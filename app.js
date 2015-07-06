@@ -64,21 +64,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.use(function (req, res, next) {
-  var views = req.session.views;
-
-  if (!views) {
-    views = req.session.views = {}
-  }
-
-  // get the url pathname
-  var pathname = parseurl(req).pathname;
-
-  // count the views
-  views[pathname] = (views[pathname] || 0) + 1;
-  console.log('session views : ',views[pathname]);
-
-  next();
-});
-
 module.exports = app;
