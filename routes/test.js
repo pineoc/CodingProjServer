@@ -16,7 +16,7 @@ router.post('/app/login',function(req,res){
     var recvData = req.body;
     console.log('recv Data : ' , recvData);
 
-    //TODO: DB�� �����ؼ� ���� DB�� INSERT �غ�����.
+    //TODO: DB¿¡ ¿¬°áÇØ¼­ ½ÇÁ¦ DB¿¡ INSERT ÇØºÁ¾ßÇÔ.
 
     var sendData = {
         status : "s",
@@ -39,7 +39,7 @@ router.get('/app/menu',function(req,res){
     console.log('recvData : ',recvData);
 
 
-    //TODO: DB�� SELECT �ؼ� ������ �������� ��.
+    //TODO: DB·Î SELECT ÇØ¼­ Á¤º¸¸¦ °¡Á®¿À°Ô ÇÔ.
     var category = [
         {
             name:"a",
@@ -306,5 +306,105 @@ router.get('/app/board/view',function(req,res){
 
 
 
+
+
+
+
+
+/* write (옷입히기)
+ type : POST
+ req : appID, nickName, data1, data2, data3, data4, data5, data6
+ res : status, contentID
+*/
+router.post('/app/board/write', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+    //DB에서 무언가를 해줘야겠지요?
+
+    var sendData = {
+        status : 's',
+        contentID : '123'
+        //DB단계 완료하면 contentID는 자동적으로 부여될 것.
+    };
+
+
+    res.json(sendData);
+});
+
+
+/* like
+ type : POST
+ req : contentID, appID
+ res : status, contentID, like
+*/
+router.post('/app/board/like', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+    //DB에서 contentID에 해당하는 글의 like을 받아오게해야함.
+    var like = 2;
+
+    var sendData = {
+        status : 's',
+        contentID : '123'
+    };
+    sendData.like = like;
+
+    res.json(sendData);
+});
+
+
+/* commentwrite
+ type : POST
+ req : appID, contentID, comment
+ res : status
+*/
+router.post('/app/board/commentwrite', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+
+    var sendData = {
+        status : 's'
+    };
+
+    res.json(sendData);
+});
+
+/* commentview
+ type : GET
+ req : contentID
+ res : status, commentNum, data(array + object)
+*/
+router.get('/app/board/commentview', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+    //DB에서 contentID에 따른 글의 comment정보를 받아온다. 
+    var data = [
+        {
+            "nick" : "a1",
+            "comment" : "c1"
+        },
+        {
+         "nick" : "a2",
+         "comment" : "c2"
+        },
+        {
+            "nick" : "a3",
+            "comment" : "c3"
+        }
+    ];
+
+
+    var sendData = {};
+    sendData.status = 's';
+    sendData.commentNum = '3';
+    sendData.datas = data;
+
+
+    res.json(sendData);
+});
 
 module.exports = router;
