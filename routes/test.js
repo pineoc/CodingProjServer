@@ -39,7 +39,7 @@ router.get('/app/menu',function(req,res){
     console.log('recvData : ',recvData);
 
 
-    //TODO: DB·Î SELECT ÇØ¼­ Á¤º¸¸¦ °¡Á®¿À°Ô ÇÔ.
+    //TODO: DB category SELECT .
     var category = [
         {
             name:"a",
@@ -405,6 +405,26 @@ router.get('/app/board/commentview', function(req, res){
 
 
     res.json(sendData);
+});
+
+router.get('/web/login_test',function(req,res){
+    res.render('test_web', { title: 'Test Web' });
+});
+router.post('/web/login_test',function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    var sendData = {};
+
+    if(recvData.email==='aaa' && recvData.pwd ==='123'){
+        sendData.status = 's';
+        sendData.isMaster = true;
+    }
+    else{
+        sendData.status = 'f';
+        sendData.isMaster=false;
+    }
+    res.send(sendData);
 });
 
 module.exports = router;

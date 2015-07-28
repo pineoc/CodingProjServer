@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- jquery added-->
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+</head>
+<body>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+<h1>test event</h1>
+<p></p>
+<!--div form tag test -->
+<div class="form_div" style="border:1px solid black;padding:10px;">
+    <h2>form tag test</h2>
+    <form action="/web/login_test" method="post">
+        ID : <input type="text" id="email" name="email" /><br/>
+        Password : <input type="password" id="pwd" name="pwd" /><br/>
+        <button type="submit">submit data</button>
+    </form>
+</div>
+
+<!--jQuery test -->
+<div style="border:1px solid black;padding:10px;">
+    <h2>jQuery test</h2>
+    Email : <input class="j_email_class"type="text" name="j_email"/><br/>
+    Password : <input class="j_pwd_class" type="password" name="j_pwd"/><br/>
+    <img class="j_btn" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Crystal_Clear_action_suspend.svg/300px-Crystal_Clear_action_suspend.svg.png" height="40px" width="40px"/>
+</div>
+
+<script>
+    //click test event, alert will execute
+    $( document ).ready(function() {
+        $( "h1" ).click(function( event ) {
+            alert( "The link will no longer take you to jquery.com" );
+            event.preventDefault();
+        });
+    });
+    $( document ).ready(function() {
+        $( ".j_btn" ).click(function( event ) {
+            var inputEmail = $(".j_email_class").val();
+            var inputPwd = $(".j_pwd_class").val();
+            var param;
+
+            if(!inputEmail){
+                alert('input the email please');
+                return;
+            }
+
+            if(!inputPwd){
+                alert('input the password please');
+                return;
+            }
+
+            param = {
+                email : inputEmail,
+                pwd : inputPwd
+            };
+
+            //ajax started
+            $.ajax({
+                url: '/web/login_test',
+                type: 'POST',
+                data:param,
+                error: function errorHandler(jqXHR, textStatus, errorThrown) {
+                    alert("login fail! (Server error)");
+                },
+                success: function successHandler(data, status, xhr) {
+                    if (data.status === 's') {
+                        alert('login success');
+                        window.location.replace("/");
+                        return;
+                    }
+                    else{
+                        alert('login fail');
+                        return;
+                    }
+                }
+
+            });
+
+
+            event.preventDefault();
+        });
+    });
+</script>
+
+</body>
+</html>
