@@ -16,7 +16,7 @@ router.post('/app/login',function(req,res){
     var recvData = req.body;
     console.log('recv Data : ' , recvData);
 
-    //TODO: DB¿¡ ¿¬°áÇØ¼­ ½ÇÁ¦ DB¿¡ INSERT ÇØºÁ¾ßÇÔ.
+    //TODO: if first, INSERT to USER, else, SELECT FROM USER
 
     var sendData = {
         status : "s",
@@ -407,10 +407,19 @@ router.get('/app/board/commentview', function(req, res){
     res.json(sendData);
 });
 
-router.get('/web/login_test',function(req,res){
+//login test page
+//type : get
+//show login test
+router.get('/web/login_test',function(req,res,next){
     res.render('test_web', { title: 'Test Web' });
 });
-router.post('/web/login_test',function(req,res){
+
+//login test request
+//type : post
+//get data from test_web.ejs
+//req : email, pwd
+//res : status, isMaster
+router.post('/web/login_test',function(req,res,next){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
@@ -426,5 +435,240 @@ router.post('/web/login_test',function(req,res){
     }
     res.send(sendData);
 });
+
+
+//login page for get login data
+//type : post
+//req : id, pwd
+//res : status, isMaster
+router.post('/web/login',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check id, pwd are not null
+
+
+    //TODO : SELECT DB on writers table
+
+
+    //TODO : success = make session / fail = return false
+
+    //master mode test
+    var sendData = {
+        status: 's',
+        isMaster : true
+    };
+
+    res.json(sendData);
+});
+
+/*
+* category list
+* type : get
+* req : none
+* res : status, categoryNum, categorys
+* */
+router.get('/web/master/category',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+
+});
+
+/*
+ * category add
+ * type : post
+ * req : addCategory
+ * res : status
+ * */
+router.post('/web/master/category/add',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+});
+
+/*
+ * category update
+ * type : post
+ * req : cateID, updateCategory
+ * res : status
+ * */
+router.post('/web/master/category/update',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+});
+
+/*
+ * category delete
+ * type : post
+ * req : cateID
+ * res : status
+ * */
+router.post('/web/master/category/delete',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+});
+
+/*
+ * editor list
+ * type : get
+ * req :
+ * res : status, editors
+ * */
+router.get('/web/master/editor',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+});
+
+/*
+ * editor add
+ * type : post
+ * req : editorID, editorEmail, editorPwd, editorName, editorNick, editorCate
+ * res : status
+ * */
+router.post('/web/master/editor/add',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+    //TODO : check datas is null and valid
+
+
+    //TODO : INSERT to writer TABLE these datas
+
+
+    //TODO : success = status:s , fail = status:f
+
+
+
+});
+
+/*
+ * editor delete
+ * type : post
+ * req : editorID
+ * res : status
+ * */
+router.post('/web/master/editor/delete',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+
+    //TODO : check datas is null and valid
+
+
+    //TODO : DELETE to writer TABLE these datas
+
+
+    //TODO : success = status:s , fail = status:f
+
+});
+
+/*
+ * all board content list
+ * type : get
+ * req : pageNum
+ * res : status, contentNum, datas
+ * */
+router.get('/web/master/board',function(req,res,next){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+
+    //TODO : SELECT data from board TABLE
+
+});
+
+/*
+ * board update
+ * type : post
+ * req : contentID,
+ * res : status
+ * */
+router.post('/web/board/update',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master or editor validation
+
+    //TODO : DB UPDATE board TABLE,
+
+
+});
+
+/*
+ * board delete
+ * type : post
+ * req : contentID
+ * res : status
+ * */
+router.post('/web/board/delete',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master or editor validation
+
+    //TODO : DB UPDATE board TABLE, valid set false
+
+
+});
+
+/*
+ * board write
+ * type : post
+ * req : title, category, thumnail(file),
+ *       datas({file, content} array)
+ * res : status
+ * */
+router.post('/web/master/board/delete',function(req,res,next){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master or editor validation
+
+    //TODO : DB UPDATE board TABLE, valid set false
+
+
+});
+
+/*
+ * board content list
+ * type : get
+ * req : pageNum
+ * res : status, contentNum, datas
+ * */
+router.get('/web/board/list',function(req,res,next){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is editor
+
+    //TODO : SELECT data from board TABLE
+
+});
+
 
 module.exports = router;
