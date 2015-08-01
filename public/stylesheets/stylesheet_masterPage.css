@@ -1,0 +1,12 @@
+iframe.main{
+		position:absolute;
+		left:220px;
+		top:120px;
+		width:1000px;
+		height:600px;
+	}
+	nav{
+		width:200px;
+		height:600px;
+		float:right;
+	}
