@@ -76,7 +76,7 @@ exports.cateList = function(req,res){
     //TODO : check session is master
 
 
-
+    res.render('category',{result:'s'});
 };
 
 /*
@@ -137,6 +137,8 @@ exports.editorList = function(req,res){
     //TODO : check session is master
 
 
+
+    res.render('editor',{result:'s'});
 };
 
 /*
@@ -201,6 +203,8 @@ exports.boardAllList = function(req,res){
 
     //TODO : SELECT data from board TABLE
 
+    res.render('management',{result:'s'});
+
 };
 
 /*
@@ -252,7 +256,7 @@ exports.boardWrite = function(req,res){
 
     //TODO : DB UPDATE board TABLE, valid set false
 
-
+    res.render('writeConsidertaions',{result:'s'});
 };
 
 /*
@@ -269,5 +273,5 @@ exports.boardList = function(req,res){
 
     //TODO : SELECT data from board TABLE
 
-
+    res.render('management',{result:'s'});
 };
