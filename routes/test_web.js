@@ -241,6 +241,11 @@ exports.boardDel = function(req,res){
 
 };
 
+exports.boardWriteGet = function(req,res){
+
+    res.render('writeConsidertaions',{result:'s'});
+};
+
 /*
  * board write
  * type : post
@@ -256,7 +261,7 @@ exports.boardWrite = function(req,res){
 
     //TODO : DB UPDATE board TABLE, valid set false
 
-    res.render('writeConsidertaions',{result:'s'});
+    res.json({result:'s'});
 };
 
 /*

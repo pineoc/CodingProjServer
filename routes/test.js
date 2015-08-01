@@ -516,6 +516,14 @@ router.post('/web/board/delete',web.boardDel);
 
 /*
  * board write
+ * type : get
+ * req : none
+ * res : status
+ * */
+router.get('/web/board/write',web.boardWriteGet);
+
+/*
+ * board write
  * type : post
  * req : title, category, thumnail(file),
  *       datas({file, content} array)
