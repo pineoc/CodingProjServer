@@ -532,4 +532,12 @@ router.post('/web/board/write',web.boardWrite);
 router.get('/web/board/list',web.boardList);
 
 
+router.get('/web/board_test',function(req,res){
+    var data ={};
+    data.arr = [1,2];
+    data.title = "test board";
+
+    res.render('test_board',{datas : data});
+});
+
 module.exports = router;

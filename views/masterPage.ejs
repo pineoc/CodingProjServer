@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Master page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css
+		" href="/stylesheet/stylesheet_masterPage.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script language="javascript">
+  function category(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="category.html";
+  }
+  function editor(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="editor.html";
+  }
+  function management(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="management.html";
+  }
+  function writeConsidertaions(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="writeConsidertaions.html";
+  }
+  function myList(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="myList.html";
+  }
+  </script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="topImg">
+			<img src="masterPageTop.jpg" class="img-rounded" alt="?">
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-lg-2">
+				<nav>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>
+								관리
+							</th>	
+						</tr>	
+					</thead>
+					<tbody>
+						<tr>
+							<th>
+								<button type="button" onclick="category()" class="btn btn-link btn-Medium">카테고리 관리</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="editor()" class="btn btn-link btn-Medium">에디터 관리</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="management()" class="btn btn-link btn-Medium">글 관리</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="writeConsidertaions()" class="btn btn-link btn-Medium">글 쓰기</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="myList()" class="btn btn-link btn-Medium">내 글 리스트</button>
+							</th>
+						</tr>
+					</tbody>
+				</table>
+				</nav>
+			</div>
+			<iframe id="main" scr="masterpage.html" width="1000px";
+		height="600px"; scrolling="no" frameborder="0"></iframe>
+		</div>
+		
+		<!--<div class="main">
+			<p>ppppp</p>
+		</div>-->
+	</div>
+
+</body>
+</html>
+

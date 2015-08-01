@@ -71,7 +71,10 @@
                 success: function successHandler(data, status, xhr) {
                     if (data.status === 's') {
                         alert('login success');
-                        window.location.replace("/");
+                        if(data.isMaster==true){
+                            window.location.replace("/web/login")
+                        }
+                        window.location.replace("/web/views/matserPage");
                         return;
                     }
                     else{
