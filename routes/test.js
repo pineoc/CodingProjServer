@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var web = require('./test_web');
+var db = require('./db_config');
 
 //test code start
 const CLOTHIDX = 1;
@@ -69,11 +70,31 @@ router.get('/app/menu',function(req,res){
         }
     ];
 
-    var sendData = {};
-    sendData.status = 's';
-    sendData.categorys = category;
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err get conn, categoryList : ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            conn.query('SELECT * FROM CATEGORY',[],function(err2, result){
+                if(err2){
+                    console.log('err S category : ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var sendData = {};
+                    sendData.status = 's';
+                    sendData.categorys = result;
+                    res.json(sendData);
+                }
+                conn.release();
+            });
 
-    res.json(sendData);
+        }
+    });
 });
 
 
