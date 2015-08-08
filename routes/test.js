@@ -3,8 +3,10 @@
  */
 var express = require('express');
 var router = express.Router();
+var crypto = require('crypto');
 var web = require('./test_web');
 var db = require('./db_config');
+
 
 //test code start
 const CLOTHIDX = 1;
@@ -12,21 +14,79 @@ const CLOTHIDX = 1;
 //login
 // first time, sign + login, after then login
 // type : post
-// req : appID, nickName
+// req : appID, nickName, key(first time)
 // res : status, appID, nickName
 router.post('/app/login',function(req,res){
     var recvData = req.body;
     console.log('recv Data : ' , recvData);
 
     //TODO: if first, INSERT to USER, else, SELECT FROM USER
+    if(recvData.appID.length==0){
+        if(typeof recvData.nickName === 'undefined' || typeof recvData.key === 'undefined'){
+            console.log('undefined datas');
+            res.json({status:'f'});
+            return;
+        }
 
-    var sendData = {
-        status : "s",
-        appID : recvData.appID.toString(),
-        nickName : recvData.nickName
-    };
-
-    res.json(sendData);
+        //access first Time, sign
+        //TODO : INSERT INTO USER
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /login sign, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                //make sha1 hash for user_token
+                var shasum = crypto.createHash('sha1');
+                shasum.update(recvData.key);
+                var d = shasum.digest('hex');
+                conn.query('INSERT INTO USER(user_token, nickName) VALUES (?,?)',[d,recvData.nickName],function(err2,result){
+                    if(err2){
+                        console.log('err I sign, ', err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var sendData = {
+                            status : 's',
+                            appID : d,
+                            nickName : recvData.nickName
+                        };
+                        res.json(sendData);
+                    }
+                    conn.release();
+                });
+            }
+        });
+    }
+    else{
+        //login
+        //TODO : SELECT FROM USER
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /login login, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                conn.query('SELECT * FROM USER WHERE user_token=?',[recvData.appID], function(err2,result){
+                    if(err2){
+                        console.log('err S /login login, ', err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        console.log('login success');
+                        res.json({status:'s'});
+                    }
+                    conn.release();
+                });
+            }
+        });
+    }
 });
 
 /* menu (categorys)
@@ -41,34 +101,7 @@ router.get('/app/menu',function(req,res){
     console.log('recvData : ',recvData);
 
 
-    //TODO: DB category SELECT .
-    var category = [
-        {
-            name:"a",
-            cateID : 1,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        },
-        {
-            name:"b",
-            cateID : 2,
-            cateImgURL : "http://localhost:3000/img/url/2.png"
-        },
-        {
-            name:"c",
-            cateID : 3,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        },
-        {
-            name:"d",
-            cateID : 4,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        },
-        {
-            name:"e",
-            cateID : 5,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        }
-    ];
+    //TODO: DB category SELECT
 
     db.pool.getConnection(function(err,conn){
         if(err){
