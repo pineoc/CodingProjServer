@@ -462,6 +462,44 @@ router.get('/app/board/commentview', function(req, res){
     res.json(sendData);
 });
 
+
+/* clothList
+type : GET
+req : cloth_cate, pageNum
+res : status, clothNum, clothList(cloth_name + cloth_idx, cloth_url)
+*/
+router.get('/app/clothList', function(req, res){
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
+
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err get conn, clothList : ', err);
+            res.json({status : 'f'});
+            return;
+        }
+        // must update LIMIT part
+        else{
+            conn.query('SELECT * FROM CLOTH WHERE cloth_cate = ? LIMIT ?,10', [recvData.cloth_cate, (recvData.pageNum)*10], function(err2, result){
+                if(err2){
+                    console.log('err S cloth : ', err2);
+                    res.json({status : 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var sendData = {
+                        "status" : "s",
+                        "clothNum" : result.length,
+                        "clothList" : result
+                    }
+                    res.json(sendData);
+                }
+                conn.release();
+            });
+        }
+    });
+});
 //login test page
 //type : get
 //show login test
