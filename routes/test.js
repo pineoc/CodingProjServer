@@ -19,11 +19,16 @@ const CLOTHIDX = 1;
 router.post('/app/login',function(req,res){
     var recvData = req.body;
     console.log('recv Data : ' , recvData);
+    if(typeof recvData.appID === 'undefined'){
+        console.log('undefined appID');
+        res.json({status:'f'});
+        return;
+    }
 
     //TODO: if first, INSERT to USER, else, SELECT FROM USER
     if(recvData.appID.length==0){
         if(typeof recvData.nickName === 'undefined' || typeof recvData.key === 'undefined'){
-            console.log('undefined datas');
+            console.log('undefined datas, nick or key');
             res.json({status:'f'});
             return;
         }
