@@ -1,4 +1,10 @@
 ﻿
+
+var db = require('./db_config');
+var sessionService = new (require('./sessionService'))();
+
+var crypto = require('crypto');
+
 //login test page
 //type : get
 //show login test
@@ -37,27 +43,71 @@ exports.login = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check id, pwd are not null
-
+    if(typeof recvData.email ==='undefined' || typeof recvData.pwd ==='undefined'){
+        console.log('email OR pwd undefined');
+        res.json({status:'f'});
+        return;
+    }
+    if(recvData.email==null || recvData.pwd==null){
+        console.log('email OR pwd null');
+        res.json({status:'f'});
+        return;
+    }
 
     //TODO : SELECT DB on writers table
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err c /web/login, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            //TODO : recvData.pwd should do hash
+            var shasum = crypto.createHash('sha1');
+            shasum.update(recvData.pwd);
+            var d = shasum.digest('hex');
+            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?',[recvData.email,recvData.pwd],function(err2,result){
+                if(err2){
+                    console.log('err S /login, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    if(result.length == 1){
+                        //success login
+                        //TODO : register session, response success
+                        var param = {};
+                        param.email = result[0].e_email;
+                        param.name = result[0].e_name;
+                        if(db.data.email === param.email && db.data.name === param.name ){
+                            param.isMaster = true;
+                        }
+                        else{
+                            param.isMaster = false;
+                        }
+                        sessionService.registerSession(req,param.email,param.name,param.isMaster);
+                        res.json({status:'s'});
+                    }
+                    else{
+                        //fail
+                        res.json({status:'f'});
+                    }
+                }
+                conn.release();
+            });
+        }
+    });
 
-
-    //TODO : success = make session / fail = return false
-
-    //master mode test
-    var sendData = {
-        status: 's',
-        isMaster : true
-    };
-
-    res.json(sendData);
 };
 
 exports.masterMain = function(req,res){
-    var recvData = req.body;
-    console.log('recvData : ',recvData);
-
-    res.render('masterPage',{result:'s'});
+    if(sessionService.getSession().isMaster){
+        res.render('masterPage',{status:'s'});
+    }
+    else{
+        res.render('masterPage',{status:'f'});
+    }
 };
 
 /*
@@ -74,7 +124,7 @@ exports.cateList = function(req,res){
     //if(req.session)
 
     var renderData = {
-        result:'s',
+        status:'s',
         categoryNum : 5,
         categorys : [
             {
