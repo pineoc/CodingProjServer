@@ -402,17 +402,68 @@ router.post('/app/board/like', function(req, res){
     var recvData = req.body;
     console.log('recvData : ', recvData);
 
-    //DB에서 contentID에 해당하는 글의 like을 받아오게해야함.
-    var like = 2;
+    if(typeof recvData.contentID === 'undefined' || typeof recvData.appID === 'undefined'){
+        console.log('undefined contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }
 
-    var sendData = {
-        status : 's',
-        contentID : '123'
-    };
-    sendData.like = like;
+    if(recvData.contentID.length == 0 || recvData.appID.length == 0){
+        console.log('undefined datas, contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }
 
-    res.json(sendData);
+
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err conn /app/board/like, ', err);
+            res.json({status : 'f'});
+            return;
+        }
+        else{
+            conn.query('INSERT INTO LIKES(user_token, b_idx) VALUES (?, ?)', [recvData.appID.toString(), parseInt(recvData.contentID)], function(err2, result2){
+                if(err2){
+                    console.log('err I like, ', err2);
+                    res.json({status: 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    conn.query('UPDATE BOARD SET likes = (likes + 1) WHERE b_idx = ?',[recvData.contentID], function(err3, result3){
+                        if(err3){
+                            console.log('err update likes, ', err3);
+                            res.json({status : 'f'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                        conn.query('SELECT likes FROM BOARD WHERE b_idx = ?', [recvData.contentID], function(err4, result4){
+                            if(err4){
+                                console.log('err SELECT likes, ', err4);
+                                res.json({status : 'f'});
+                                conn.release();
+                                return;
+                            }
+                            else{
+                                var sendData = {
+                                status : 's',
+                                contentID : recvData.contentID,
+                                likes : result4[0].likes
+                                };
+                                res.json(sendData);
+                                conn.release();
+                            }
+                        });
+                        }
+                    });
+                }
+            conn.release();
+            });
+        }
+    });
 });
+
 
 
 /* commentwrite
@@ -424,12 +475,48 @@ router.post('/app/board/commentwrite', function(req, res){
     var recvData = req.body;
     console.log('recvData : ', recvData);
 
+    if(typeof recvData.contentID === 'undefined' || typeof recvData.appID === 'undefined'){
+        console.log('undefined contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }
 
-    var sendData = {
-        status : 's'
-    };
+    if(recvData.contentID.length == 0 || recvData.appID.length == 0){
+        console.log('undefined datas, contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }    
 
-    res.json(sendData);
+    if(recvData.comment.length == 0){
+        console.log('undefinded data, comment');
+        res.json({status : 'f'});
+        return;
+    }
+
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err conn /board/commentwrite, ', err);
+            res.json({status : 'f'});
+            return;
+        }
+        else{
+            conn.query('INSERT INTO COMMENT(user_token, c_content, b_idx) VALUES (?, ?, ?)', [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
+                if(err2){
+                    console.log('err INSERT COMMENT, ', err2);
+                    res.json({status : 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var sendData = {
+                        status : 's',
+                    };
+                }
+                res.json(sendData);
+                conn.release();
+            });
+        }
+    });
 });
 
 /* commentview
