@@ -3,29 +3,96 @@
  */
 var express = require('express');
 var router = express.Router();
+var crypto = require('crypto');
 var web = require('./test_web');
+var db = require('./db_config');
+
 
 //test code start
+//namjungnaedle category number
 const CLOTHIDX = 1;
 
 //login
 // first time, sign + login, after then login
 // type : post
-// req : appID, nickName
+// req : appID, nickName, key(first time)
 // res : status, appID, nickName
 router.post('/app/login',function(req,res){
     var recvData = req.body;
     console.log('recv Data : ' , recvData);
+    if(typeof recvData.appID === 'undefined'){
+        console.log('undefined appID');
+        res.json({status:'f'});
+        return;
+    }
 
     //TODO: if first, INSERT to USER, else, SELECT FROM USER
+    if(recvData.appID.length==0){
+        if(typeof recvData.nickName === 'undefined' || typeof recvData.key === 'undefined'){
+            console.log('undefined datas, nick or key');
+            res.json({status:'f'});
+            return;
+        }
 
-    var sendData = {
-        status : "s",
-        appID : recvData.appID.toString(),
-        nickName : recvData.nickName
-    };
-
-    res.json(sendData);
+        //access first Time, sign
+        //TODO : INSERT INTO USER
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /login sign, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                //make sha1 hash for user_token
+                var shasum = crypto.createHash('sha1');
+                shasum.update(recvData.key);
+                var d = shasum.digest('hex');
+                conn.query('INSERT INTO USER(user_token, nickName) VALUES (?,?)',[d,recvData.nickName],function(err2,result){
+                    if(err2){
+                        console.log('err I sign, ', err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var sendData = {
+                            status : 's',
+                            appID : d,
+                            nickName : recvData.nickName
+                        };
+                        res.json(sendData);
+                    }
+                    conn.release();
+                });
+            }
+        });
+    }
+    else{
+        //login
+        //TODO : SELECT FROM USER
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /login login, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                conn.query('SELECT * FROM USER WHERE user_token=?',[recvData.appID], function(err2,result){
+                    if(err2){
+                        console.log('err S /login login, ', err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        console.log('login success');
+                        res.json({status:'s'});
+                    }
+                    conn.release();
+                });
+            }
+        });
+    }
 });
 
 /* menu (categorys)
@@ -40,40 +107,33 @@ router.get('/app/menu',function(req,res){
     console.log('recvData : ',recvData);
 
 
-    //TODO: DB category SELECT .
-    var category = [
-        {
-            name:"a",
-            cateID : 1,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        },
-        {
-            name:"b",
-            cateID : 2,
-            cateImgURL : "http://localhost:3000/img/url/2.png"
-        },
-        {
-            name:"c",
-            cateID : 3,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        },
-        {
-            name:"d",
-            cateID : 4,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
-        },
-        {
-            name:"e",
-            cateID : 5,
-            cateImgURL : "http://localhost:3000/img/url/1.png"
+    //TODO: DB category SELECT
+
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err get conn, categoryList : ',err);
+            res.json({status:'f'});
+            return;
         }
-    ];
+        else{
+            conn.query('SELECT * FROM CATEGORY',[],function(err2, result){
+                if(err2){
+                    console.log('err S category : ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var sendData = {};
+                    sendData.status = 's';
+                    sendData.categorys = result;
+                    res.json(sendData);
+                }
+                conn.release();
+            });
 
-    var sendData = {};
-    sendData.status = 's';
-    sendData.categorys = category;
-
-    res.json(sendData);
+        }
+    });
 });
 
 
@@ -92,70 +152,43 @@ router.get('/app/board', function(req,res){
         //cloth board
 
         //TODO: board DB data SELECT where category=1
-        var sendData = {
-            "status" : "s",
-            "contentNum" : 123,
-            "pageContentsNum" : 6,
-            "rankedDatas":[
-                {
-                    "contentIdx":1,
-                    "likes":12,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150507T2311"
-                },
-                {
-                    "contentIdx":2,
-                    "likes":10,
-                    "clothIdxs":[11,21,31,444,325,226],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":3,
-                    "likes":9,
-                    "clothIdxs":[1,8,13,24,35,16],
-                    "dateTime":"20150511T1122"
-                }
-            ],
-            "datas":[
-                {
-                    "contentIdx":11,
-                    "likes":1,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":21,
-                    "likes":2,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":31,
-                    "likes":1,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":41,
-                    "likes":2,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":12,
-                    "likes":1,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":13,
-                    "likes":2,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                }
-            ]
-        };
-        res.json(sendData);
+
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /board, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                conn.query('SELECT * FROM CLOTH_BOARD ORDER BY likes DESC LIMIT 3',[],function(err2,result){
+                    if(err2){
+                        console.log('err S /board, ',err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        conn.query('SELECT * FROM CLOTH_BOARD LIMIT ?, 10',[parseInt(recvData.pageNum)*10],function(err3,result2){
+                            if(err3){
+                                console.log('err S2 /board, ',err3);
+                                res.json({status:'f'});
+                                conn.release();
+                                return;
+                            }
+                            else{
+                                var sendData ={};
+                                sendData.status = 's';
+                                sendData.rankedData = result;
+                                sendData.datas = result2;
+                                sendData.contentsNum = result2.length;
+                                res.json(sendData);
+                            }
+                            conn.release();
+                        });
+                    }
+                });
+            }
+        });
     }
     else{
         //normal board
@@ -343,17 +376,68 @@ router.post('/app/board/like', function(req, res){
     var recvData = req.body;
     console.log('recvData : ', recvData);
 
-    //DB에서 contentID에 해당하는 글의 like을 받아오게해야함.
-    var like = 2;
+    if(typeof recvData.contentID === 'undefined' || typeof recvData.appID === 'undefined'){
+        console.log('undefined contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }
 
-    var sendData = {
-        status : 's',
-        contentID : '123'
-    };
-    sendData.like = like;
+    if(recvData.contentID.length == 0 || recvData.appID.length == 0){
+        console.log('undefined datas, contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }
 
-    res.json(sendData);
+
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err conn /app/board/like, ', err);
+            res.json({status : 'f'});
+            return;
+        }
+        else{
+            conn.query('INSERT INTO LIKES(user_token, b_idx) VALUES (?, ?)', [recvData.appID.toString(), parseInt(recvData.contentID)], function(err2, result2){
+                if(err2){
+                    console.log('err I like, ', err2);
+                    res.json({status: 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    conn.query('UPDATE BOARD SET likes = (likes + 1) WHERE b_idx = ?',[recvData.contentID], function(err3, result3){
+                        if(err3){
+                            console.log('err update likes, ', err3);
+                            res.json({status : 'f'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                        conn.query('SELECT likes FROM BOARD WHERE b_idx = ?', [recvData.contentID], function(err4, result4){
+                            if(err4){
+                                console.log('err SELECT likes, ', err4);
+                                res.json({status : 'f'});
+                                conn.release();
+                                return;
+                            }
+                            else{
+                                var sendData = {
+                                status : 's',
+                                contentID : recvData.contentID,
+                                likes : result4[0].likes
+                                };
+                                res.json(sendData);
+                                conn.release();
+                            }
+                        });
+                        }
+                    });
+                }
+            conn.release();
+            });
+        }
+    });
 });
+
 
 
 /* commentwrite
@@ -365,12 +449,48 @@ router.post('/app/board/commentwrite', function(req, res){
     var recvData = req.body;
     console.log('recvData : ', recvData);
 
+    if(typeof recvData.contentID === 'undefined' || typeof recvData.appID === 'undefined'){
+        console.log('undefined contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }
 
-    var sendData = {
-        status : 's'
-    };
+    if(recvData.contentID.length == 0 || recvData.appID.length == 0){
+        console.log('undefined datas, contentID or appID');
+        res.json({status : 'f'});
+        return;
+    }    
 
-    res.json(sendData);
+    if(recvData.comment.length == 0){
+        console.log('undefinded data, comment');
+        res.json({status : 'f'});
+        return;
+    }
+
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err conn /board/commentwrite, ', err);
+            res.json({status : 'f'});
+            return;
+        }
+        else{
+            conn.query('INSERT INTO COMMENT(user_token, c_content, b_idx) VALUES (?, ?, ?)', [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
+                if(err2){
+                    console.log('err INSERT COMMENT, ', err2);
+                    res.json({status : 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var sendData = {
+                        status : 's',
+                    };
+                }
+                res.json(sendData);
+                conn.release();
+            });
+        }
+    });
 });
 
 /* commentview
@@ -408,6 +528,44 @@ router.get('/app/board/commentview', function(req, res){
     res.json(sendData);
 });
 
+
+/* clothList
+type : GET
+req : cloth_cate, pageNum
+res : status, clothNum, clothList(cloth_name + cloth_idx, cloth_url)
+*/
+router.get('/app/clothList', function(req, res){
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
+
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err get conn, clothList : ', err);
+            res.json({status : 'f'});
+            return;
+        }
+        // must update LIMIT part
+        else{
+            conn.query('SELECT * FROM CLOTH WHERE cloth_cate = ? LIMIT ?,10', [recvData.cloth_cate, (recvData.pageNum)*10], function(err2, result){
+                if(err2){
+                    console.log('err S cloth : ', err2);
+                    res.json({status : 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var sendData = {
+                        "status" : "s",
+                        "clothNum" : result.length,
+                        "clothList" : result
+                    }
+                    res.json(sendData);
+                }
+                conn.release();
+            });
+        }
+    });
+});
 //login test page
 //type : get
 //show login test

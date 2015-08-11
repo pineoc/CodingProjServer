@@ -9,11 +9,31 @@
 		" href="stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding : 5px;
+        }
+    </style>
 </head>
 <body>
 	<div class="container-fluid">
 		<h1>카테고리 관리</h1>
 		<hr>
 	</div>
+    <div>
+        <table>
+            <tr>
+                <th>categoryNum</th>
+                <th>categoryName</th>
+            </tr>
+            <% for (var i=0; i < categoryNum; i++) { %>
+            <tr>
+                <td><%=categorys[i].cateID%></td>
+                <td><%=categorys[i].cateName%></td>
+            </tr>
+            <%}%>
+        </table>
+    </div>
 </body>
 </html>
