@@ -9,6 +9,7 @@ var db = require('./db_config');
 
 
 //test code start
+//namjungnaedle category number
 const CLOTHIDX = 1;
 
 //login
@@ -151,70 +152,43 @@ router.get('/app/board', function(req,res){
         //cloth board
 
         //TODO: board DB data SELECT where category=1
-        var sendData = {
-            "status" : "s",
-            "contentNum" : 123,
-            "pageContentsNum" : 6,
-            "rankedDatas":[
-                {
-                    "contentIdx":1,
-                    "likes":12,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150507T2311"
-                },
-                {
-                    "contentIdx":2,
-                    "likes":10,
-                    "clothIdxs":[11,21,31,444,325,226],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":3,
-                    "likes":9,
-                    "clothIdxs":[1,8,13,24,35,16],
-                    "dateTime":"20150511T1122"
-                }
-            ],
-            "datas":[
-                {
-                    "contentIdx":11,
-                    "likes":1,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":21,
-                    "likes":2,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":31,
-                    "likes":1,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":41,
-                    "likes":2,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":12,
-                    "likes":1,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":13,
-                    "likes":2,
-                    "clothIdxs":[1,2,3,4,5,6],
-                    "dateTime":"20150509T1134"
-                }
-            ]
-        };
-        res.json(sendData);
+
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /board, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                conn.query('SELECT * FROM CLOTH_BOARD ORDER BY likes DESC LIMIT 3',[],function(err2,result){
+                    if(err2){
+                        console.log('err S /board, ',err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        conn.query('SELECT * FROM CLOTH_BOARD LIMIT ?, 10',[parseInt(recvData.pageNum)*10],function(err3,result2){
+                            if(err3){
+                                console.log('err S2 /board, ',err3);
+                                res.json({status:'f'});
+                                conn.release();
+                                return;
+                            }
+                            else{
+                                var sendData ={};
+                                sendData.status = 's';
+                                sendData.rankedData = result;
+                                sendData.datas = result2;
+                                sendData.contentsNum = result2.length;
+                                res.json(sendData);
+                            }
+                            conn.release();
+                        });
+                    }
+                });
+            }
+        });
     }
     else{
         //normal board

@@ -1,7 +1,4 @@
-/**
- * Created by pineoc on 2015-08-01.
- */
-
+﻿
 //login test page
 //type : get
 //show login test
@@ -74,9 +71,37 @@ exports.cateList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
+    //if(req.session)
+
+    var renderData = {
+        result:'s',
+        categoryNum : 5,
+        categorys : [
+            {
+                "cateID":1,
+                "cateName":"남정네들"
+            },
+            {
+                "cateID":2,
+                "cateName":"패션"
+            },
+            {
+                "cateID":3,
+                "cateName":"자동차"
+            },
+            {
+                "cateID":4,
+                "cateName":"게임"
+            },
+            {
+                "cateID":5,
+                "cateName":"스포츠"
+            }
+        ]
+    };
 
 
-    res.render('category',{result:'s'});
+    res.render('category',renderData);
 };
 
 /*
