@@ -35,10 +35,10 @@ SessionService.prototype.removeSession = function (req) {
 
 /**
  * makeUserSessionData
- * - content Object¿¡ userId, userName Ãß°¡
+ * - content Objectï¿½ï¿½ userId, userName ï¿½ß°ï¿½
  * @param req
  * @param {JSONObject} content
- * @returns {boolean} : session ÀÖÀ» ¶§ true, ¾øÀ» ¶§ false
+ * @returns {boolean} : session ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ true, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ false
  */
 SessionService.prototype.makeUserSessionData = function (req, content) {
     var hasSessionResult = false;
@@ -56,13 +56,29 @@ SessionService.prototype.makeUserSessionData = function (req, content) {
 
 /**
  * hasUserAuthority
- * - ´Ù¸¥ »ç¶÷ Æ÷Æ®Æú¸®¿À ¼öÁ¤ÇÏÁö ¸øÇÏµµ·Ï ±ÇÇÑ °Ë»ç
  * @param req
  * @param userName
  * @returns {boolean}
  */
 SessionService.prototype.hasUserAuthorityByName = function (req, userName) {
     return (req.session.userName === userName);
+};
+
+SessionService.prototype.isMaster = function(req){
+
+    var config = require('./db_config');
+
+    if(!this.hasSession(req)){
+        return null;
+    }
+    else{
+        if(req.session.userId == config.data.email && req.session.userName == config.data.name){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 };
 
 module.exports = SessionService;
