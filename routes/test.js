@@ -741,5 +741,25 @@ router.get('/web/hot_fashion_list', function(req, res){
     res.render('hot_fashion_list');
 });
 
-
+/*
+ * hot_fashion
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/hot_fashion', function(req, res){
+    res.render('hot_fashion_list');
+});/*
+ * fitting_room
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/fitting_room', function(req, res){
+    res.render('fitting_room');
+});
 module.exports = router;
