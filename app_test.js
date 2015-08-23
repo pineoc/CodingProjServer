@@ -55,7 +55,7 @@ app.get('/img/:string',function(req,res){
     });
     filestream.on('error',function(err){
       if(err){
-        res.json({result:'F'});
+        res.json({result:'f'});
       }
     });
   }
