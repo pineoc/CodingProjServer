@@ -750,7 +750,7 @@ router.get('/web/hot_fashion_list', function(req, res){
  * Daun Joung
  */
 router.get('/web/hot_fashion', function(req, res){
-    res.render('hot_fashion_list');
+    res.render('hot_fashion');
 });/*
  * fitting_room
  * type : get
