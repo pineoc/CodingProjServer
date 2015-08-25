@@ -45,8 +45,6 @@ app.get('/img/:string',function(req,res){
     return;
   }
   else{
-    console.log('dirname : ',__dirname);
-
     var file = __dirname+'/public/img/'+split;
     var filestream = fs.createReadStream(file);
 

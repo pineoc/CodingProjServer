@@ -2,9 +2,9 @@
 
 var db = require('./db_config');
 var sessionService = new (require('./sessionService'))();
+var fileUploadService = require('./fileUploadService');
 
 var crypto = require('crypto');
-
 
 //login test page
 //type : get
@@ -208,7 +208,7 @@ exports.cateList = function(req,res){
 /*
  * category add
  * type : post
- * req : addCategory
+ * req : categoryID, categoryName, categoryImage
  * res : status
  * */
 exports.cateAdd = function(req,res){
@@ -218,10 +218,18 @@ exports.cateAdd = function(req,res){
     //TODO : check session is master
     if(!sessionService.isMaster(req)){
         console.log('/cateadd,  not master');
-        res.json({status:'f'});
+        res.json({status:'f',msg : 'no master'});
         return;
     }
     else{
+        if(typeof recvData.categoryID === 'undefined' || typeof recvData.categoryName === 'undefined' ) {
+            console.log('/cateadd no cateID OR no cateName');
+            res.json({status:'f',msg:'no data'});
+            return;
+        }
+        //TODO : file check, categoryImage
+
+
 
     }
 
@@ -579,4 +587,58 @@ exports.boardList = function(req,res){
     //TODO : SELECT data from board TABLE
 
     res.render('management',{status:'s'});
+};
+
+/*
+* file upload test
+* type : post
+* req : param1, param2, file1, file2, file3
+* res : status
+* */
+exports.fileUploadTest = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    console.log('param1 : ',recvData.param1);
+    console.log('param2 : ',recvData.param2);
+
+    if(fileUploadService.fileUpload(1,'file1',req.files.file1)){
+        console.log('file1 success');
+    }
+    else{
+        console.log('file1 fail');
+    }
+
+    if(fileUploadService.fileUpload(1,'file2',req.files.file2)){
+        console.log('file2 success');
+    }
+    else{
+        console.log('file2 fail');
+    }
+
+    if(fileUploadService.fileUpload(1,'file3',req.files.file3)){
+        console.log('file3 success');
+    }
+    else{
+        console.log('file3 fail');
+    }
+    res.json({status:'s'});
+};
+
+exports.fileUploadTest2 = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    console.log('param1 : ',recvData.param1);
+    console.log('param2 : ',recvData.param2);
+
+    if(fileUploadService.fileUploadArr(1, 'board1', req.files.file1)){
+        console.log('files upload Arr success');
+        res.json({status:'s'});
+    }
+    else{
+        console.log('files upload Arr fail');
+        res.json({status:'f'});
+    }
+
 };

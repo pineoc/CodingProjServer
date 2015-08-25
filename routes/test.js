@@ -4,6 +4,10 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
+var multipart = require('connect-multiparty');
+
+var multipartMiddleware = multipart();
+
 var web = require('./test_web');
 var db = require('./db_config');
 
@@ -861,12 +865,7 @@ router.post('/web/board/write',web.boardWrite);
 router.get('/web/board/list',web.boardList);
 
 
-router.get('/web/board_test',function(req,res){
-    var data ={};
-    data.arr = [1,2];
-    data.title = "test board";
-
-    res.render('test_board',{datas : data});
-});
+router.post('/fileUpload', multipartMiddleware, web.fileUploadTest);
+router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
 
 module.exports = router;
