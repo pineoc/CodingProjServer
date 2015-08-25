@@ -3,8 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <script>
+        $(document).ready(function(){
+           $("input#go_fitting").click(function(){
+               $("div#fitting_room_container").load("/web/fitting_room");
+           });
+            $("td#more").click(function(){
+                $("div#fitting_room_container").load("/web/fitting_room");
+            });
+
+            $('[data-toggle="popover"]').popover({html: true});
+        });
+
+    </script>
 </head>
 <body>
-    Fitting room list
+    <div class="container">
+        <h3> My Fashion </h3>
+        <input id="go_fitting" type="button" value="Go Fitting Room"/>
+        <div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <th> indx </th>
+                    <th> 상의 </th>
+                    <th> 하의 </th>
+                    <th> 코트 </th>
+                    <th> hashTag</th>
+                    <th> Date </th>
+                    <th> 자세히 보기 </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> 0 </td>
+                        <td>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
+                                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
+                                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
+                                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
+                            </a>
+                        </td>
+                        <td> #해변 #외출 #여름 </td>
+                        <td> 2015.08.15 </td>
+                        <td id="more"> 자세히 보기 </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
