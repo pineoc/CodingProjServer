@@ -5,6 +5,7 @@ var sessionService = new (require('./sessionService'))();
 
 var crypto = require('crypto');
 
+
 //login test page
 //type : get
 //show login test
@@ -23,9 +24,10 @@ exports.login_test_post = function(req, res){
 
     var sendData = {};
 
-    if(recvData.email==='aaa' && recvData.pwd ==='123'){
+    if(recvData.email===db.data.email && recvData.pwd ==='1234'){
         sendData.status = 's';
         sendData.isMaster = true;
+        sessionService.registerSession(req,recvData.email,'root',true);
     }
     else{
         sendData.status = 'f';
@@ -36,7 +38,7 @@ exports.login_test_post = function(req, res){
 
 //login page for get login data
 //type : post
-//req : id, pwd
+//req : email, pwd
 //res : status, isMaster
 exports.login = function(req,res){
     var recvData = req.body;
@@ -66,7 +68,7 @@ exports.login = function(req,res){
             var shasum = crypto.createHash('sha1');
             shasum.update(recvData.pwd);
             var d = shasum.digest('hex');
-            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?',[recvData.email,recvData.pwd],function(err2,result){
+            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?',[recvData.email,d],function(err2,result){
                 if(err2){
                     console.log('err S /login, ',err2);
                     res.json({status:'f'});
@@ -125,17 +127,52 @@ exports.cateList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    /*
+
     if(!sessionService.isMaster(req)){
         console.log('/cateadd,  not master');
         res.json({status:'f'});
         return;
     }
     else{
-
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /catelist, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM CATEGORY';
+                conn.query(query,[],function(err2,result){
+                    if(err2){
+                        console.log('err S /cateList, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var d = {
+                                cateID : result[i].cate_idx,
+                                cateName : result[i].cate_name,
+                                cateURL : result[i].cate_url
+                            };
+                            arr.push(d);
+                        }
+                        var sendData = {
+                            status : 's',
+                            categoryNum : result.length,
+                            categorys : arr
+                        };
+                        res.render('category',sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
-    */
 
+/*
     var renderData = {
         status:'s',
         categoryNum : 5,
@@ -165,6 +202,7 @@ exports.cateList = function(req,res){
 
 
     res.render('category',renderData);
+    */
 };
 
 /*
