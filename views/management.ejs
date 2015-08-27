@@ -12,8 +12,27 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<h1>글 관리</h1>
-		<hr>
 	</div>
+     <div>
+        <table class="table table-striped table-bordered">
+          <tr>
+              <th>contentID</th>
+              <th>writer</th>
+              <th>title</th>
+              <th>categoryID</th>
+              <th>categoryName</th>
+              <th>like</th>
+          </tr>
+          <%for(var i=0;i<contentNum;i++){%>
+          <tr>
+              <td><%=datas[i].contentID%></td>
+              <td><%=datas[i].writer%></td>
+              <td><%=datas[i].title%></td>
+              <td><%=datas[i].categoryID%></td>
+              <td><%=datas[i].categoryName%></td>
+              <td><%=datas[i].like%></td>
+            </tr>
+            <%}%>
+          </table>
 </body>
 </html>

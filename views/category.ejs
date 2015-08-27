@@ -17,23 +17,23 @@
     </style>
 </head>
 <body>
-	<div class="container-fluid">
-		<h1>카테고리 관리</h1>
-		<hr>
-	</div>
-    <div>
-        <table>
-            <tr>
-                <th>categoryNum</th>
-                <th>categoryName</th>
-            </tr>
+    <div class="container-fluid">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>categoryNum</th>
+                    <th>categoryName</th>
+                </tr>
+            </thead>
+            <tbody>
             <% for (var i=0; i < categoryNum; i++) { %>
             <tr>
                 <td><%=categorys[i].cateID%></td>
                 <td><%=categorys[i].cateName%></td>
             </tr>
             <%}%>
+          </tbody>
         </table>
     </div>
 </body>
-</html>
+</html> 
