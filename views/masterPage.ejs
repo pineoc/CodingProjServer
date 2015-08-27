@@ -4,8 +4,9 @@
   <title>Master page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="/stylesheets/stylesheet_masterPage.css"/>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css
+		" href="/stylesheet/stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script language="javascript">
@@ -13,35 +14,45 @@
   	var main=document.getElementById("main");
 
   	main.contentWindow.location="/web/master/category";
+  	//getElementById("buttons1").className="btn btn-primary active";
+  	//getElementById("buttons2").className="btn btn-link btn-Medium"
   }
   function editor(){
   	var main=document.getElementById("main");
 
   	main.contentWindow.location="/web/master/editor";
+  	//getElementById("buttons2").className="btn btn-primary active";
   }
   function management(){
   	var main=document.getElementById("main");
 
   	main.contentWindow.location="/web/master/board";
+  	//getElementById("buttons3").className="btn btn-primary active";
   }
   function writeConsidertaions(){
   	var main=document.getElementById("main");
 
   	main.contentWindow.location="/web/board/write";
+  	//getElementById("buttons4").className="btn btn-primary active";
+  }
+  function addClothes(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/master/addClothes";
   }
 
   </script>
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="topImg">
-			<img src="/images/masterPageTop.jpg" class="img-rounded" alt="?">
+		<div class="jumbotron" style="background-color:#3366CC;">
+			<h1>Master Page</h1>
+			<p>Welcom Master!</p>
 		</div>
-		<hr>
 		<div class="row">
 			<div class="col-lg-2">
 				<nav>
-				<table class="table table-striped">
+				<table class="table table-striped well">
 					<thead>
 						<tr>
 							<th>
@@ -52,36 +63,41 @@
 					<tbody>
 						<tr>
 							<th>
-								<button type="button" onclick="category()" class="btn btn-link btn-Medium">카테고리 관리</button>
+								<button type="button" onclick="category()" class="btn btn-link btn-Medium" id="bottons1">카테고리 관리</button>
 							</th>
 						</tr>
 						<tr>
 							<th>
-								<button type="button" onclick="editor()" class="btn btn-link btn-Medium">에디터 관리</button>
+								<button type="button" onclick="editor()" class="btn btn-link btn-Medium" id="bottons2">에디터 관리</button>
 							</th>
 						</tr>
 						<tr>
 							<th>
-								<button type="button" onclick="management()" class="btn btn-link btn-Medium">글 관리</button>
+								<button type="button" onclick="management()" class="btn btn-link btn-Medium" id="bottons3">글 관리</button>
 							</th>
 						</tr>
 						<tr>
 							<th>
-								<button type="button" onclick="writeConsidertaions()" class="btn btn-link btn-Medium">글 쓰기</button>
+								<button type="button" onclick="writeConsidertaions()" class="btn btn-link btn-Medium" id="bottons4">글 쓰기</button>
 							</th>
 						</tr>
-						
+						<tr>
+							<th>
+								<button type="button" onclick="addClothes()" class="btn btn-link btn-Medium" id="bottons4">옷추가</button>
+							</th>
+						<tr>
 					</tbody>
 				</table>
 				</nav>
 			</div>
-			<iframe id="main" width="1000px" height="600px" scrolling="no" frameborder="0"></iframe>
-		</div>
-		
+			<iframe id="main" width="1000px";
+		height="600px"; scrolling="no" frameborder="0"></iframe>
+	</div>
 		<!--<div class="main">
 			<p>ppppp</p>
 		</div>-->
 	</div>
+	
 
 </body>
 </html>

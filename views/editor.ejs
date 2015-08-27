@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Master page</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <title>Master page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style>
+table, th, td {
+border: 1px solid black;
+padding : 5px;
+}
+    </style>
+
 </head>
 <body>
-	<div class="container-fluid">
-		<h1>에디터 관리</h1>
-		<hr>
-	</div>
+    <div class="container-fluid">
+    </div>
+    <div>
+        <table class="table table-striped table-bordered">
+        <tr>
+            <th>editorIdx</th>
+            <th>editorID</th>
+            <th>editorEmail</th>
+            <th>editorName</th>
+            <th>editorNick</th>
+            <th>writingNum</th>
+        </tr>
+        <% for (var i=0; i < editorsNum; i++) { %>
+        <tr>
+            <td><%=editors[i].editorIdx%></td>
+            <td><%=editors[i].editorID%></td>
+            <td><%=editors[i].editorEmail%></td>
+            <td><%=editors[i].editorName%></td>
+            <td><%=editors[i].editorNick%></td>
+            <td><%=editors[i].writingNum%></td>
+        </tr>
+        <%}%>
+        </table>
+    </div>
 </body>
 </html>
