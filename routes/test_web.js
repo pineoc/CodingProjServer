@@ -339,7 +339,8 @@ exports.editorList = function(req,res){
 /*
  * editor add
  * type : post
- * req : editorID, editorEmail, editorPwd, editorName, editorNick, editorCate
+ * req : editorEmail, editorPwd, editorName, editorCate
+ *       editorIntro, thumnailImg
  * res : status
  * */
 exports.editorAdd = function(req,res){
@@ -355,17 +356,81 @@ exports.editorAdd = function(req,res){
     else{
         //TODO : check datas is null and valid
 
+        //editorEmail check
+        if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
+            console.log('/master/editor/add, no email');
+            res.json({status:'f'});
+            return;
+        }
+        //editorPwd check
+        if(typeof recvData.editorPwd === 'undefined' || recvData.editorPwd.length == 0){
+            console.log('/master/editor/add, no pwd');
+            res.json({status:'f'});
+            return;
+        }
+        //editorName check
+        if(typeof recvData.editorName === 'undefined' || recvData.editorName.length == 0){
+            console.log('/master/editor/add, no name');
+            res.json({status:'f'});
+            return;
+        }
 
-        //TODO : INSERT to writer TABLE these datas
+        //editorCate check
+        if(typeof recvData.editorCate === 'undefined' || recvData.editorCate.length == 0){
+            console.log('/master/editor/add, no category');
+            res.json({status:'f'});
+            return;
+        }
+        var file_thumnail = null;
+        var fileUpload_result;
+        //TODO : file upload and use result
+        if(typeof req.files.thumnailImg !== 'undefined' && req.files.thumnailImg != null){
+            fileUpload_result = fileUploadService.fileUpload('editor/'+recvData.editorName.toString(),req.files.thumnailImg);
+            console.log('file upload result',fileUpload_result);
+            file_thumnail = fileUpload_result.path;
+        }
 
+        //TODO : INSERT INTO EDITOR TABLE these datas
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /editorAdd, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                //hash for password
+                var shasum = crypto.createHash('sha1');
+                shasum.update(recvData.editorPwd);
+                var d = shasum.digest('hex');
 
-        //TODO : success = status:s , fail = status:f
+                var q = 'INSERT INTO EDITOR (e_name, e_email, e_pwd, e_thumnail, e_category, e_intro, isValid) ' +
+                    'VALUES(?,?,?,?,?,?,1)';
+                var params = [recvData.editorName.toString(),recvData.editorEmail.toString(),
+                    d.toString(),file_thumnail,
+                    parseInt(recvData.editorCate),recvData.editorIntro.toString()];
+                conn.query(q,params,function(err2,result){
+                    if(err2){
+                        console.log('err S /editorAdd, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        //TODO : result send, res.json()
+                        if(result.affectedRows==1){
+                            console.log('editor add success');
+                            res.json({status:'s'});
+                        }
+                        else{
+                            console.log('err S /editorAdd, ',err);
+                            res.json({status:'f'});
+                        }
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
-
-
-
-
-
 };
 
 /*
@@ -771,21 +836,21 @@ exports.fileUploadTest = function(req,res){
     console.log('param1 : ',recvData.param1);
     console.log('param2 : ',recvData.param2);
 
-    if(fileUploadService.fileUpload(1,'file1',req.files.file1)){
+    if(fileUploadService.fileUpload('file1',req.files.file1).status){
         console.log('file1 success');
     }
     else{
         console.log('file1 fail');
     }
 
-    if(fileUploadService.fileUpload(1,'file2',req.files.file2)){
+    if(fileUploadService.fileUpload('file2',req.files.file2).status){
         console.log('file2 success');
     }
     else{
         console.log('file2 fail');
     }
 
-    if(fileUploadService.fileUpload(1,'file3',req.files.file3)){
+    if(fileUploadService.fileUpload('file3',req.files.file3).status){
         console.log('file3 success');
     }
     else{
@@ -801,7 +866,7 @@ exports.fileUploadTest2 = function(req,res){
     console.log('param1 : ',recvData.param1);
     console.log('param2 : ',recvData.param2);
 
-    if(fileUploadService.fileUploadArr(1, 'board1', req.files.file1)){
+    if(fileUploadService.fileUploadArr('board1', req.files.file1)){
         console.log('files upload Arr success');
         res.json({status:'s'});
     }

@@ -805,7 +805,7 @@ router.get('/web/master/editor',web.editorList);
  * req : editorID, editorEmail, editorPwd, editorName, editorNick, editorCate
  * res : status
  * */
-router.post('/web/master/editor/add',web.editorAdd);
+router.post('/web/master/editor/add',multipartMiddleware,web.editorAdd);
 
 /*
  * editor delete
