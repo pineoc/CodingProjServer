@@ -4,6 +4,10 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
+var multipart = require('connect-multiparty');
+
+var multipartMiddleware = multipart();
+
 var web = require('./test_web');
 var db = require('./db_config');
 
@@ -155,14 +159,14 @@ router.get('/app/board', function(req,res){
 
         db.pool.getConnection(function(err,conn){
             if(err){
-                console.log('err conn /board, ',err);
+                console.log('err conn /board cate1, ',err);
                 res.json({status:'f'});
                 return;
             }
             else{
                 conn.query('SELECT * FROM CLOTH_BOARD ORDER BY likes DESC LIMIT 3',[],function(err2,result){
                     if(err2){
-                        console.log('err S /board, ',err2);
+                        console.log('err S /board cate1, ',err2);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -170,7 +174,7 @@ router.get('/app/board', function(req,res){
                     else{
                         conn.query('SELECT * FROM CLOTH_BOARD LIMIT ?, 10',[parseInt(recvData.pageNum)*10],function(err3,result2){
                             if(err3){
-                                console.log('err S2 /board, ',err3);
+                                console.log('err S2 /board cate1, ',err3);
                                 res.json({status:'f'});
                                 conn.release();
                                 return;
@@ -194,10 +198,47 @@ router.get('/app/board', function(req,res){
         //normal board
 
         //TODO: board DB data SELECT where category!=1
-
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /board cate!=1, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM BOARD WHERE category=? LIMIT ?, 10';
+                conn.query(query,[parseInt(recvData.cateID),parseInt(recvData.pageNum)*10],function(err2,result){
+                    if(err2){
+                        console.log('err S /board cate1, ',err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var data = {};
+                            data.contentIdx = result.b_idx;
+                            data.likes = result.likes;
+                            data.title = result.title;
+                            data.titleImg = result.thumnail;
+                            data.editor = result.editor;
+                            data.dateTime = result.datetime;
+                            arr.push(data);
+                        }
+                        var sendData = {
+                            status : 's',
+                            pageContentsNum : result.length,
+                            datas : arr
+                        };
+                        res.json(sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
+        /*
         var sendData = {
             status:"s",
-            contentNum:123,
             pageContentsNum : 6,
             datas:[
                 {
@@ -250,7 +291,7 @@ router.get('/app/board', function(req,res){
                 }
             ]
         };
-        res.json(sendData);
+        res.json(sendData);*/
     }
 });
 
@@ -269,7 +310,47 @@ router.get('/app/board/view',function(req,res){
         //cloth content view
 
         //TODO: board DB data SELECT where category=1 AND contentID
-
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /view cate=1, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM CLOTH_BOARD NATURAL JOIN USER WHERE cb_idx=?';
+                conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
+                    if(err2){
+                        console.log('err S /view cate1, ',err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.length<1){
+                            console.log('err S /view cate1, no data');
+                            res.json({status:'f'});
+                            conn.release();
+                            return;
+                        }
+                        var sendData = {
+                            status : 's',
+                            contentID : parseInt(recvData.contentID),
+                            likes : result[0].likes,
+                            editor : result[0].nickName,
+                            datas : [
+                                result[0].head,
+                                result[0].upperBody,
+                                result[0].lowerBody,
+                                result[0].coat
+                            ]
+                        };
+                        res.json(sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
+        /*
         var sendData = {
             status : 's',
             contentID:123,
@@ -278,12 +359,61 @@ router.get('/app/board/view',function(req,res){
             datas : [1,2,3,4,5,6]
         };
         res.json(sendData);
+        */
     }
     else{
         //normal board view
 
         //TODO: board DB data SELECT where category!=1 AND contentID
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err conn /view cate!=1, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM BOARD WHERE b_idx=?';
+                conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
+                    if(err2){
+                        console.log('err S /view cate!=1, ',err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.length<1){
+                            console.log('err S /view cate!=1, no data');
+                            res.json({status:'f'});
+                            conn.release();
+                            return;
+                        }
+                        var arr = [];
+                        var c_data = JSON.parse(result[0].contents);
+                        var i_data = JSON.parse(result[0].images);
+                        for (var i=0; i<c_data.length;i++){
+                            var data = {
+                                img : i_data[i],
+                                content : c_data[i]
+                            };
+                            arr.push(data);
+                        }
 
+                        var sendData = {
+                            status : 's',
+                            contentID : result[0].b_idx,
+                            likes : result[0].likes,
+                            editor : result[0].editor,
+                            title : result[0].title,
+                            pageNum : result[0].contentsNum,
+                            datas : arr
+                        };
+                        res.json(sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
+        /*
         var sendData = {
             status : 's',
             contentID:123,
@@ -335,6 +465,7 @@ router.get('/app/board/view',function(req,res){
             ]
         };
         res.json(sendData);
+        */
     }
 });
 
@@ -404,7 +535,7 @@ router.post('/app/board/like', function(req, res){
                     return;
                 }
                 else{
-                    conn.query('UPDATE BOARD SET likes = (likes + 1) WHERE b_idx = ?',[recvData.contentID], function(err3, result3){
+                    conn.query('UPDATE BOARD SET likes = (likes + 1) WHERE b_idx = ?',[parseInt(recvData.contentID)], function(err3, result3){
                         if(err3){
                             console.log('err update likes, ', err3);
                             res.json({status : 'f'});
@@ -412,7 +543,7 @@ router.post('/app/board/like', function(req, res){
                             return;
                         }
                         else{
-                        conn.query('SELECT likes FROM BOARD WHERE b_idx = ?', [recvData.contentID], function(err4, result4){
+                        conn.query('SELECT likes FROM BOARD WHERE b_idx = ?', [parseInt(recvData.contentID)], function(err4, result4){
                             if(err4){
                                 console.log('err SELECT likes, ', err4);
                                 res.json({status : 'f'});
@@ -498,10 +629,46 @@ router.post('/app/board/commentwrite', function(req, res){
  res : status, commentNum, data(array + object)
 */
 router.get('/app/board/commentview', function(req, res){
-    var recvData = req.body;
+    var recvData = req.query;
     console.log('recvData : ', recvData);
 
-    //DB에서 contentID에 따른 글의 comment정보를 받아온다. 
+    //DB에서 contentID에 따른 글의 comment정보를 받아온다.
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err conn /commview, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'SELECT * FROM COMMENTS NATURAL JOIN USER WHERE b_idx=?';
+            conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
+                if(err2) {
+                    console.log('err S /commview, ', err2);
+                    res.json({status: 'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var arr = [];
+                    for(var i = 0 ; i<result.length; i++ ){
+                        var data = {
+                            nick : result[i].nickName,
+                            comment : result[i].c_content
+                        };
+                        arr.push(data);
+                    }
+                    var sendData = {
+                        status : 's',
+                        commentNum : result.length,
+                        datas : arr
+                    };
+                    res.json(sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
+    /*
     var data = [
         {
             "nick" : "a1",
@@ -525,6 +692,7 @@ router.get('/app/board/commentview', function(req, res){
 
 
     res.json(sendData);
+    */
 });
 
 
@@ -554,9 +722,9 @@ router.get('/app/clothList', function(req, res){
                 }
                 else{
                     var sendData = {
-                        "status" : "s",
-                        "clothNum" : result.length,
-                        "clothList" : result
+                        status : "s",
+                        clothNum : result.length,
+                        clothList : result
                     };
                     res.json(sendData);
                 }
@@ -696,14 +864,24 @@ router.post('/web/board/write',web.boardWrite);
  * */
 router.get('/web/board/list',web.boardList);
 
+/*
+ * cloth list
+ * type : get
+ * req : pageNum
+ * res : datas
+ *
+ * */
+router.get('/web/board/cloth',web.clothList);
 
-router.get('/web/board_test',function(req,res){
-    var data ={};
-    data.arr = [1,2];
-    data.title = "test board";
+/*
+*
+*
+*
+* */
 
-    res.render('test_board',{datas : data});
-});
+
+router.post('/fileUpload', multipartMiddleware, web.fileUploadTest);
+router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
 
 /*
  * recommend menu
