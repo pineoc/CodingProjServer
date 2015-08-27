@@ -217,13 +217,13 @@ exports.cateAdd = function(req,res){
 
     //TODO : check session is master
     if(!sessionService.isMaster(req)){
-        console.log('/cateadd,  not master');
+        console.log('/category/add,  not master');
         res.json({status:'f',msg : 'no master'});
         return;
     }
     else{
         if(typeof recvData.categoryID === 'undefined' || typeof recvData.categoryName === 'undefined' ) {
-            console.log('/cateadd no cateID OR no cateName');
+            console.log('/category/add no cateID OR no cateName');
             res.json({status:'f',msg:'no data'});
             return;
         }
@@ -288,7 +288,7 @@ exports.cateDel = function(req,res){
  * res : status, editors
  * */
 exports.editorList = function(req,res){
-    var recvData = req.body;
+    var recvData = req.query;
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
