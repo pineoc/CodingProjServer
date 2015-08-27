@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <script>
+        $(document).ready(function(){
+            $("button#fitting_room").click(function(){
+                if($("div#fitting_room_container").text().length == 0){
+                    // if this is first time call fitting room
+                    $("div#fitting_room_container").load("/web/fitting_room_list");
+                }
+                $("div#fitting_room_container").show();
+                $("div#hot_fashion_container").hide();
+            });
+            $("button#hot_fashion").click(function(){
+                if($("div#hot_fashion_container").text().length == 0) {
+                    // if this is first time call hot fashion
+                    $("div#hot_fashion_container").load("/web/hot_fashion_list");
+                }
+                $("div#hot_fashion_container").show();
+                $("div#fitting_room_container").hide();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <button id="fitting_room" class="btn-default col-sm-6 btn-lg"> Fitting Room </button>
+            <button id="hot_fashion" class="btn-default col-sm-6 btn-lg"> Hot Fashion </button>
+        </div>
+
+    <div id="fitting_room_container"></div>
+    <div id="hot_fashion_container"></div>
+    </div>
+</body>
+</html>
