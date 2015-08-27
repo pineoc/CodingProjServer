@@ -600,7 +600,19 @@ exports.clothList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    //TODO : check session is editor
+    //TODO : check session is master
+    /*
+     if(!sessionService.isMaster(req)){
+     console.log('/master/board,  not master');
+     res.json({status:'f'});
+     return;
+     }
+     else{
+
+
+     res.render('management',{status:'s'});
+     }
+     */
 
     //TODO : SELECT data from CLOTH table
 
@@ -665,6 +677,20 @@ exports.clothAddView = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
+    //TODO : check session is master
+    /*
+     if(!sessionService.isMaster(req)){
+     console.log('/master/board,  not master');
+     res.json({status:'f'});
+     return;
+     }
+     else{
+
+
+     res.render('management',{status:'s'});
+     }
+     */
+
     //var renderData = {};
     //res.render('',renderData);
 };
@@ -680,7 +706,22 @@ exports.clothAdd = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
-    //TODO : INSERT TO CLOTH table cloth informations
+    //TODO : check session is master
+    /*
+     if(!sessionService.isMaster(req)){
+     console.log('/master/board,  not master');
+     res.json({status:'f'});
+     return;
+     }
+     else{
+     //TODO : INSERT TO CLOTH table cloth informations
+
+
+
+     res.render('management',{status:'s'});
+     }
+     */
+
 
 
 
@@ -689,13 +730,29 @@ exports.clothAdd = function(req,res){
 /*
 * cloth delete
 * type : post
-* req :
+* req : cloth_idx
 * res :
 *
 * */
 exports.clothDel = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+    /*
+     if(!sessionService.isMaster(req)){
+     console.log('/master/board,  not master');
+     res.json({status:'f'});
+     return;
+     }
+     else{
+     //TODO : INSERT TO CLOTH table cloth informations
+
+
+
+     res.render('management',{status:'s'});
+     }
+     */
 
 
 

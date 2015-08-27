@@ -871,7 +871,7 @@ router.get('/web/board/list',web.boardList);
  * res : datas
  *
  * */
-router.get('/web/board/cloth',web.clothList);
+router.get('/web/cloth/list',web.clothList);
 
 /*
 *
