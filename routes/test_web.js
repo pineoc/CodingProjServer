@@ -590,6 +590,118 @@ exports.boardList = function(req,res){
 };
 
 /*
+* cloth list
+* type : get
+* req : pageNum
+* res : datas
+*
+* */
+exports.clothList = function(req,res){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is editor
+
+    //TODO : SELECT data from CLOTH table
+
+    var renderData = {
+        status : 's',
+        clothsNum : 5,
+        datas : [
+            {
+                cloth_idx : 1,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/1.png',
+                cloth_url : '남정네들 옷1 링크',
+                cloth_info : '옷1 정보'
+            },
+            {
+                cloth_idx : 2,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/2.png',
+                cloth_url : '남정네들 옷2 링크',
+                cloth_info : '옷2 정보'
+            },
+            {
+                cloth_idx : 3,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/3.png',
+                cloth_url : '남정네들 옷3 링크',
+                cloth_info : '옷3 정보'
+            },
+            {
+                cloth_idx : 4,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/4.png',
+                cloth_url : '남정네들 옷4 링크',
+                cloth_info : '옷4 정보'
+            },
+            {
+                cloth_idx : 5,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/5.png',
+                cloth_url : '남정네들 옷5 링크',
+                cloth_info : '옷5 정보'
+            }
+        ]
+    };
+    res.render('manageClothes',renderData);
+
+};
+
+/*
+* cloth add view page
+* type : get
+* req : none
+* res :
+*
+* */
+exports.clothAddView = function(req,res){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
+
+    //var renderData = {};
+    //res.render('',renderData);
+};
+
+/*
+* cloth add
+* type : post
+* req : cloth_cate, cloth_img, cloth_name, cloth_url, cloth_info
+* res : status
+*
+* */
+exports.clothAdd = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : INSERT TO CLOTH table cloth informations
+
+
+
+};
+
+/*
+* cloth delete
+* type : post
+* req :
+* res :
+*
+* */
+exports.clothDel = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+
+
+};
+
+/*
 * file upload test
 * type : post
 * req : param1, param2, file1, file2, file3

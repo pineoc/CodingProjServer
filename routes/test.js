@@ -864,6 +864,21 @@ router.post('/web/board/write',web.boardWrite);
  * */
 router.get('/web/board/list',web.boardList);
 
+/*
+ * cloth list
+ * type : get
+ * req : pageNum
+ * res : datas
+ *
+ * */
+router.get('/web/board/cloth',web.clothList);
+
+/*
+*
+*
+*
+* */
+
 
 router.post('/fileUpload', multipartMiddleware, web.fileUploadTest);
 router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
