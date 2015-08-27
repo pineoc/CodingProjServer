@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <!-- import jquey -->
+  <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+  <!-- import bootstrap and style sheet -->
+  <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+  <script>
+    $(document).ready(function(){
+      $("#input-4").fileinput({showCaption: false});
+    });
+  </script>
+
+</head>
+<body>
+<div class="container">
+  <label class="control-label">Select File</label>
+  <input id="input-4" type="file" multiple=true class="file-loading">
+</div>
+</body>
+</html>

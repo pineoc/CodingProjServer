@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <!-- import jquey -->
+  <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+  <!-- import bootstrap and style sheet -->
+  <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+  <script>
+    $(document).ready(function(){
+      $("input#addClothBlank").click(function(){
+        $("div#addBlankContainer").append("<input type='text'> </br>");
+      });
+    });
+  </script>
+
+</head>
+<body>
+<div class="container">
+  <h3> Add New Cloth Page </h3>
+
+  <input type="button" id="addClothBlank" value="+">
+  <div id="addBlankContainer"></div>
+</div>
+</body>
+</html>

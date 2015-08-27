@@ -884,6 +884,41 @@ router.post('/fileUpload', multipartMiddleware, web.fileUploadTest);
 router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
 
 /*
+ * cloth management
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/master/manageClothes', function(req, res){
+    res.render('manageClothes');
+});
+
+/*
+ * cloth list
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/master/clothesList', function(req, res){
+    res.render('clothesList');
+});
+
+/*
+ * Add new cloth
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/master/addCloth', function(req, res){
+    res.render('clothesAdd');
+});
+/*
  * recommend menu
  * type : get
  * req :

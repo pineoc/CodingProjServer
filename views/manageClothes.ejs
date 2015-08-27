@@ -1,18 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <title>Master page</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css
-		" href="stylesheet_masterPage.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <meta charset="UTF-8">
+  <title></title>
+  <!-- import jquey -->
+  <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+  <!-- import bootstrap and style sheet -->
+  <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+
+  <script>
+    $(document).ready(function(){
+      if($("div#cloth_list_container").length < 10){
+        $("div#cloth_list_container").load("/web/master/clothesList");
+      }
+    });
+
+  </script>
+
 </head>
 <body>
-	<div class="container-fluid">
-          <h1>옷관리</h1>
-	</div>
+<div class="container">
+  <h3> Manage Clothes Page </h3>
+  <div class="row">
+    <div class="col-xs-2"> 의상 명 : </div>
+    <div class="col-xs-3"> <input type="text"/> </div>
+    <div class="col-xs-2"> 카테고리 : </div>
+    <div class="col-xs-3">
+      <select name="">
+        <option> Top </option>
+        <option> Bottom </option>
+        <option> Coat </option>
+      </select>
+    </div>
+    <div class="col-xs-2"> <input type="button" value="Search"> </div>
+  </div>
+
+  <div id="cloth_list_container"></div>
+
+</div>
 </body>
 </html>
