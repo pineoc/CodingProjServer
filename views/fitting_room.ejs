@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <script>
+        $(document).ready(function(){
+            $("input#go_back").click(function(){
+                $("div#fitting_room_container").load("/web/fitting_room_list");
+            });
+            $("input#submit").click(function(){
+                $("div#fitting_room_container").load("/web/fitting_room_list");
+            });
+
+            $("td#top_cloth").click(function(){
+               alert("Choose Top Cloth");
+            });
+            $("td#bottom_cloth").click(function(){
+                alert("Choose Bottom Cloth");
+            });
+            $("td#outer_cloth").click(function(){
+                alert("Choose Outer Cloth");
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3> Fitting Room </h3>
+        <input id="go_back" type="button" value="Go Back"/>
+        <input id="submit" type="button" value="submit"/>
+        <div>
+            <table class=" ">
+                <tbody>
+                    <tr>
+                        <td  id = "top_cloth" width="100px" height="100px">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="150px"/>
+                        </td>
+                        <td  id = "bottom_cloth" width="100px" rowspan="2">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id = "outer_cloth" width="100px" height="100px">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="150px"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+        </div>
+    </div>
+</body>
+</html>

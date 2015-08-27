@@ -45,8 +45,6 @@ app.get('/img/:string',function(req,res){
     return;
   }
   else{
-    console.log('dirname : ',__dirname);
-
     var file = __dirname+'/public/img/'+split;
     var filestream = fs.createReadStream(file);
 
@@ -55,7 +53,7 @@ app.get('/img/:string',function(req,res){
     });
     filestream.on('error',function(err){
       if(err){
-        res.json({result:'F'});
+        res.json({result:'f'});
       }
     });
   }

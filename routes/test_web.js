@@ -2,6 +2,7 @@
 
 var db = require('./db_config');
 var sessionService = new (require('./sessionService'))();
+var fileUploadService = require('./fileUploadService');
 
 var crypto = require('crypto');
 
@@ -23,9 +24,10 @@ exports.login_test_post = function(req, res){
 
     var sendData = {};
 
-    if(recvData.email==='aaa' && recvData.pwd ==='123'){
+    if(recvData.email===db.data.email && recvData.pwd ==='1234'){
         sendData.status = 's';
         sendData.isMaster = true;
+        sessionService.registerSession(req,recvData.email,'root',true);
     }
     else{
         sendData.status = 'f';
@@ -36,7 +38,7 @@ exports.login_test_post = function(req, res){
 
 //login page for get login data
 //type : post
-//req : id, pwd
+//req : email, pwd
 //res : status, isMaster
 exports.login = function(req,res){
     var recvData = req.body;
@@ -66,7 +68,7 @@ exports.login = function(req,res){
             var shasum = crypto.createHash('sha1');
             shasum.update(recvData.pwd);
             var d = shasum.digest('hex');
-            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?',[recvData.email,recvData.pwd],function(err2,result){
+            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?',[recvData.email,d],function(err2,result){
                 if(err2){
                     console.log('err S /login, ',err2);
                     res.json({status:'f'});
@@ -125,17 +127,52 @@ exports.cateList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    /*
+
     if(!sessionService.isMaster(req)){
         console.log('/cateadd,  not master');
         res.json({status:'f'});
         return;
     }
     else{
-
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /catelist, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM CATEGORY';
+                conn.query(query,[],function(err2,result){
+                    if(err2){
+                        console.log('err S /cateList, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var d = {
+                                cateID : result[i].cate_idx,
+                                cateName : result[i].cate_name,
+                                cateURL : result[i].cate_url
+                            };
+                            arr.push(d);
+                        }
+                        var sendData = {
+                            status : 's',
+                            categoryNum : result.length,
+                            categorys : arr
+                        };
+                        res.render('category',sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
-    */
 
+/*
     var renderData = {
         status:'s',
         categoryNum : 5,
@@ -165,12 +202,13 @@ exports.cateList = function(req,res){
 
 
     res.render('category',renderData);
+    */
 };
 
 /*
  * category add
  * type : post
- * req : addCategory
+ * req : categoryID, categoryName, categoryImage
  * res : status
  * */
 exports.cateAdd = function(req,res){
@@ -179,11 +217,19 @@ exports.cateAdd = function(req,res){
 
     //TODO : check session is master
     if(!sessionService.isMaster(req)){
-        console.log('/cateadd,  not master');
-        res.json({status:'f'});
+        console.log('/category/add,  not master');
+        res.json({status:'f',msg : 'no master'});
         return;
     }
     else{
+        if(typeof recvData.categoryID === 'undefined' || typeof recvData.categoryName === 'undefined' ) {
+            console.log('/category/add no cateID OR no cateName');
+            res.json({status:'f',msg:'no data'});
+            return;
+        }
+        //TODO : file check, categoryImage
+
+
 
     }
 
@@ -242,7 +288,7 @@ exports.cateDel = function(req,res){
  * res : status, editors
  * */
 exports.editorList = function(req,res){
-    var recvData = req.body;
+    var recvData = req.query;
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
@@ -541,4 +587,170 @@ exports.boardList = function(req,res){
     //TODO : SELECT data from board TABLE
 
     res.render('management',{status:'s'});
+};
+
+/*
+* cloth list
+* type : get
+* req : pageNum
+* res : datas
+*
+* */
+exports.clothList = function(req,res){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is editor
+
+    //TODO : SELECT data from CLOTH table
+
+    var renderData = {
+        status : 's',
+        clothsNum : 5,
+        datas : [
+            {
+                cloth_idx : 1,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/1.png',
+                cloth_url : '남정네들 옷1 링크',
+                cloth_info : '옷1 정보'
+            },
+            {
+                cloth_idx : 2,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/2.png',
+                cloth_url : '남정네들 옷2 링크',
+                cloth_info : '옷2 정보'
+            },
+            {
+                cloth_idx : 3,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/3.png',
+                cloth_url : '남정네들 옷3 링크',
+                cloth_info : '옷3 정보'
+            },
+            {
+                cloth_idx : 4,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/4.png',
+                cloth_url : '남정네들 옷4 링크',
+                cloth_info : '옷4 정보'
+            },
+            {
+                cloth_idx : 5,
+                cloth_cate : 1,
+                cloth_name : '셔츠',
+                cloth_img : 'localhost:3000/img/cloth/5.png',
+                cloth_url : '남정네들 옷5 링크',
+                cloth_info : '옷5 정보'
+            }
+        ]
+    };
+    res.render('manageClothes',renderData);
+
+};
+
+/*
+* cloth add view page
+* type : get
+* req : none
+* res :
+*
+* */
+exports.clothAddView = function(req,res){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
+
+    //var renderData = {};
+    //res.render('',renderData);
+};
+
+/*
+* cloth add
+* type : post
+* req : cloth_cate, cloth_img, cloth_name, cloth_url, cloth_info
+* res : status
+*
+* */
+exports.clothAdd = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : INSERT TO CLOTH table cloth informations
+
+
+
+};
+
+/*
+* cloth delete
+* type : post
+* req :
+* res :
+*
+* */
+exports.clothDel = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+
+
+};
+
+/*
+* file upload test
+* type : post
+* req : param1, param2, file1, file2, file3
+* res : status
+* */
+exports.fileUploadTest = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    console.log('param1 : ',recvData.param1);
+    console.log('param2 : ',recvData.param2);
+
+    if(fileUploadService.fileUpload(1,'file1',req.files.file1)){
+        console.log('file1 success');
+    }
+    else{
+        console.log('file1 fail');
+    }
+
+    if(fileUploadService.fileUpload(1,'file2',req.files.file2)){
+        console.log('file2 success');
+    }
+    else{
+        console.log('file2 fail');
+    }
+
+    if(fileUploadService.fileUpload(1,'file3',req.files.file3)){
+        console.log('file3 success');
+    }
+    else{
+        console.log('file3 fail');
+    }
+    res.json({status:'s'});
+};
+
+exports.fileUploadTest2 = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    console.log('param1 : ',recvData.param1);
+    console.log('param2 : ',recvData.param2);
+
+    if(fileUploadService.fileUploadArr(1, 'board1', req.files.file1)){
+        console.log('files upload Arr success');
+        res.json({status:'s'});
+    }
+    else{
+        console.log('files upload Arr fail');
+        res.json({status:'f'});
+    }
+
 };
