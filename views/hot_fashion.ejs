@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <script>
+        $(document).ready(function(){
+            $("input#go_back").click(function(){
+                $("div#hot_fashion_container").load("/web/hot_fashion_list");
+            });
+            $("input#submit").click(function(){
+                $("div#hot_fashion_container").load("/web/hot_fashion_list");
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+    <h3> hot fashion </h3>
+        <input id="go_back" type="button" value="Go Back"/>
+        <input id="submit" type="button" value="submit"/>
+    </div>
+</body>
+</html>

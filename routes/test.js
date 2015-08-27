@@ -883,4 +883,61 @@ router.get('/web/cloth/list',web.clothList);
 router.post('/fileUpload', multipartMiddleware, web.fileUploadTest);
 router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
 
+/*
+ * recommend menu
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/recommend_menu', function(req, res){
+    res.render('recommend_menu');
+});
+
+/*
+ * fitting_room_list
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/fitting_room_list', function(req, res){
+    res.render('fitting_room_list');
+});
+
+/*
+ * hot_fashion_list
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/hot_fashion_list', function(req, res){
+    res.render('hot_fashion_list');
+});
+
+/*
+ * hot_fashion
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/hot_fashion', function(req, res){
+    res.render('hot_fashion');
+});/*
+ * fitting_room
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/fitting_room', function(req, res){
+    res.render('fitting_room');
+});
 module.exports = router;

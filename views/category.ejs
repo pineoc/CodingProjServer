@@ -6,8 +6,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
+  <link rel="stylesheet" type="text/css
+    " href="/stylesheet/stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script>
+    function showAddDiv(id,id2){
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+
+        var e2 = document.getElementById(id2);
+       if(e2.style.display == 'block')
+          e2.style.display = 'none';
+       else
+          e2.style.display = 'block';
+   }
+   function showCategoryMain(id,id2){
+    var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+
+        var e2 = document.getElementById(id2);
+       if(e2.style.display == 'block')
+          e2.style.display = 'none';
+       else
+          e2.style.display = 'block';
+   }
+   function showDeleteDiv(id,id2){
+     var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+
+        var e2 = document.getElementById(id2);
+       if(e2.style.display == 'block')
+          e2.style.display = 'none';
+       else
+          e2.style.display = 'block';
+   }
+   function printValue(value){
+    console.log(value);
+   }
+</script>
     <style>
         table, th, td {
             border: 1px solid black;
@@ -16,23 +62,61 @@
     </style>
 </head>
 <body>
-	<div class="container-fluid">
-		<h1>카테고리 관리</h1>
-		<hr>
-	</div>
-    <div>
-        <table>
-            <tr>
-                <th>categoryNum</th>
-                <th>categoryName</th>
-            </tr>
-            <% for (var i=0; i < categoryNum; i++) { %>
-            <tr>
-                <td><%=categorys[i].cateID%></td>
-                <td><%=categorys[i].cateName%></td>
-            </tr>
-            <%}%>
+  <!--카테고리 메인-->
+    <div class="container-fluid" id="categoryMain" style="display:block">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>categoryNum</th>
+                    <th>categoryName</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i=0; i < categoryNum; i++) { %>
+                    <tr>
+                        <td><%=categorys[i].cateID%></td>
+                        <td><%=categorys[i].cateName%></td>
+                    </tr>
+                <%}%>
+            </tbody>
         </table>
+          <button  class="btn btn-success" onclick="showAddDiv('addDiv','categoryMain')">카테고리추가</button>
+          <button class="btn btn-success"onclick="showDeleteDiv('deleteDiv','categoryMain')">카테고리 삭제</button>
+      </div>
+      <!--카테고리 추가-->
+      <div id="addDiv" style="display:none">
+          <div class="form-group">
+              <label for="카테고리 이름">CategoryName:</label>
+              <input class="form-control" type="카테고리 이름" id="categoryName" placeholder="카테고리 이름을 입력해주세요">
+              <label for="카테고리 아이디">CategoryId:</label>
+              <input class="form-control" type="카테고리 아이디" id="categoryName" placeholder="카테고리 아이디를 입력해주세요">
+              <label for="카테고리 이미지">CategoryImage:</label>
+              <input type="file" id="categoryName" placeholder="카테고리를 입력해주세요">
+              <br>
+              <button class="btn btn-success" onclick="showCategoryMain('addDiv','categoryMain')">완료</button>
+            </div>
     </div>
+    <!--카테고리 삭제-->
+    <div id="deleteDiv" style="display:none">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>categoryNum</th>
+                    <th>categoryName</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i=0; i < categoryNum; i++) { %>
+                    <tr>
+                        <td><%=categorys[i].cateID%></td>
+                        <td><%=categorys[i].cateName%></td>
+                        <td><button id="delete"type="button" class="btn btn-link btn-Medium"  value=<%=categorys[i].cateID%> onclick="printValue(value)">삭제</button></td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+            <button class="btn btn-success" onclick="showCategoryMain('deleteDiv','categoryMain')">완료</button>
+      </div>
 </body>
-</html>
+</html> 

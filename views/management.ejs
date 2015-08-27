@@ -9,11 +9,87 @@
 		" href="stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script>
+  function printValue(value){
+    console.log(value);
+   }
+ function showDeleteDiv(id,id2){
+     var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+
+        var e2 = document.getElementById(id2);
+       if(e2.style.display == 'block')
+          e2.style.display = 'none';
+       else
+          e2.style.display = 'block';
+   }
+   function showManagementMain(id,id2){
+    var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+
+        var e2 = document.getElementById(id2);
+       if(e2.style.display == 'block')
+          e2.style.display = 'none';
+       else
+          e2.style.display = 'block';
+   }
+   </script>
 </head>
 <body>
-	<div class="container-fluid">
-		<h1>글 관리</h1>
-		<hr>
-	</div>
+  <!--글관리 메인-->
+     <div class="container-fluid" id="managementMain" style="display:block">
+        <table class="table table-striped table-bordered">
+          <tr>
+              <th>contentID</th>
+              <th>writer</th>
+              <th>title</th>
+              <th>categoryID</th>
+              <th>categoryName</th>
+              <th>like</th>
+          </tr>
+          <%for(var i=0;i<contentsNum;i++){%>
+          <tr>
+              <td><%=datas[i].contentID%></td>
+              <td><%=datas[i].writer%></td>
+              <td><%=datas[i].title%></td>
+              <td><%=datas[i].categoryID%></td>
+              <td><%=datas[i].categoryName%></td>
+              <td><%=datas[i].like%></td>
+            </tr>
+            <%}%>
+          </table>
+          <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','managementMain')">글 삭제</button>
+      </div>
+      <!--글 삭제-->
+      <div id="deleteDiv" style="display:none">
+      <table class="table table-striped table-bordered">
+          <tr>
+              <th>contentID</th>
+              <th>writer</th>
+              <th>title</th>
+              <th>categoryID</th>
+              <th>categoryName</th>
+              <th>like</th>
+              <th>삭제</th>
+          </tr>
+          <%for(var i=0;i<contentsNum;i++){%>
+          <tr>
+              <td><%=datas[i].contentID%></td>
+              <td><%=datas[i].writer%></td>
+              <td><%=datas[i].title%></td>
+              <td><%=datas[i].categoryID%></td>
+              <td><%=datas[i].categoryName%></td>
+              <td><%=datas[i].like%></td>
+              <td><button id="delete" type="button" class="btn btn-link btn-sm" value=<%=datas[i].contentID%> onclick="printValue(value)">삭제</button></td>
+            </tr>
+            <%}%>
+          </table>
+          <button class="btn btn-success" onclick="showManagementMain('deleteDiv','managementMain')">완료</button>
 </body>
 </html>
