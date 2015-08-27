@@ -432,7 +432,6 @@ router.post('/app/board/like', function(req, res){
                         }
                     });
                 }
-            conn.release();
             });
         }
     });
@@ -474,7 +473,7 @@ router.post('/app/board/commentwrite', function(req, res){
             return;
         }
         else{
-            conn.query('INSERT INTO COMMENT(user_token, c_content, b_idx) VALUES (?, ?, ?)', [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
+            conn.query('INSERT INTO COMMENTS(user_token, c_content, b_idx) VALUES (?, ?, ?)', [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
                 if(err2){
                     console.log('err INSERT COMMENT, ', err2);
                     res.json({status : 'f'});
@@ -483,7 +482,7 @@ router.post('/app/board/commentwrite', function(req, res){
                 }
                 else{
                     var sendData = {
-                        status : 's',
+                        status : 's'
                     };
                 }
                 res.json(sendData);
@@ -558,7 +557,7 @@ router.get('/app/clothList', function(req, res){
                         "status" : "s",
                         "clothNum" : result.length,
                         "clothList" : result
-                    }
+                    };
                     res.json(sendData);
                 }
                 conn.release();
