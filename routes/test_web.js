@@ -284,7 +284,7 @@ exports.cateDel = function(req,res){
 /*
  * editor list
  * type : get
- * req :
+ * req : pageNum
  * res : status, editors
  * */
 exports.editorList = function(req,res){
@@ -292,55 +292,100 @@ exports.editorList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    /*
+/*
     if(!sessionService.isMaster(req)){
         console.log('/master/editor,  not master');
         res.json({status:'f'});
         return;
     }
     else{
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /editorList, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM EDITOR LIMIT ?, 20';
+                conn.query(query,[parseInt(recvData.pageNum)*10],function(err2,result){
+                    if(err2){
+                        console.log('err S /editorList, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for(var i=0; i<result.length;i++){
+                            var d = {
+                                editorEmail : result[i].e_email,
+                                editorName : result[i].e_name,
+                                editorNick : result[i].e_nickname,
+                                editorCate : result[i].e_category,
+                                editorIntro : result[i].e_intro,
+                                editorThumnail : result[i].e_thumnail,
+                                editorValid : result[i].isValid
+                            };
+                            arr.push(d);
+                        }
 
+                        var sendData = {
+                            status : 's',
+                            editorsNum : arr.length,
+                            editors : arr
+                        };
+                        res.json(sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
     */
+
     var renderData = {
         status:'s',
         editorsNum : 3,
         editors:[
             {
-                "editorIdx":1,
-                "editorID":"pineoc",
-                "editorEmail":"pineoc@naver.com",
-                "editorName":"lee",
-                "editorNick":"namu",
-                "writingNum":5
+                editorEmail:"pineoc@naver.com",
+                editorName:"lee",
+                editorNick:"namu",
+                editorCate : 2,
+                editorIntro : 'asdqwezxc',
+                editorThumnail : "http://localhost:3000/img/editor/lee.png",
+                editorValid : 1
             },
             {
-                "editorIdx":2,
-                "editorID":"dd",
-                "editorEmail":"ssc@naver.com",
-                "editorName":"doo",
-                "editorNick":"da",
-                "writingNum":2
+                editorEmail:"ssc@naver.com",
+                editorName:"doo",
+                editorNick:"da",
+                ditorCate : 2,
+                editorIntro : 'asdqwezxc123123',
+                editorThumnail : "http://localhost:3000/img/editor/doo.png",
+                editorValid : 1
             },
             {
-                "editorIdx":3,
-                "editorID":"sdc",
-                "editorEmail":"sdc@naver.com",
-                "editorName":"soo",
-                "editorNick":"mm",
-                "writingNum":3
+                editorEmail:"sdc@naver.com",
+                editorName:"soo",
+                editorNick:"mm",
+                editorCate : 2,
+                editorIntro : 'asd3q333w3e313323zxc',
+                editorThumnail : "http://localhost:3000/img/editor/soo.png",
+                editorValid : 1
             }
         ]
     };
 
     res.render('editor',renderData);
+
 };
 
 /*
  * editor add
  * type : post
- * req : editorEmail, editorPwd, editorName, editorCate
- *       editorIntro, thumnailImg
+ * req : editorEmail, editorPwd, editorName, editorCate,
+ *       editorNick, editorIntro, thumnailImg
  * res : status
  * */
 exports.editorAdd = function(req,res){
@@ -374,13 +419,20 @@ exports.editorAdd = function(req,res){
             res.json({status:'f'});
             return;
         }
-
         //editorCate check
         if(typeof recvData.editorCate === 'undefined' || recvData.editorCate.length == 0){
             console.log('/master/editor/add, no category');
             res.json({status:'f'});
             return;
         }
+        //editorNick check
+        if(typeof recvData.editorNick === 'undefined' || recvData.editorNick.length == 0){
+            console.log('/master/editor/add, no nick');
+            res.json({status:'f'});
+            return;
+        }
+
+
         var file_thumnail = null;
         var fileUpload_result;
         //TODO : file upload and use result
@@ -403,11 +455,11 @@ exports.editorAdd = function(req,res){
                 shasum.update(recvData.editorPwd);
                 var d = shasum.digest('hex');
 
-                var q = 'INSERT INTO EDITOR (e_name, e_email, e_pwd, e_thumnail, e_category, e_intro, isValid) ' +
+                var q = 'INSERT INTO EDITOR (e_name, e_email, e_nickname, e_pwd, e_thumnail, e_category, e_intro, isValid) ' +
                     'VALUES(?,?,?,?,?,?,1)';
-                var params = [recvData.editorName.toString(),recvData.editorEmail.toString(),
-                    d.toString(),file_thumnail,
-                    parseInt(recvData.editorCate),recvData.editorIntro.toString()];
+                var params = [recvData.editorName.toString(), recvData.editorEmail.toString(),
+                    recvData.editorNick.toString(), d.toString(), file_thumnail,
+                    parseInt(recvData.editorCate), recvData.editorIntro.toString()];
                 conn.query(q,params,function(err2,result){
                     if(err2){
                         console.log('err S /editorAdd, ',err);
@@ -436,7 +488,7 @@ exports.editorAdd = function(req,res){
 /*
  * editor delete
  * type : post
- * req : editorID
+ * req : editorEmail
  * res : status
  * */
 exports.editorDel = function(req,res){
@@ -445,24 +497,48 @@ exports.editorDel = function(req,res){
 
     //TODO : check session is master
     if(!sessionService.isMaster(req)){
-        console.log('/master/editor/delete,  not master');
+        console.log('/editor/delete,  not master');
         res.json({status:'f'});
         return;
     }
     else{
-
         //TODO : check datas is null and valid
+        //editorEmail check
+        if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
+            console.log('/editor/del, no email');
+            res.json({status:'f'});
+            return;
+        }
 
-
-        //TODO : DELETE to writer TABLE these datas
-
-
-        //TODO : success = status:s , fail = status:f
-
+        //TODO : DELETE to EDITOR TABLE these datas
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /editor/del, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'UPDATE EDITOR SET isValid=0 WHERE e_email=?';
+                conn.query(query,[recvData.editorEmail],function(err2,result){
+                    if(err2){
+                        console.log('err U /editor/del, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.changedRows==1){
+                            res.json({status:'s'});
+                        }
+                        else{
+                            res.json({status:'f'});
+                        }
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
-
-
-
 };
 
 /*
@@ -476,16 +552,55 @@ exports.boardAllList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    /*
-    if(!sessionService.isMaster(req)){
+/*
+    if(sessionService.isMaster(req)){
         console.log('/master/board,  not master');
         res.json({status:'f'});
         return;
     }
     else{
         //TODO : SELECT data from board TABLE
-
-        res.render('management',{status:'s'});
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /board/list, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY LIMIT ?, 20';
+                conn.query(query,[parseInt(recvData.pageNum)],function(err2,result){
+                    if(err2){
+                        console.log('err S /web/master/board, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for(var i=0; i<result.length;i++){
+                            var d = {
+                                contentID : result[i].b_idx,
+                                writer : result[i].e_nickname,
+                                title : result[i].title,
+                                categoryID : result[i].category,
+                                categoryName : result[i].cate_name,
+                                like : result[i].likes,
+                                datetime : result[i].datetime,
+                                isValid : result[i].isValid
+                            };
+                            arr.push(d);
+                        }
+                        var renderData = {
+                            status : 's',
+                            contentsNum : arr.length,
+                            datas : arr
+                        };
+                        res.render('management',renderData);
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
     */
 
@@ -578,6 +693,7 @@ exports.boardAllList = function(req,res){
 
 
     res.render('management',renderData);
+    
 };
 
 /*
