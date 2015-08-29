@@ -614,7 +614,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert",
                 "categoryID":2,
                 "categoryName":"car",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":2,
@@ -622,7 +624,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert33",
                 "categoryID":2,
                 "categoryName":"car",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":3,
@@ -630,7 +634,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert22",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":4,
@@ -638,7 +644,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2244",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":5,
@@ -646,7 +654,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2255",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":6,
@@ -654,7 +664,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2266",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":7,
@@ -662,7 +674,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2277",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":8,
@@ -670,7 +684,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2288",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":9,
@@ -678,7 +694,9 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2299",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             },
             {
                 "contentID":10,
@@ -686,14 +704,16 @@ exports.boardAllList = function(req,res){
                 "title":"qwert2200",
                 "categoryID":3,
                 "categoryName":"sport",
-                "like":3
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
             }
         ]
     };
 
 
     res.render('management',renderData);
-    
+
 };
 
 /*
