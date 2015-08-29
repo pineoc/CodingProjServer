@@ -270,13 +270,40 @@ exports.cateDel = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    if(!sessionService.isMaster(req)){
+    if(sessionService.isMaster(req)){
         console.log('/category/delete,  not master');
         res.json({status:'f'});
         return;
     }
     else{
+        if(typeof recvData.cateID === 'undefined' || recvData.cateID.length == 0){
+            console.log('/category/del, no cateID');
+            res.json({status : 'f'});
+            return;
+        }
 
+        db.pool.getConnection(function(err, conn){
+            if(err){
+                console.log('err C /category/del, ', err);
+                res.json({status : 'f'});
+                return;
+            }
+            else{
+                var query = 'DELETE FROM CATEGORY WHERE cate_idx=?';
+                conn.query(query,[recvData.cateID],function(err2, result){
+                    if(err2){
+                        console.log('err D /category/del, ', err2);
+                        res.json({ status : 'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        res.json({status : 's'});
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
 
 
@@ -755,8 +782,45 @@ exports.boardDel = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master or editor validation
+    if(0){}
+    else{
+        //TODO : DB UPDATE board TABLE, valid set false
+        //To check that whether b_idx is valid or not
+        if(typeof recvData.contentID === 'undefined' || recvData.contentID.length == 0){
+            console.log('/board/delete, no contentID');
+            res.json({status : 'f'});
+            return;
+        }
 
-    //TODO : DB UPDATE board TABLE, valid set false
+        db.pool.getConnection(function(err, conn){
+            if(err){
+                console.log('err C /board/del, ', err);
+                res.json({status : 'f'});
+                return;
+            }
+            else{
+                var query = 'UPDATE BOARD SET isValid=0 WHERE b_idx=?';
+                conn.query(query,[recvData.contentID],function(err2,result){
+                    if(err2){
+                        console.log('err U /board/del, ', err);
+                        res.json({status : 'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.changedRows==1){
+                            res.json({status : 's'});
+                        }
+                        else{
+                            res.json({status : 'f'});
+                        }
+                        conn.release();
+                    }
+                });
+            }
+        });
+    }
+    
 
 
 };
