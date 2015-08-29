@@ -115,7 +115,7 @@ router.get('/app/menu',function(req,res){
 
     db.pool.getConnection(function(err,conn){
         if(err){
-            console.log('err get conn, categoryList : ',err);
+            console.log('err C, /menu categoryList : ',err);
             res.json({status:'f'});
             return;
         }
@@ -350,16 +350,6 @@ router.get('/app/board/view',function(req,res){
                 });
             }
         });
-        /*
-        var sendData = {
-            status : 's',
-            contentID:123,
-            likes:12,
-            editor:'asd',
-            datas : [1,2,3,4,5,6]
-        };
-        res.json(sendData);
-        */
     }
     else{
         //normal board view
@@ -604,7 +594,8 @@ router.post('/app/board/commentwrite', function(req, res){
             return;
         }
         else{
-            conn.query('INSERT INTO COMMENTS(user_token, c_content, b_idx) VALUES (?, ?, ?)', [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
+            var query = 'INSERT INTO COMMENTS(user_token, c_content, b_idx) VALUES (?, ?, ?)';
+            conn.query(query, [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
                 if(err2){
                     console.log('err INSERT COMMENT, ', err2);
                     res.json({status : 'f'});
