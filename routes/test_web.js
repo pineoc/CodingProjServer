@@ -300,6 +300,11 @@ exports.editorList = function(req,res){
         return;
     }
     else{
+         if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
+         console.log('err /editor/list , no pageNum');
+         res.json({status:'f'});
+         return;
+         }
         db.pool.getConnection(function(err,conn){
             if(err){
                 console.log('err C /editorList, ',err);
@@ -560,6 +565,11 @@ exports.boardAllList = function(req,res){
         return;
     }
     else{
+         if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
+         console.log('err /master/board , no pageNum');
+         res.json({status:'f'});
+         return;
+         }
         //TODO : SELECT data from board TABLE
         db.pool.getConnection(function(err,conn){
             if(err){
@@ -768,6 +778,11 @@ exports.boardWrite = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master or editor validation
+    if(!sessionService.hasSession(req)){
+        console.log('invalid approach, /boardWrite');
+        res.json({status:'f'});
+        return;
+    }
 
     //TODO : DB UPDATE board TABLE, valid set false
 
@@ -784,10 +799,16 @@ exports.boardList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
+    if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
+        console.log('err /board/list , no pageNum');
+        res.json({status:'f'});
+        return;
+    }
+
     /*
     //TODO : check session is editor
     if(!sessionService.hasSession(req)){
-        console.log('invalid approach');
+        console.log('invalid approach, /boardList');
         res.json({status:'f'});
         return;
     }
