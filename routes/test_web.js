@@ -127,7 +127,7 @@ exports.cateList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-
+/*
     if(!sessionService.isMaster(req)){
         console.log('/cateadd,  not master');
         res.json({status:'f'});
@@ -171,8 +171,9 @@ exports.cateList = function(req,res){
             }
         });
     }
+    */
 
-/*
+
     var renderData = {
         status:'s',
         categoryNum : 5,
@@ -202,7 +203,7 @@ exports.cateList = function(req,res){
 
 
     res.render('category',renderData);
-    */
+
 };
 
 /*
@@ -786,6 +787,7 @@ exports.boardList = function(req,res){
     //TODO : check session is editor
 
     //TODO : SELECT data from board TABLE
+
 
     res.render('management',{status:'s'});
 };
