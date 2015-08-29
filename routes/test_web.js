@@ -217,7 +217,9 @@ exports.cateAdd = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    if(!sessionService.isMaster(req)){
+    //for test
+    //if(!sessionService.isMaster(req)){
+    if(0){
         console.log('/category/add,  not master');
         res.json({status:'f',msg : 'no master'});
         return;
@@ -229,12 +231,36 @@ exports.cateAdd = function(req,res){
             return;
         }
         //TODO : file check, categoryImage
-
-
-
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C, /cate/add, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var q = 'INSERT INTO CATEGORY (cate_idx,cate_name,cate_url) VALUES (?,?,?)';
+                var cate_img = fileUploadService.fileUpload('cate',req.files.categoryImage).path;
+                var params = [parseInt(recvData.categoryID),recvData.categoryName.toString(),cate_img];
+                conn.query(q,params,function(err2,result){
+                    if(err2){
+                        console.log('err C, /cate/add, ',err2);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.affectedRows==1){
+                            res.json({status:'s'});
+                        }
+                        else{
+                            res.json({status:'f'});
+                        }
+                        conn.release();
+                    }
+                });
+            }
+        });
     }
-
-
 };
 
 /*
@@ -320,7 +346,7 @@ exports.editorList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-/*
+
     if(!sessionService.isMaster(req)){
         console.log('/master/editor,  not master');
         res.json({status:'f'});
@@ -374,8 +400,8 @@ exports.editorList = function(req,res){
             }
         });
     }
-    */
 
+/*
     var renderData = {
         status:'s',
         editorsNum : 3,
@@ -411,6 +437,7 @@ exports.editorList = function(req,res){
     };
 
     res.render('editor',renderData);
+    */
 
 };
 
@@ -426,7 +453,9 @@ exports.editorAdd = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    if(!sessionService.isMaster(req)){
+    //test
+    //if(!sessionService.isMaster(req)){
+    if(0){
         console.log('/master/editor/add,  not master');
         res.json({status:'f'});
         return;
@@ -489,13 +518,13 @@ exports.editorAdd = function(req,res){
                 var d = shasum.digest('hex');
 
                 var q = 'INSERT INTO EDITOR (e_name, e_email, e_nickname, e_pwd, e_thumnail, e_category, e_intro, isValid) ' +
-                    'VALUES(?,?,?,?,?,?,1)';
+                    'VALUES(?,?,?,?,?,?,?,1)';
                 var params = [recvData.editorName.toString(), recvData.editorEmail.toString(),
                     recvData.editorNick.toString(), d.toString(), file_thumnail,
                     parseInt(recvData.editorCate), recvData.editorIntro.toString()];
                 conn.query(q,params,function(err2,result){
                     if(err2){
-                        console.log('err S /editorAdd, ',err);
+                        console.log('err I /editorAdd, ',err2);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -782,7 +811,11 @@ exports.boardDel = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master or editor validation
-    if(0){}
+    if(!sessionService.hasSession(req)){
+        console.log('invalid approach, /board/del');
+        res.json({status:'f'});
+        return;
+    }
     else{
         //TODO : DB UPDATE board TABLE, valid set false
         //To check that whether b_idx is valid or not
@@ -834,12 +867,13 @@ exports.boardWriteGet = function(req,res){
  * board write
  * type : post
  * req : title, category, thumnail(file),
- *       datas({file, content} array)
+ *       contents(array), images(file array)
  * res : status
  * */
 exports.boardWrite = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
+
 
     //TODO : check session is master or editor validation
     if(!sessionService.hasSession(req)){
@@ -847,10 +881,120 @@ exports.boardWrite = function(req,res){
         res.json({status:'f'});
         return;
     }
+    var userData = sessionService.getSession(req);
 
-    //TODO : DB UPDATE board TABLE, valid set false
+    //TODO : files upload + contents
+    var contentsData = [];
+    var imagesData = [];
+    var thumnail_image = fileUploadService.fileUpload(('board/'+userData.userName).toString(),req.files.thumnail).path;
+    for(var i=0;i<recvData.contents.length;i++){
+        var data_content = recvData.contents[i];
+        contentsData.push(data_content);
+        var data_image = req.files.images[i];
+        imagesData.push(fileUploadService.fileUpload(('board/'+userData.userName).toString(),data_image).path);
+    }
 
-    res.json({status:'s'});
+    //TODO : DB INSERT BOARD
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err C, /board/write, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'INSERT INTO BOARD(e_name,category,title,thumnail,likes,pagesNum,contents,images,isValid) ' +
+                'VALUES(?,?,?,?,0,?,?,?,1)';
+            var param_arr = [userData.userName,parseInt(recvData.category),recvData.title,thumnail_image,
+            parseInt(contentsData.length),JSON.stringify(contentsData),JSON.stringify(imagesData)];
+            conn.query(query,param_arr,function(err2,result){
+                if(err2){
+                    console.log('err I /board/write, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    if(result.affectedRows == 1){
+                        console.log('write board success');
+                        res.json({status:'s'});
+                    }
+                    else{
+                        console.log('write board not affected');
+                        res.json({status:'f'});
+                    }
+                    conn.release();
+                }
+            });
+        }
+    });
+};
+
+/*
+ * board write
+ * type : post
+ * req : title, category, thumnail(file),
+ *       contents(array), images(file array),
+ *       editorName
+ * res : status
+ * */
+exports.boardWrite_test = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+
+    //TODO : check session is master or editor validation
+    if(!sessionService.hasSession(req)){
+        console.log('invalid approach, /boardWrite');
+        res.json({status:'f'});
+        return;
+    }
+    var userData = {};
+    userData.userName = recvData.editorName;
+
+    //TODO : files upload + contents
+    var contentsData = [];
+    var imagesData = [];
+    var thumnail_image = fileUploadService.fileUpload(('board/'+userData.userName).toString(),req.files.thumnail).path;
+    for(var i=0;i<recvData.contents.length;i++){
+        var data_content = recvData.contents[i];
+        contentsData.push(data_content);
+        var data_image = req.files.images[i];
+        imagesData.push(fileUploadService.fileUpload(('board/'+userData.userName).toString(),data_image).path);
+    }
+
+    //TODO : DB INSERT BOARD
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err C, /board/write, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'INSERT INTO BOARD(e_name,category,title,thumnail,likes,pagesNum,contents,images,isValid) ' +
+                'VALUES(?,?,?,?,0,?,?,?,1)';
+            var param_arr = [userData.userName,parseInt(recvData.category),recvData.title,thumnail_image,
+                parseInt(contentsData.length),JSON.stringify(contentsData),JSON.stringify(imagesData)];
+            conn.query(query,param_arr,function(err2,result){
+                if(err2){
+                    console.log('err I /board/write, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    if(result.affectedRows == 1){
+                        console.log('write board success');
+                        res.json({status:'s'});
+                    }
+                    else{
+                        console.log('write board not affected');
+                        res.json({status:'f'});
+                    }
+                    conn.release();
+                }
+            });
+        }
+    });
 };
 
 /*

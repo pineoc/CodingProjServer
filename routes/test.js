@@ -764,7 +764,7 @@ router.get('/web/master/category',web.cateList);
  * req : addCategory
  * res : status
  * */
-router.post('/web/master/category/add',web.cateAdd);
+router.post('/web/master/category/add',multipartMiddleware,web.cateAdd);
 
 /*
  * category update
@@ -793,7 +793,7 @@ router.get('/web/master/editor',web.editorList);
 /*
  * editor add
  * type : post
- * req : editorID, editorEmail, editorPwd, editorName, editorNick, editorCate
+ * req : editorEmail, editorPwd, editorName, editorNick, editorCate
  * res : status
  * */
 router.post('/web/master/editor/add',multipartMiddleware,web.editorAdd);
@@ -838,15 +838,16 @@ router.post('/web/board/delete',web.boardDel);
  * */
 router.get('/web/board/write',web.boardWriteGet);
 
+
 /*
  * board write
  * type : post
  * req : title, category, thumnail(file),
- *       datas({file, content} array)
+ *       contents(array), images(file array)
  * res : status
  * */
-router.post('/web/board/write',web.boardWrite);
-
+router.post('/web/board/write',multipartMiddleware,web.boardWrite);
+router.post('/web/board/write/test',multipartMiddleware,web.boardWrite_test);
 /*
  * board content list
  * type : get

@@ -17,16 +17,16 @@ var urlpath_base = path.join(config.server_data.domain,'img');
 
 var imgFile_check = function(filename){
     var checkext = path.extname(filename);
-    checkext=checkext.toLowerCase();
+    checkext = checkext.toLowerCase();
     //check image ext
-    if(checkext === '.jpg')
+    if(checkext == '.jpg')
         return true;
-    if(checkext === '.jpeg')
+    else if(checkext == '.jpeg')
         return true;
-    if(checkext === '.png')
+    else if(checkext == '.png')
         return true;
-
-    return false;
+    else
+        return false;
 };
 
 
@@ -36,18 +36,27 @@ var imgFile_check = function(filename){
 * file : file
 * */
 exports.fileUpload = function(name,file){
+    var resData = {};
+    if(typeof file === 'undefined' || file == null){
+        console.log('fileService, no file');
+        resData.path = urlpath_base+'/'+'null.png';
+        resData.result = false;
+        return resData;
+    }
     var filename = file.name;
     var folder = path.resolve(mypath,name);
     var srcpath = file.path;
     var destpath;
-    var resData = {};
 
-    if(imgFile_check(name)==false){
-        console.log('file ext invalid, ext : ',path.extname(name));
+
+    if(imgFile_check(filename)==false){
+        console.log('file ext invalid, ext : ',path.extname(filename));
         resData.path = null;
         resData.result = false;
         return resData;
     }
+
+
 
     if(!fs.existsSync(folder)){
         mkdirp(folder,function(err){
@@ -63,7 +72,7 @@ exports.fileUpload = function(name,file){
     }
     var md5sum = crypto.createHash('md5');
     md5sum.update(filename);
-    var hashedFilename = md5sum.digest('hex')+'.png';
+    var hashedFilename = md5sum.digest('hex')+path.extname(filename);
 
     destpath = path.resolve(folder,hashedFilename);
     var is = fs.createReadStream(srcpath); //소스로부터 스트림을 입력받음
