@@ -308,7 +308,7 @@ exports.editorList = function(req,res){
             }
             else{
                 var query = 'SELECT * FROM EDITOR LIMIT ?, 20';
-                conn.query(query,[parseInt(recvData.pageNum)*10],function(err2,result){
+                conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
                         console.log('err S /editorList, ',err);
                         res.json({status:'f'});
@@ -522,7 +522,7 @@ exports.editorDel = function(req,res){
                 var query = 'UPDATE EDITOR SET isValid=0 WHERE e_email=?';
                 conn.query(query,[recvData.editorEmail],function(err2,result){
                     if(err2){
-                        console.log('err U /editor/del, ',err);
+                        console.log('err U /editor/del, ',err2);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -569,9 +569,9 @@ exports.boardAllList = function(req,res){
             }
             else{
                 var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY LIMIT ?, 20';
-                conn.query(query,[parseInt(recvData.pageNum)],function(err2,result){
+                conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
-                        console.log('err S /web/master/board, ',err);
+                        console.log('err S /web/master/board, ',err2);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -784,12 +784,128 @@ exports.boardList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
+    /*
     //TODO : check session is editor
+    if(!sessionService.hasSession(req)){
+        console.log('invalid approach');
+        res.json({status:'f'});
+        return;
+    }
 
     //TODO : SELECT data from board TABLE
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err C /board/list, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var editorName = sessionService.getSession(req).userName;
+            var query = 'SELECT * FROM BOARD WHERE e_name=? LIMIT ?,20';
+            conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
+                if(err2){
+                    console.log('err U /board/list, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var arr = [];
+                    for(var i=0; i<result.length;i++){
+                        var d = {
+                            contentID : result[i].b_idx,
+                            writer : result[i].e_nickname,
+                            title : result[i].title,
+                            categoryID : result[i].category,
+                            categoryName : result[i].cate_name,
+                            like : result[i].likes,
+                            datetime : result[i].datetime,
+                            isValid : result[i].isValid
+                        };
+                        arr.push(d);
+                    }
+                    var renderData = {
+                        status : 's',
+                        contentsNum : arr.length,
+                        datas : arr
+                    };
+                    res.render('management',renderData);
+                }
+                conn.release();
 
+            });
 
-    res.render('management',{status:'s'});
+        }
+    });
+    */
+    var renderData = {
+        status : 's',
+        contentsNum : 6,
+        datas:[
+            {
+                "contentID":1,
+                "writer":"asd",
+                "title":"qwert",
+                "categoryID":2,
+                "categoryName":"car",
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
+            },
+            {
+                "contentID":2,
+                "writer":"asd",
+                "title":"qwert33",
+                "categoryID":2,
+                "categoryName":"car",
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
+            },
+            {
+                "contentID":3,
+                "writer":"asd",
+                "title":"qwert22",
+                "categoryID":3,
+                "categoryName":"sport",
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
+            },
+            {
+                "contentID":4,
+                "writer":"asd4",
+                "title":"qwert2244",
+                "categoryID":3,
+                "categoryName":"sport",
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
+            },
+            {
+                "contentID":5,
+                "writer":"asd5",
+                "title":"qwert2255",
+                "categoryID":3,
+                "categoryName":"sport",
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
+            },
+            {
+                "contentID":6,
+                "writer":"asd6",
+                "title":"qwert2266",
+                "categoryID":3,
+                "categoryName":"sport",
+                "like":3,
+                datetime : '20150829T1354',
+                isValid : 1
+            }
+        ]
+    };
+
+    res.render('management',renderData);
 };
 
 /*
