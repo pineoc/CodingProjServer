@@ -10,3 +10,10 @@ iframe.main{
 		height:600px;
 		float:right;
 	}
+.errorPage{
+	position:absolute;
+	left:220px;
+	top:120px;
+	width:1000px;
+	height:600px;
+}
