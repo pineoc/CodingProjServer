@@ -32,8 +32,8 @@
 <div style="border:dotted;background-color:#F3F7F7;padding:10px;width:500px;height:200px;margin:0 auto;">
     <h2 style="text-align:center;">login</h2>
     <div style="float:left; margin-left:100px">
-    <input class="j_email_class"type="text" name="j_email" placeholder="이메일 입력" /><br/>
-    <input class="j_pwd_class" type="password" name="j_pwd" placeholder="비밀번호 입력" /><br/>
+    <input class="j_email_class"type="text" name="j_email" id="j_email" placeholder="이메일 입력" /><br/>
+    <input class="j_pwd_class" type="password" name="j_pwd" id="j_pwd" placeholder="비밀번호 입력" /><br/>
     </div>
     <div style="float:right; margin-right:120px;">
     <button class="j_btn btn btn-success btn-lg" style="padding:12px 20px;cursor: pointer;">로그인</button>
@@ -56,11 +56,13 @@
 
             if(!inputEmail){
                 alert('input the email please');
+                document.getElementById("j_email").focus();
                 return;
             }
 
             if(!inputPwd){
                 alert('input the password please');
+                document.getElementById("j_pwd").focus();
                 return;
             }
 
