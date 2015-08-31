@@ -884,9 +884,6 @@ router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
  * Daun Joung
  */
 router.get('/web/master/manageClothes', function(req, res){
-    db.pool.getConnection(function(err, conn){
-
-    })
     res.render('manageClothes');
 });
 
