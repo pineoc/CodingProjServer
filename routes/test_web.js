@@ -313,7 +313,7 @@ exports.cateDel = function(req,res){
         return;
     }
     else{
-        if(typeof recvData.cateID === 'undefined' || recvData.cateID.length == 0){
+        if(typeof recvData.categoryID === 'undefined' || recvData.categoryID.length == 0){
             console.log('/category/del, no cateID');
             res.json({status : 'f'});
             return;
@@ -327,7 +327,7 @@ exports.cateDel = function(req,res){
             }
             else{
                 var query = 'DELETE FROM CATEGORY WHERE cate_idx=?';
-                conn.query(query,[recvData.cateID],function(err2, result){
+                conn.query(query,[recvData.categoryID],function(err2, result){
                     if(err2){
                         console.log('err D /category/del, ', err2);
                         res.json({ status : 'f'});
