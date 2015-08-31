@@ -222,7 +222,7 @@ exports.cateAdd = function(req,res){
     //for test
     //if(!sessionService.isMaster(req)){
     if(0){
-        console.log('/category/add,  not master');
+        console.log('/category/add, not master');
         res.json({status:'f',msg : 'no master'});
         return;
     }
@@ -232,6 +232,7 @@ exports.cateAdd = function(req,res){
             res.json({status:'f',msg:'no data'});
             return;
         }
+
         if(typeof req.files.categoryImage === 'undefined' || req.files.categoryImage == null){
             console.log('/category/add no categoryImage');
             res.json({status:'f',msg:'no image file'});
@@ -251,7 +252,7 @@ exports.cateAdd = function(req,res){
                 var params = [parseInt(recvData.categoryID),recvData.categoryName.toString(),cate_img];
                 conn.query(q,params,function(err2,result){
                     if(err2){
-                        console.log('err C, /cate/add, ',err2);
+                        console.log('err I, /cate/add, ',err2);
                         res.json({status:'f', msg:'query error'});
                         conn.release();
                         return;
