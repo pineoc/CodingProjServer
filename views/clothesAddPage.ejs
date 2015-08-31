@@ -21,8 +21,10 @@
       $("input#submit").click(function(){
         // check all the blank is filled
         var name = $("input#name").val();
-        var category = $("select[name=category]").val();
+        var category = $("select[id=category]").val();
         var url = $("input#url").val();
+
+
 
         if(name == ""){
           alert("please write name");
@@ -30,14 +32,26 @@
           alert("please choose category");
         }else if(url == ""){
           alert("please write url");
-        }else{
-          var jqxhr = $.post("/web/master/addCloth", {name : "daun"}).done(function(){
-            alert("Upload Success");
-          }).fail(function(){
-            alert("Upload fail");
+        }else {
+          var data = new FormData();
+          data.append("name", name);
+          data.append("category", category);
+          data.append("url", url);
+          $.each($("#imageFile")[0].files, function(i, file){
+            data.append("imageFile", file);
+          });
+          $.ajax({
+            url: '/web/master/addCloth',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+              alert("Add success");
+            }
           });
         }
-
 
 
       });

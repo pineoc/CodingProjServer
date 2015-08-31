@@ -249,6 +249,7 @@ exports.cateAdd = function(req,res){
             else{
                 var q = 'INSERT INTO CATEGORY (cate_idx,cate_name,cate_url) VALUES (?,?,?)';
                 var cate_img = fileUploadService.fileUpload('cate',req.files.categoryImage).path;
+                console.log("cate test : " + cate_img);
                 var params = [parseInt(recvData.categoryID),recvData.categoryName.toString(),cate_img];
                 conn.query(q,params,function(err2,result){
                     if(err2){

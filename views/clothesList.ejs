@@ -18,6 +18,23 @@
         });
       });
 
+      $("input#valid").click(function(){
+        $("input#checkBox").each(function(){
+          if($(this).is(":checked")){
+            alert("Do you want to valid '" + $(this).val()+ "' on the list?");
+          }
+        });
+      });
+
+
+      $("input#inValid").click(function(){
+        $("input#checkBox").each(function(){
+          if($(this).is(":checked")){
+            alert("Do you want to invalid '" + $(this).val()+ "' on the list?");
+          }
+        });
+      });
+
     });
 
   </script>
@@ -29,6 +46,7 @@
   <a href="/web/master/addCloth"> Add New Cloth </a>
   <input type="button" value="Delete" id="delete" class="btn btn-warning">
   <input type="button" value="Valid" id="valid" class="btn btn-warning">
+  <input type="button" value="inValid" id="inValid" class="btn btn-warning">
   <table class="table table-striped table-hover">
     <thead>
       <th> Idx </th>
@@ -42,7 +60,7 @@
     <tbody>
     <% for (var i = 0 ; i < cloths.length ; i++) {%>
       <tr>
-        <td> <input type="checkbox" value="Striped Shirts" id="checkBox">  </td>
+        <td> <input type="checkbox" value=<%=cloths[i].clothIdx%> id="checkBox">  </td>
         <td> <%=cloths[i].clothCate%> </td>
         <td> <%=cloths[i].clothName%> </td>
         <td> <img src=<%=cloths[i].clothImg%> width="100px" height="100px" > </td>

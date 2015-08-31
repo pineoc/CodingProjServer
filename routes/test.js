@@ -12,6 +12,7 @@ var web = require('./test_web');
 var db = require('./db_config');
 
 
+var fileUploadService = require('./fileUploadService');
 //test code start
 //namjungnaedle category number
 const CLOTHIDX = 1;
@@ -971,11 +972,45 @@ router.get('/web/master/addCloth', function(req, res){
  * req :
  * res :
  */
-router.post('/web/master/addCloth', function(req, res){
+router.post('/web/master/addCloth',multipartMiddleware, function(req, res){
     var recvData = req.body;
     console.log('recvData : ', recvData);
 
-    res.json({status:'f'});
+    // check file is exist
+    if(typeof req.files.imageFile == 'undefined' || req.files.imageFile == null){
+        console.log('/web/master/addCloth no imageFile');
+        res.json({status:"f", msg:"no image file"});
+        return;
+    }
+
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log("err C, /web/mater/addCloth, ",err);
+            res.json({status:"f"});
+            return;
+        }else{
+            var q = 'INSERT INTO CLOTH(cloth_cate, cloth_name, cloth_img, cloth_url, isValid) VALUES(?,?,?,?,?)';
+            var img = fileUploadService.fileUpload('cloth',req.files.imageFile).path;
+            var params = [parseInt(recvData.category), recvData.name.toString(), img, recvData.url.toString(), true ];
+            console.log("tsd : " + params);
+
+            conn.query(q, params, function(err2, result){
+                if(err2){
+                    console.log('err l, /cate/add, ', err2);
+                    res.json({status:'f', msg:'query err'});
+                    conn.release();
+                    return;
+                }else{
+                    if(result.affectedRows==1){
+                        res.json({status:'s'});
+                    }else{
+                    res.json({status:'f', msg:'not affected'});
+                    }
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 /*
  * recommend menu
@@ -998,6 +1033,8 @@ router.get('/web/recommend_menu', function(req, res){
  * Daun Joung
  */
 router.get('/web/fitting_room_list', function(req, res){
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
     res.render('fitting_room_list');
 });
 
