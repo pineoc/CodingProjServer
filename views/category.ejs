@@ -24,7 +24,7 @@
        else
           e2.style.display = 'block';
    }
-   function showCategoryMain(id,id2){
+   function showCategoryMain1(id,id2){
     document.categoryAdd.submit();
 
     var e = document.getElementById(id);
@@ -55,7 +55,7 @@
           e2.style.display = 'block';
 
    }
-   function printValue(id,id2){
+   function showCategoryMain2(id,id2){
         document.categoryDelete.submit();
 
          var e = document.getElementById(id);
@@ -112,7 +112,7 @@
               <label for="카테고리 이미지">CategoryImage:</label>
               <input type="file" id="categoryImage" name="categoryImage" placeholder="카테고리를 입력해주세요">
               <br>
-              <Input type="submit" value="완료" class="btn btn-success" onclick="showCategoryMain('addDiv','categoryMain')"/>
+              <Input type="submit" value="완료" class="btn btn-success" onclick="showCategoryMain1('addDiv','categoryMain')"/>
             </div>
           </form>
     </div>
@@ -138,7 +138,7 @@
         <label for="카테고리 삭제">InputCategoryID:</label>
         <input class="form-control" type="카테고리 삭제" id="categoryID" name="categoryID" placeholder="삭제를 원하는 카테고리 ID를 입력해주세요"/>
         <br>
-        <input type="submit"  id="delete" type="button" class="btn btn-success btn-Medium"  value="완료" onclick="printValue('deleteDiv','categoryMain')"/>   
+        <input type="submit"  id="delete" type="button" class="btn btn-success btn-Medium"  value="완료" onclick="showCategoryMain2('deleteDiv','categoryMain')"/>   
       </form>
       </div>
 </body>
