@@ -28,6 +28,7 @@
 <div class="container">
   <a href="/web/master/addCloth"> Add New Cloth </a>
   <input type="button" value="Delete" id="delete" class="btn btn-warning">
+  <input type="button" value="Valid" id="valid" class="btn btn-warning">
   <table class="table table-striped table-hover">
     <thead>
       <th> Idx </th>
@@ -36,16 +37,20 @@
       <th> img </th>
       <th> link </th>
       <th> info </th>
+      <th> Valid </th>
     </thead>
     <tbody>
+    <% for (var i = 0 ; i < cloths.length ; i++) {%>
       <tr>
         <td> <input type="checkbox" value="Striped Shirts" id="checkBox">  </td>
-        <td> Top </td>
-        <td> Striped Shirts </td>
-        <td> <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px" > </td>
-        <td> <a href="http://www.namjungnedle.com" target="_blank"> Show </a></td>
-        <td> Red Color </td>
+        <td> <%=cloths[i].clothCate%> </td>
+        <td> <%=cloths[i].clothName%> </td>
+        <td> <img src=<%=cloths[i].clothImg%> width="100px" height="100px" > </td>
+        <td> <a href=<%=cloths[i].clothURL%> target="_blank"> Show </a></td>
+        <td> <%=cloths[i].clothInfo%> </td>
+        <td> <%=cloths[i].isValid%></td>
       </tr>
+    <% } %>
     </tbody>
   </table>
 </div>

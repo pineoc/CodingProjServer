@@ -14,6 +14,16 @@
       if($("div#cloth_list_container").length < 10){
         $("div#cloth_list_container").load("/web/master/clothesList");
       }
+
+      // when click search button
+      $("input#search").click(function(){
+        var linkUrl = '/web/master/clothesList';
+        // c heck there are serch data
+        linkUrl += ('?name=' + $("input#clothName").val());
+        linkUrl += ('&category=' + $("select[name=category]").val());
+        linkUrl += ('&pageNo=' + '1');
+        $("div#cloth_list_container").load(linkUrl);
+      });
     });
 
   </script>
@@ -24,16 +34,17 @@
   <h3> Manage Clothes Page </h3>
   <div class="row">
     <div class="col-xs-2"> 의상 명 : </div>
-    <div class="col-xs-3"> <input type="text"/> </div>
+    <div class="col-xs-3"> <input type="text" id="clothName"/> </div>
     <div class="col-xs-2"> 카테고리 : </div>
     <div class="col-xs-3">
-      <select name="">
-        <option> Top </option>
-        <option> Bottom </option>
-        <option> Coat </option>
+      <select name="category">
+        <option value=""> </option>
+        <option value="1"> Top </option>
+        <option value="2"> Bottom </option>
+        <option value="3"> Coat </option>
       </select>
     </div>
-    <div class="col-xs-2"> <input type="button" value="Search"> </div>
+    <div class="col-xs-2"> <input type="button" value="Search" id="search"> </div>
   </div>
 
   <div id="cloth_list_container"></div>
