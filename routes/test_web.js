@@ -127,16 +127,17 @@ exports.cateList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-/*
-    if(!sessionService.isMaster(req)){
-        console.log('/cateadd,  not master');
+    //test for if
+    //if(!sessionService.isMaster(req)){
+    if(0){
+        console.log('/cate/list,  not master');
         res.json({status:'f'});
         return;
     }
     else{
         db.pool.getConnection(function(err,conn){
             if(err){
-                console.log('err C /catelist, ',err);
+                console.log('err C /cate/list, ',err);
                 res.json({status:'f'});
                 return;
             }
@@ -144,7 +145,7 @@ exports.cateList = function(req,res){
                 var query = 'SELECT * FROM CATEGORY';
                 conn.query(query,[],function(err2,result){
                     if(err2){
-                        console.log('err S /cateList, ',err);
+                        console.log('err S /cate/List, ',err);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -171,9 +172,9 @@ exports.cateList = function(req,res){
             }
         });
     }
-    */
 
 
+/*
     var renderData = {
         status:'s',
         categoryNum : 5,
@@ -203,6 +204,7 @@ exports.cateList = function(req,res){
 
 
     res.render('category',renderData);
+    */
 
 };
 
@@ -230,6 +232,12 @@ exports.cateAdd = function(req,res){
             res.json({status:'f',msg:'no data'});
             return;
         }
+        if(typeof req.files.categoryImage === 'undefined' || req.files.categoryImage == null){
+            console.log('/category/add no categoryImage');
+            res.json({status:'f',msg:'no image file'});
+            return;
+        }
+
         //TODO : file check, categoryImage
         db.pool.getConnection(function(err,conn){
             if(err){
@@ -244,7 +252,7 @@ exports.cateAdd = function(req,res){
                 conn.query(q,params,function(err2,result){
                     if(err2){
                         console.log('err C, /cate/add, ',err2);
-                        res.json({status:'f'});
+                        res.json({status:'f', msg:'query error'});
                         conn.release();
                         return;
                     }
@@ -253,7 +261,7 @@ exports.cateAdd = function(req,res){
                             res.json({status:'s'});
                         }
                         else{
-                            res.json({status:'f'});
+                            res.json({status:'f', msg : 'not affected'});
                         }
                         conn.release();
                     }
@@ -299,7 +307,7 @@ exports.cateDel = function(req,res){
     //test for if
     //if(sessionService.isMaster(req)){
     if(0){
-        console.log('/category/delete,  not master');
+        console.log('/category/del,  not master');
         res.json({status:'f'});
         return;
     }
@@ -347,12 +355,12 @@ exports.editorList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    /*
+
     //TODO : check session is master
     //test for if
     //if(!sessionService.isMaster(req)){
     if(0){
-        console.log('/master/editor,  not master');
+        console.log('/editor/list,  not master');
         res.json({status:'f'});
         return;
     }
@@ -364,7 +372,7 @@ exports.editorList = function(req,res){
          }
         db.pool.getConnection(function(err,conn){
             if(err){
-                console.log('err C /editorList, ',err);
+                console.log('err C /editor/List, ',err);
                 res.json({status:'f'});
                 return;
             }
@@ -372,7 +380,7 @@ exports.editorList = function(req,res){
                 var query = 'SELECT * FROM EDITOR LIMIT ?, 20';
                 conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
-                        console.log('err S /editorList, ',err);
+                        console.log('err S /editor/list, ',err);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -397,16 +405,15 @@ exports.editorList = function(req,res){
                             editorsNum : arr.length,
                             editors : arr
                         };
-                        res.json(sendData);
+                        res.render('editor',sendData);
                         conn.release();
                     }
                 });
             }
         });
     }
-    */
 
-
+/*
     var renderData = {
         status:'s',
         editorsNum : 3,
@@ -442,7 +449,7 @@ exports.editorList = function(req,res){
     };
 
     res.render('editor',renderData);
-
+*/
 
 };
 
@@ -505,14 +512,14 @@ exports.editorAdd = function(req,res){
         //TODO : file upload and use result
         if(typeof req.files.thumnailImg !== 'undefined' && req.files.thumnailImg != null){
             fileUpload_result = fileUploadService.fileUpload('editor/'+recvData.editorName.toString(),req.files.thumnailImg);
-            console.log('file upload result',fileUpload_result);
+            //console.log('file upload result',fileUpload_result);
             file_thumnail = fileUpload_result.path;
         }
 
         //TODO : INSERT INTO EDITOR TABLE these datas
         db.pool.getConnection(function(err,conn){
             if(err){
-                console.log('err C /editorAdd, ',err);
+                console.log('err C /editor/add, ',err);
                 res.json({status:'f'});
                 return;
             }
@@ -529,7 +536,7 @@ exports.editorAdd = function(req,res){
                     parseInt(recvData.editorCate), recvData.editorIntro.toString()];
                 conn.query(q,params,function(err2,result){
                     if(err2){
-                        console.log('err I /editorAdd, ',err2);
+                        console.log('err I /editor/add, ',err2);
                         res.json({status:'f'});
                         conn.release();
                         return;
@@ -541,7 +548,7 @@ exports.editorAdd = function(req,res){
                             res.json({status:'s'});
                         }
                         else{
-                            console.log('err S /editorAdd, ',err);
+                            console.log('err S /editor/add, ',err);
                             res.json({status:'f'});
                         }
                         conn.release();
@@ -621,8 +628,9 @@ exports.boardAllList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-/*
-    if(sessionService.isMaster(req)){
+    //test for if
+    //if(sessionService.isMaster(req)){
+    if(0){
         console.log('/master/board,  not master');
         res.json({status:'f'});
         return;
@@ -676,8 +684,8 @@ exports.boardAllList = function(req,res){
             }
         });
     }
-    */
 
+/*
     var renderData = {
         status : 's',
         contentsNum : 10,
@@ -787,6 +795,7 @@ exports.boardAllList = function(req,res){
 
 
     res.render('management',renderData);
+*/
 
 };
 
@@ -862,9 +871,6 @@ exports.boardDel = function(req,res){
             }
         });
     }
-    
-
-
 };
 
 exports.boardWriteGet = function(req,res){
@@ -1024,13 +1030,14 @@ exports.boardList = function(req,res){
         return;
     }
 
-    /*
+/*
     //TODO : check session is editor
     if(!sessionService.hasSession(req)){
         console.log('invalid approach, /boardList');
         res.json({status:'f'});
         return;
     }
+*/
 
     //TODO : SELECT data from board TABLE
     db.pool.getConnection(function(err,conn){
@@ -1077,7 +1084,8 @@ exports.boardList = function(req,res){
 
         }
     });
-    */
+
+    /*
     var renderData = {
         status : 's',
         contentsNum : 6,
@@ -1146,6 +1154,7 @@ exports.boardList = function(req,res){
     };
 
     res.render('management',renderData);
+    */
 };
 
 /*
