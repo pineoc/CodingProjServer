@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css
-		" href="/stylesheet/stylesheet_masterPage.css">
+		" href="/stylesheets/stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script language="javascript">
@@ -20,13 +20,13 @@
   function editor(){
   	var main=document.getElementById("main");
 
-  	main.contentWindow.location="/web/master/editor";
+  	main.contentWindow.location="/web/master/editor?pageNum=0";
   	//getElementById("buttons2").className="btn btn-primary active";
   }
   function management(){
   	var main=document.getElementById("main");
 
-  	main.contentWindow.location="/web/master/board";
+  	main.contentWindow.location="/web/master/board?pageNum=0";
   	//getElementById("buttons3").className="btn btn-primary active";
   }
   function writeConsidertaions(){
@@ -91,8 +91,7 @@
 				</table>
 				</nav>
 			</div>
-			<iframe id="main" width="1000px";
-		height="600px"; scrolling="no" frameborder="0" style="background-color:#F3F7F7" src="/default_iframe"></iframe>
+			<iframe id="main" width="1000px" height="600px" scrolling="no" frameborder="0" style="background-color:#F3F7F7" src="/default_iframe"></iframe>
 	</div>
 		<!--<div class="main">
 			<p>ppppp</p>

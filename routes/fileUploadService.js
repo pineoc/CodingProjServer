@@ -56,8 +56,6 @@ exports.fileUpload = function(name,file){
         return resData;
     }
 
-
-
     if(!fs.existsSync(folder)){
         mkdirp(folder,function(err){
             if(err){

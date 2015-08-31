@@ -380,7 +380,7 @@ router.get('/app/board/view',function(req,res){
                         var arr = [];
                         var c_data = JSON.parse(result[0].contents);
                         var i_data = JSON.parse(result[0].images);
-                        for (var i=0; i<c_data.length;i++){
+                        for (var i = 0; i < c_data.length; i++){
                             var data = {
                                 img : i_data[i],
                                 content : c_data[i]
@@ -394,7 +394,7 @@ router.get('/app/board/view',function(req,res){
                             likes : result[0].likes,
                             editor : result[0].editor,
                             title : result[0].title,
-                            pageNum : result[0].contentsNum,
+                            pagesNum : result[0].pagesNum,
                             datas : arr
                         };
                         res.json(sendData);
@@ -458,12 +458,6 @@ router.get('/app/board/view',function(req,res){
         */
     }
 });
-
-
-
-
-
-
 
 
 /* write (옷입히기)
