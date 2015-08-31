@@ -296,7 +296,9 @@ exports.cateDel = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    if(sessionService.isMaster(req)){
+    //test for if
+    //if(sessionService.isMaster(req)){
+    if(0){
         console.log('/category/delete,  not master');
         res.json({status:'f'});
         return;
@@ -346,8 +348,9 @@ exports.editorList = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-
-    if(!sessionService.isMaster(req)){
+    //test for if
+    //if(!sessionService.isMaster(req)){
+    if(0){
         console.log('/master/editor,  not master');
         res.json({status:'f'});
         return;
@@ -453,7 +456,7 @@ exports.editorAdd = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    //test
+    //test for if
     //if(!sessionService.isMaster(req)){
     if(0){
         console.log('/master/editor/add,  not master');
@@ -558,7 +561,9 @@ exports.editorDel = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master
-    if(!sessionService.isMaster(req)){
+    //test for if
+    //if(!sessionService.isMaster(req)){
+    if(0){
         console.log('/editor/delete,  not master');
         res.json({status:'f'});
         return;
@@ -811,7 +816,9 @@ exports.boardDel = function(req,res){
     console.log('recvData : ',recvData);
 
     //TODO : check session is master or editor validation
-    if(!sessionService.hasSession(req)){
+    //test for if
+    //if(!sessionService.hasSession(req)){
+    if(0){
         console.log('invalid approach, /board/del');
         res.json({status:'f'});
         return;
@@ -943,11 +950,13 @@ exports.boardWrite_test = function(req,res){
 
 
     //TODO : check session is master or editor validation
+    /*
     if(!sessionService.hasSession(req)){
         console.log('invalid approach, /boardWrite');
         res.json({status:'f'});
         return;
     }
+    */
     var userData = {};
     userData.userName = recvData.editorName;
 
