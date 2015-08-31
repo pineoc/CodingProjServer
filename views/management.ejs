@@ -38,6 +38,8 @@
           e2.style.display = 'none';
        else
           e2.style.display = 'block';
+
+        document.deleteContent.submit();
    }
    </script>
 </head>
@@ -68,6 +70,7 @@
       </div>
       <!--글 삭제-->
       <div id="deleteDiv" style="display:none">
+      <form action="/web/board/delete" method="post" name="deleteContent">
       <table class="table table-striped table-bordered">
           <tr>
               <th>contentID</th>
@@ -86,10 +89,13 @@
               <td><%=datas[i].categoryID%></td>
               <td><%=datas[i].categoryName%></td>
               <td><%=datas[i].like%></td>
-              <td><button id="delete" type="button" class="btn btn-link btn-sm" value=<%=datas[i].contentID%> onclick="printValue(value)">삭제</button></td>
             </tr>
             <%}%>
           </table>
-          <button class="btn btn-success" onclick="showManagementMain('deleteDiv','managementMain')">완료</button>
+          <label for="글 삭제">Input Content's ID</label>
+          <input class="form-control" type="글 삭제" id="contentID" name="contentID" placeholder="삭제를 원하는 글의 ID를 입력해주세요"/>
+          <br>
+          <input type="submit" value="완료" class="btn btn-success" onclick="showManagementMain('deleteDiv','managementMain')"/>
+        </form>
 </body>
 </html>

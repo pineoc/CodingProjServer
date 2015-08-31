@@ -9,11 +9,27 @@
 		" href="stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script>
+  function writeContents(id,id2){
+        document.writeContent.submit();
+
+   }
+   </script>
 </head>
 <body>
 	<div class="container-fluid">
-		<h1>글 쓰기</h1>
-		<hr>
+          <div class="form-group">
+		<form action="/web/board/write" method="post" name="writeContent" id="writeContent">
+          <label for="이미지">글 이미지:</label>
+          <input  type="file" id="images" name="images"/>
+          <br>
+          <label for="글 내용">글 내용:</label>
+          <br><textarea rows="4" cols="50" name="content" form="writeContent"></textarea>
+          <br>
+          <br>
+          <input type="submit" value="완료" class="btn btn-success" onclick="writeContents()"/>
+          </form>
+          </div>
 	</div>
 </body>
 </html>
