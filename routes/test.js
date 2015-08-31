@@ -884,19 +884,81 @@ router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
  * Daun Joung
  */
 router.get('/web/master/manageClothes', function(req, res){
+    db.pool.getConnection(function(err, conn){
+
+    })
     res.render('manageClothes');
 });
 
 /*
  * cloth list
  * type : get
- * req :
- * res :
+ * req : pageNo, category, name
+ * res : status, cloth(array)
  *
  * Daun Joung
  */
 router.get('/web/master/clothesList', function(req, res){
-    res.render('clothesList');
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
+
+    // connect db
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err C /clothList, ',err);
+            res.json({status:"f"});
+            return;
+        }else{
+            var query = 'SELECT * FROM CLOTH ';      // TODO CHANGE!! 쿼리 수정해야함
+            // if there is request param
+
+            if((recvData.category) && (recvData.name)){
+                // category 와 name 둘다 조건이 존재하는 경우
+                query += ("WHERE cloth_cate=" + recvData.category + " AND cloth_name LIKE '%" + recvData.name + "%' ");
+            }else if(recvData.category){
+                // category 조건만 있는 경우
+                query += ("WHERE cloth_cate=" + recvData.category + " ");
+            }else if(recvData.name){
+                // name 조건만 있는 경우
+                query += ("WHERE cloth_name LIKE '%" + recvData.name + "%' ");
+            }
+            if(recvData.pageNo){
+                query += ("LIMIT " + ((recvData.pageNo-1)*20) + ", 20");
+            }
+            console.log("query : " + query);
+            conn.query(query,function(err2, result){
+                if(err2) {
+                    console.log('err S / clothList, ', err);
+                    res.json({status: 'f'});
+                    conn.release();
+                    return;
+                }else{
+                    var arr= [];
+                    for(var i = 0 ; i < result.length; i++){
+
+                        var d = {
+                            clothIdx : result[i].cloth_idx,
+                            clothCate : result[i].cloth_cate,
+                            clothName : result[i].cloth_name,
+                            clothImg : result[i].cloth_img,
+                            clothURL : result[i].cloth_url,
+                            clothInfo : result[i].cloth_info,
+                            dateTime : result[i].datetime,
+                            isValid : result[i].isValid
+                        };
+                        arr.push(d);
+                    }
+
+                    var sendData = {
+                        status: 's',
+                        cloths : arr
+                    };
+                    res.render('clothesList',sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 
 /*
