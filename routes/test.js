@@ -953,7 +953,7 @@ router.get('/web/master/clothesList', function(req, res){
 });
 
 /*
- * Add new cloth
+ * show Add new cloth Page
  * type : get
  * req :
  * res :
@@ -961,7 +961,21 @@ router.get('/web/master/clothesList', function(req, res){
  * Daun Joung
  */
 router.get('/web/master/addCloth', function(req, res){
-    res.render('clothesAdd');
+    res.render('clothesAddPage');
+});
+
+
+/*
+ * Add new Cloth
+ * type : post
+ * req :
+ * res :
+ */
+router.post('/web/master/addCloth', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+    res.json({status:'f'});
 });
 /*
  * recommend menu

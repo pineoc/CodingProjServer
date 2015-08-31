@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <!-- import jquey -->
+  <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+  <!-- import bootstrap and style sheet -->
+  <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+  <!-- import fileinput plugin and style sheet -->
+  <script type="text/javascript" src="/plugins/fileinput/fileinput.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/fileinput/fileinput.min.css">
+  <script>
+    $(document).ready(function(){
+      $("input#addClothBlank").click(function(){
+        $("div#addBlankContainer").append(" color : <input id='color'>  <input id='imageFile' type='file' class='file'> <br>");
+      });
+
+      // send post
+      $("input#submit").click(function(){
+        // check all the blank is filled
+        var name = $("input#name").val();
+        var category = $("select[name=category]").val();
+        var url = $("input#url").val();
+
+        if(name == ""){
+          alert("please write name");
+        }else if(category == ""){
+          alert("please choose category");
+        }else if(url == ""){
+          alert("please write url");
+        }else{
+          var jqxhr = $.post("/web/master/addCloth", {name : "daun"}).done(function(){
+            alert("Upload Success");
+          }).fail(function(){
+            alert("Upload fail");
+          });
+        }
+
+
+
+      });
+    });
+  </script>
+
+</head>
+<body>
+<div class="container">
+  <h3> Add New Cloth Page </h3>
+  <div class="row">
+    <div class="col-xs-2"> Cloth name : </div>
+    <input type="text" id="name" class="col-xs-2">
+    <div class="col-xs-2"> Category </div>
+    <div class="col-xs-2">
+      <select id="category" name="">
+        <option value="1"> Top </option>
+        <option value="2"> Bottom </option>
+        <option value="3"> Coat </option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2"> URL : </div>
+    <input type="text" id="url" class="col-xs-2">
+  </div>
+  <div id="addBlankContainer"></div>
+  <input type="button" id="addClothBlank" value="+">
+  <input type="button" id="submit" value="ADD">
+</div>
+</body>
+</html>
