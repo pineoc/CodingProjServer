@@ -261,6 +261,11 @@ exports.cateAdd = function(req,res){
                     else{
                         if(result.affectedRows==1){
                             res.json({status:'s'});
+                            /*
+                            res.writeHead(200,{
+                                'Location' : '/web/master/editor'
+                            });
+                            */
                         }
                         else{
                             res.json({status:'f', msg : 'not affected'});
@@ -548,6 +553,10 @@ exports.editorAdd = function(req,res){
                         if(result.affectedRows==1){
                             console.log('editor add success');
                             res.json({status:'s'});
+                            /*
+                            res.writeHead(200,{
+                                'Location' : '/web/master/editor'
+                            });*/
                         }
                         else{
                             console.log('err S /editor/add, ',err);
