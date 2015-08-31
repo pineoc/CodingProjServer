@@ -347,6 +347,7 @@ exports.editorList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
+    /*
     //TODO : check session is master
     //test for if
     //if(!sessionService.isMaster(req)){
@@ -403,8 +404,9 @@ exports.editorList = function(req,res){
             }
         });
     }
+    */
 
-/*
+
     var renderData = {
         status:'s',
         editorsNum : 3,
@@ -440,7 +442,7 @@ exports.editorList = function(req,res){
     };
 
     res.render('editor',renderData);
-    */
+
 
 };
 
