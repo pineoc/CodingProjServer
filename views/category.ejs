@@ -107,14 +107,13 @@
               <label for="카테고리 아이디">CategoryId:</label>
               <input class="form-control" type="카테고리 아이디" id="categoryID" name="categoryID" placeholder="카테고리 아이디를 입력해주세요">
               <label for="카테고리 이미지">CategoryImage:</label>
-              <input type="file" id="categoryImage" placeholder="카테고리를 입력해주세요">
+              <input type="file" id="categoryImage" name="categoryImage" placeholder="카테고리를 입력해주세요">
               <br>
               <Input type="submit" value="완료" class="btn btn-success" onclick="printValue('addDiv','categoryMain')"/>
             </div>
           </form>
     </div>
     <!--카테고리 삭제-->
-
     <div id="deleteDiv" style="display:none">
         <form action="/web/master/category/delete" name="categoryDelete" method="post">
         <table class="table table-striped table-bordered">
