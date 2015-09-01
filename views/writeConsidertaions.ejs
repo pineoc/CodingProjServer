@@ -10,16 +10,96 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script>
-  function writeContents(id,id2){
+  var count=1;
+
+  function writeContents(){
         document.writeContent.submit();
    }
-  function hide1()
+  function displayChange(id){
+       var e = document.getElementById(id);
+       if(e.style.display == 'none')
+          e.style.display = 'block';
+  }
+  function displayHide(id){
+        var e=document.getElementById(id);
+        if(e.style.display='block')
+          e.style.display='none';
+  }
+  function add(){
+      count+=1;
+     console.log(count);
+
+      switch(count){
+        case 2:
+          displayChange("display2");
+          break;
+        case 3:
+          displayChange("display3");
+          break;
+        case 4:
+          displayChange("display4");
+          break;
+        case 5:
+          displayChange("display5");
+          break;
+        case 6:
+          displayChange("display6");
+          break;
+        case 7:
+          displayChange("display7");
+          break;
+        case 8:
+          displayChange("display8");
+          break;
+        case 9:
+          displayChange("display9");
+          break;
+        case 10:
+          displayChange("display10");
+          break;
+        case 11:
+          displayChange("display11");
+          break;
+        case 12:
+          displayChange("display12");
+          break;
+         case 13:
+          displayChange("display13");
+          break;
+        case 14:
+          displayChange("display14");
+          break;
+        case 15:
+          displayChange("display15");
+          break;
+        case 16:
+          displayChange("display16");
+          break;
+        case 17:
+          displayChange("display17");
+          break;
+        case 18:
+          displayChange("display18");
+          break;
+        case 19:
+          displayChange("display19");
+          break;
+        case 20:
+          displayChange("display20");
+          displayHide("plusBtn");
+          break;
+        default:
+        break;
+      }
+
+  }
    </script>
 </head>
 <body>
   <!--1-->
-	<div class="container-fluid">
+	<div class="container-fluid" style="background-color:#ADC2FF;margin-bottom:10px;">
           <div class="form-group">
+            <br>
 		<form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
           <input  type="file" id="images" name="images"/>
@@ -28,12 +108,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
 	</div>
   <!--2-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display2">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -43,12 +122,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--3-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display3">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -58,12 +136,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--4-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display4">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -73,12 +150,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--5-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display5">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -88,12 +164,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--6-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display6">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -103,12 +178,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--7-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display7">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -118,12 +192,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--8-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display8">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -133,12 +206,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
    <!--9-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display9">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -148,12 +220,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--10-->
-  <div class="container-fluid" style="display:none"> 
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display10"> 
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -163,12 +234,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--11-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display11">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -178,12 +248,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--12-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display12">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -193,12 +262,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
    <!--13-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display13">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -208,12 +276,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--14-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display14">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -223,12 +290,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--15-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display15">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -238,12 +304,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--16-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display16">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -253,12 +318,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
    <!--17-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display17">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -268,12 +332,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--18-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display18">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -283,12 +346,11 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
   <!--19-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display19">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -297,13 +359,12 @@
           <label for="글 내용">글 내용:</label>
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
-          <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
+          <br>          
           </form>
           </div>
   </div>
   <!--20-->
-  <div class="container-fluid" style="display:none">
+  <div class="container-fluid" style="display:none;background-color:#ADC2FF;margin-bottom:10px;" id="display20">
           <div class="form-group">
     <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
           <label for="이미지">글 이미지:</label>
@@ -313,9 +374,17 @@
           <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
           <br>
           <br>
-          <input type="submit" value="완료" class="jbtn btn-success" onclick="writeContents()"/>
           </form>
           </div>
   </div>
+  <div class="form-group">
+   <button id="plusBtn" class="btn btn-lg" onclick="add();" style="display:block;width:1200px;padding:20px;margin-left:30px;margin-top:20px;background-color:white">
+    <span class="glyphicon glyphicon-plus"</span>
+  </button>
+  <br>
+  <form action="/web/board/write" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
+          <input type="submit" value="완료" class="jbtn btn btn-lg btn-success" onclick="writeContents()"/>
+  </form>
+</div>
 </body>
 </html>
