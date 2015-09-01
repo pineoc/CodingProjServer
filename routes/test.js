@@ -917,10 +917,9 @@ router.get('/web/master/clothesList', function(req, res){
             if(recvData.pageNo){
                 query += ("LIMIT " + ((recvData.pageNo-1)*20) + ", 20");
             }
-            console.log("query : " + query);
             conn.query(query,function(err2, result){
                 if(err2) {
-                    console.log('err S / clothList, ', err);
+                    console.log('err S / clothList, ', err2);
                     res.json({status: 'f'});
                     conn.release();
                     return;
@@ -1035,7 +1034,49 @@ router.get('/web/recommend_menu', function(req, res){
 router.get('/web/fitting_room_list', function(req, res){
     var recvData = req.query;
     console.log('recvData : ', recvData);
-    res.render('fitting_room_list');
+
+    // db connect
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err C /web/fitting_room_list, ',err);
+            res.json({status:'f'});
+            return;
+        }else{
+            var query = 'SELECT * FROM CLOTH_BOARD';
+
+            conn.query(query, function(err2, result){
+                if(err2){
+                    console.log('err S /web/fitting_room_list, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }else{
+                    var arr = [];
+                    for(var i = 0 ; i < result.length; i++){
+                        // TODO!!
+                        var d = {
+                            cbIdx : result[i].cb_idx,
+                            head : result[i].head,
+                            upperBody : result[i].upperBody,
+                            lowerBody : result[i].lowerBody,
+                            coat : result[i].coat,
+                            likes : result[i].likes,
+                            hashtag : result[i].hashtag,
+                            datetime : result[i].datetime
+                        };
+                        arr.push(d);
+                    }
+
+                    var sendData = {
+                        status : 's',
+                        list : arr
+                    };
+                    res.render('fitting_room_list',sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 
 /*
@@ -1047,7 +1088,51 @@ router.get('/web/fitting_room_list', function(req, res){
  * Daun Joung
  */
 router.get('/web/hot_fashion_list', function(req, res){
-    res.render('hot_fashion_list');
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
+
+    // db connect
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err C /web/fitting_room_list, ',err);
+            res.json({status:'f'});
+            return;
+        }else{
+            var query = 'SELECT * FROM CLOTH_BOARD';
+
+            conn.query(query, function(err2, result){
+                if(err2){
+                    console.log('err S /web/fitting_room_list, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }else{
+                    var arr = [];
+                    for(var i = 0 ; i < result.length; i++){
+                        // TODO!!
+                        var d = {
+                            cbIdx : result[i].cb_idx,
+                            head : result[i].head,
+                            upperBody : result[i].upperBody,
+                            lowerBody : result[i].lowerBody,
+                            coat : result[i].coat,
+                            likes : result[i].likes,
+                            hashtag : result[i].hashtag,
+                            datetime : result[i].datetime
+                        };
+                        arr.push(d);
+                    }
+
+                    var sendData = {
+                        status : 's',
+                        list : arr
+                    };
+                    res.render('hot_fashion_list'.sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 
 /*
@@ -1070,5 +1155,45 @@ router.get('/web/hot_fashion', function(req, res){
  */
 router.get('/web/fitting_room', function(req, res){
     res.render('fitting_room');
+});
+/*
+ * fitting_room
+ * type : post
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.post('/web/fitting_room', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+    db.pool.getConnection(function(err, conn){
+       if(err){
+           console.log("err C, /web/fitting_room, ", err);
+           res.json({status:'f'});
+           return;
+       } else{
+           var q = "INSERT INTO CLOTH_BOARD(user_token, head, upperbody, lowerbody, coat) VALUES(?,?,?,?,?)";
+           var params = [recvData.token.toString(), parseInt(recvData.head), parseInt(recvData.upper), parseInt(recvData.down), parseInt(recvData.coat)];
+
+           conn.query(q, params, function(err2, result){
+                if(err2){
+                    console.log('err l, /web/fitting_room, ',err2);
+                    res.json({status:'f', msg:'query err'});
+                    conn.release();
+                    return;
+                }else{
+                    if(result.affectedRows == 1){
+                        res.json({status:'s'});
+                    }else{
+                        res.json({status:'f', msg:'not affected'});
+                    }
+                    conn.release();
+                }
+           });
+       }
+    });
+
 });
 module.exports = router;

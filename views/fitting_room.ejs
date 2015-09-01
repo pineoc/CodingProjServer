@@ -14,7 +14,14 @@
                 $("div#fitting_room_container").load("/web/fitting_room_list");
             });
             $("input#submit").click(function(){
-                $("div#fitting_room_container").load("/web/fitting_room_list");
+                var head = $("input#head").val();
+                var upper = $("input#upper").val();
+                var down = $("input#down").val();
+                var coat = $("input#coat").val();
+                var token=$("input#token").val();
+
+                $.post("/web/fitting_room", {head : head, upper : upper, down : down, coat : coat, token : token});
+
             });
 
             $("td#top_cloth").click(function(){
@@ -34,6 +41,12 @@
         <h3> Fitting Room </h3>
         <input id="go_back" type="button" value="Go Back"/>
         <input id="submit" type="button" value="submit"/>
+        <br>
+        head : <input id="head" type = "text"> <br>
+        upper : <input id="upper" type="text"> <br>
+        down : <input id="down" type="text"> <br>
+        coat : <input id="coat" type="text"> <br>
+        <input id="token" type="hidden" value="aaa">
         <div>
             <table class=" ">
                 <tbody>
