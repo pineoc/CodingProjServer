@@ -828,7 +828,7 @@ exports.boardUpdate = function(req,res){
 };
 
 /*
- * board delete
+ * board delete, (set isValid = false)
  * type : post
  * req : contentID
  * res : status
@@ -864,7 +864,7 @@ exports.boardDel = function(req,res){
                 var query = 'UPDATE BOARD SET isValid=0 WHERE b_idx=?';
                 conn.query(query,[recvData.contentID],function(err2,result){
                     if(err2){
-                        console.log('err U /board/del, ', err);
+                        console.log('err U /board/del, ', err2);
                         res.json({status : 'f'});
                         conn.release();
                         return;
@@ -884,8 +884,64 @@ exports.boardDel = function(req,res){
     }
 };
 
-exports.boardWriteGet = function(req,res){
 
+
+/*
+* board drop (drop from table)
+* type : post
+* req : contentID
+* res : status
+* */
+exports.boardDrop = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master validation
+    //test for if
+    //if(!sessionService.isMaster(req)){
+    if(0){
+        console.log('invalid approach, /board/drop');
+        res.json({status:'f'});
+        return;
+    }
+    else{
+        if(typeof recvData.contentID === 'undefined' || recvData.contentID.length == 0){
+            console.log('/board/drop, no contentID');
+            res.json({status : 'f'});
+            return;
+        }
+
+        db.pool.getConnection(function(err, conn){
+            if(err){
+                console.log('err C /board/drop, ', err);
+                res.json({status : 'f'});
+                return;
+            }
+            else{
+                var query = 'DELETE FROM BOARD WHERE b_idx=?';
+                conn.query(query,[recvData.contentID],function(err2,result){
+                    if(err2){
+                        console.log('err U /board/drop, ', err2);
+                        res.json({status : 'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.affectedRows==1){
+                            res.json({status : 's'});
+                        }
+                        else{
+                            res.json({status : 'f'});
+                        }
+                        conn.release();
+                    }
+                });
+            }
+        });
+    }
+};
+
+exports.boardWriteGet = function(req,res){
     res.render('writeConsidertaions',{status:'s'});
 };
 
@@ -1373,20 +1429,3 @@ exports.fileUploadTest = function(req,res){
     res.json({status:'s'});
 };
 
-exports.fileUploadTest2 = function(req,res){
-    var recvData = req.body;
-    console.log('recvData : ',recvData);
-
-    console.log('param1 : ',recvData.param1);
-    console.log('param2 : ',recvData.param2);
-
-    if(fileUploadService.fileUploadArr('board1', req.files.file1)){
-        console.log('files upload Arr success');
-        res.json({status:'s'});
-    }
-    else{
-        console.log('files upload Arr fail');
-        res.json({status:'f'});
-    }
-
-};

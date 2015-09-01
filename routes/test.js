@@ -861,16 +861,6 @@ router.get('/web/board/list',web.boardList);
 router.get('/web/cloth/list',web.clothList);
 
 /*
-*
-*
-*
-* */
-
-
-router.post('/fileUpload', multipartMiddleware, web.fileUploadTest);
-router.post('/fileUploadArr',multipartMiddleware,web.fileUploadTest2);
-
-/*
  * cloth management
  * type : get
  * req :

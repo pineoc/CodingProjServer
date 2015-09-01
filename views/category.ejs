@@ -112,6 +112,7 @@
                 <tr>
                     <th>categoryNum</th>
                     <th>categoryName</th>
+                    <th>categoryImg</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,6 +120,7 @@
                     <tr>
                         <td><%=categorys[i].cateID%></td>
                         <td><%=categorys[i].cateName%></td>
+                        <td><a href="<%=categorys[i].cateURL%>"><%=categorys[i].cateURL%></a></td>
                     </tr>
                 <%}%>
             </tbody>
