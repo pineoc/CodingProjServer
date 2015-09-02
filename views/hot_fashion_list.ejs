@@ -14,9 +14,28 @@
                 $("div#hot_fashion_container").load("/web/hot_fashion");
             });
 
-
+            // make hastag as a link
+            $("td#hashTag").each(function(){
+                var text = $(this).text().replace(/\ /g,'');
+                var splitText = text.split('#');
+                var repText = "";
+                for(var i = 0 ; i < splitText.length; i++){
+                    if(splitText[i] != ''){
+                        repText += ("<u id='hashTag'> #" + splitText[i] + "</u> ");
+                    }
+                }
+                $(this).text('');
+                $(this).append(repText);//.replace(repText);
+            });
+            $("u#hashTag").click(function() {
+                var clickTag = $(this).text().replace(/\ /,'').replace(/\#/,'');
+                var url = "/web/hot_fashion_list?hashtag=" + clickTag;
+                $("div#hot_fashion_container").load(url);
+            });
+           // var res = str.split("");
             $('[data-toggle="popover"]').popover({html: true});
         });
+
 
     </script>
 </head>
@@ -55,7 +74,7 @@
                     <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
                             <img src=<%=list[i].coatUrl%> width="100px" height="100px"/>
                         </a></td>
-                    <td><%=list[i].hashtag%></td>
+                    <td id="hashTag"><%=list[i].hashtag%></td>
                 </tr>
             <%}%>
             </tbody>

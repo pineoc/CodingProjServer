@@ -1103,7 +1103,12 @@ router.get('/web/hot_fashion_list', function(req, res){
                 + 'IF(LOWERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = LOWERBODY), NULL) AS LOWERURL, '
                 + 'IF(COAT IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = COAT), NULL) AS COATURL'
                 + ' FROM CLOTH_BOARD';
+            if(recvData.hashtag){
+                // if hastag is exist
+                query += (" WHERE HASHTAG LIKE '%" + recvData.hashtag + "%'" );
 
+            }
+            console.log("Query check : " + query);
             conn.query(query, function(err2, result){
                 if(err2){
                     console.log('err S /web/fitting_room_list, ',err2);
