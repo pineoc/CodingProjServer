@@ -1032,7 +1032,12 @@ router.get('/web/fitting_room_list', function(req, res){
             res.json({status:'f'});
             return;
         }else{
-            var query = 'SELECT * FROM CLOTH_BOARD';
+            var query = 'SELECT CB_IDX, USER_TOKEN, HEAD, UPPERBODY, LOWERBODY, COAT, LIKES, HASHTAG, DATETIME, '
+                + 'IF(HEAD IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = HEAD), NULL) AS HEADURL, '
+                + 'IF(UPPERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = UPPERBODY), NULL) AS UPPERURL,'
+                + 'IF(LOWERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = LOWERBODY), NULL) AS LOWERURL, '
+                + 'IF(COAT IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = COAT), NULL) AS COATURL'
+                + ' FROM CLOTH_BOARD';
 
             conn.query(query, function(err2, result){
                 if(err2){
@@ -1045,14 +1050,18 @@ router.get('/web/fitting_room_list', function(req, res){
                     for(var i = 0 ; i < result.length; i++){
                         // TODO!!
                         var d = {
-                            cbIdx : result[i].cb_idx,
-                            head : result[i].head,
-                            upperBody : result[i].upperBody,
-                            lowerBody : result[i].lowerBody,
-                            coat : result[i].coat,
-                            likes : result[i].likes,
-                            hashtag : result[i].hashtag,
-                            datetime : result[i].datetime
+                            cbIdx : result[i].CB_IDX,
+                            head : result[i].HEAD,
+                            upperBody : result[i].UPPERBODY,
+                            lowerBody : result[i].LOWERBODY,
+                            coat : result[i].COAT,
+                            headUrl : result[i].HEADURL,
+                            upperUrl : result[i].UPPERURL,
+                            lowerUrl : result[i].LOWERURL,
+                            coatUrl : result[i].COATURL,
+                            likes : result[i].LIKES,
+                            hashtag : result[i].HASHTAG,
+                            datetime : result[i].DATETIME
                         };
                         arr.push(d);
                     }
@@ -1088,7 +1097,12 @@ router.get('/web/hot_fashion_list', function(req, res){
             res.json({status:'f'});
             return;
         }else{
-            var query = 'SELECT * FROM CLOTH_BOARD';
+            var query = 'SELECT CB_IDX, USER_TOKEN, HEAD, UPPERBODY, LOWERBODY, COAT, LIKES, HASHTAG, DATETIME, '
+                + 'IF(HEAD IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = HEAD), NULL) AS HEADURL, '
+                + 'IF(UPPERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = UPPERBODY), NULL) AS UPPERURL,'
+                + 'IF(LOWERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = LOWERBODY), NULL) AS LOWERURL, '
+                + 'IF(COAT IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = COAT), NULL) AS COATURL'
+                + ' FROM CLOTH_BOARD';
 
             conn.query(query, function(err2, result){
                 if(err2){
@@ -1101,14 +1115,18 @@ router.get('/web/hot_fashion_list', function(req, res){
                     for(var i = 0 ; i < result.length; i++){
                         // TODO!!
                         var d = {
-                            cbIdx : result[i].cb_idx,
-                            head : result[i].head,
-                            upperBody : result[i].upperBody,
-                            lowerBody : result[i].lowerBody,
-                            coat : result[i].coat,
-                            likes : result[i].likes,
-                            hashtag : result[i].hashtag,
-                            datetime : result[i].datetime
+                            cbIdx : result[i].CB_IDX,
+                            head : result[i].HEAD,
+                            upperBody : result[i].UPPERBODY,
+                            lowerBody : result[i].LOWERBODY,
+                            coat : result[i].COAT,
+                            headUrl : result[i].HEADURL,
+                            upperUrl : result[i].UPPERURL,
+                            lowerUrl : result[i].LOWERURL,
+                            coatUrl : result[i].COATURL,
+                            likes : result[i].LIKES,
+                            hashtag : result[i].HASHTAG,
+                            datetime : result[i].DATETIME
                         };
                         arr.push(d);
                     }
@@ -1117,7 +1135,7 @@ router.get('/web/hot_fashion_list', function(req, res){
                         status : 's',
                         list : arr
                     };
-                    res.render('hot_fashion_list'.sendData);
+                    res.render('hot_fashion_list',sendData);
                     conn.release();
                 }
             });
