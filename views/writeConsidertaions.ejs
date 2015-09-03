@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
-        var count=1;
+        var count=3;
 
         function writeContents(){
             document.writeContent.submit();
@@ -26,7 +26,7 @@
         }
         function add(){
             count+=1;
-            console.log(count);
+            console.log("count : ",count);
 
 
             switch(count){
@@ -91,16 +91,13 @@
                 default:
                     break;
             }
-
-            //var displayString = "display" + count;
-            //displayChange(displayString);
         }
     </script>
 </head>
 <body>
 <form action="/web/board/write/test?editorName=lee" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
     <!--1-->
-    <div class="container-fluid" style="background-color:#ADC2FF;margin-bottom:10px;">
+    <div class="container-fluid" style="display:block;background-color:#ADC2FF;margin-bottom:10px;">
         <div class="form-group">
             <br>
 
@@ -108,7 +105,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
         </div>
@@ -121,7 +118,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
         </div>
@@ -134,7 +131,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -148,7 +145,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -162,7 +159,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -176,7 +173,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -190,7 +187,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -204,7 +201,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -218,7 +215,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -232,7 +229,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -246,7 +243,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -260,7 +257,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -274,7 +271,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -288,7 +285,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -302,7 +299,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -316,7 +313,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -330,7 +327,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -344,7 +341,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -358,7 +355,7 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
@@ -372,19 +369,21 @@
             <input  type="file" id="images" name="images"/>
             <br>
             <label for="글 내용">글 내용:</label>
-            <br><textarea rows="4" cols="100" name="content" form="writeContent"></textarea>
+            <br><textarea rows="4" cols="100" name="contents" form="writeContent"></textarea>
             <br>
             <br>
 
         </div>
     </div>
-    <div class="form-group">
-        <button id="plusBtn" class="btn btn-lg" onclick="add();" style="display:block;width:1200px;padding:20px;margin-left:30px;margin-top:20px;background-color:white">
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        <br>
-        <input type="submit" value="완료" class="jbtn btn btn-lg btn-success"/>
-    </div>
 </form>
+<div class="form-group">
+    <button id="plusBtn" class="btn btn-lg" onclick="add();" style="display:block;width:1200px;padding:20px;margin-left:30px;margin-top:20px;background-color:white">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <br>
+    <button type="submit" form="writeContent" class="jbtn btn btn-lg btn-success">
+        완료
+    </button>
+</div>
 </body>
 </html>

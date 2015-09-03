@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
-  <link rel="stylesheet" type="text/css
-    " href="/stylesheets/stylesheet_masterPage.css">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/plugins/jquery.form.js"></script>
   <script>
     function showAddDiv(id,id2){
        var e = document.getElementById(id);
@@ -25,7 +25,7 @@
           e2.style.display = 'block';
    }
    function showCategoryMain1(id,id2){
-    document.categoryAdd.submit();
+    //document.categoryAdd.submit();
 
     var e = document.getElementById(id);
        if(e.style.display == 'block')
@@ -56,7 +56,7 @@
 
    }
    function showCategoryMain2(id,id2){
-        document.categoryDelete.submit();
+        //document.categoryDelete.submit();
 
          var e = document.getElementById(id);
        if(e.style.display == 'block')
@@ -130,7 +130,7 @@
       </div>
       <!--카테고리 추가-->
       <div id="addDiv" style="display:none">
-          <form action="/web/master/category/add" method="post" name="categoryAdd" enctype="multipart/form-data">
+          <form action="/web/master/category/add" method="post" name="categoryAdd" id="categoryAdd" enctype="multipart/form-data">
           <div class="form-group">
               <label for="카테고리 이름">CategoryName:</label>
               <input class="form-control" type="카테고리 이름" id="categoryName" name="categoryName" placeholder="카테고리 이름을 입력해주세요">
@@ -145,7 +145,7 @@
     </div>
     <!--카테고리 삭제-->
     <div id="deleteDiv" style="display:none">
-        <form action="/web/master/category/delete" name="categoryDelete" method="post">
+        <form action="/web/master/category/delete" id = "categoryDelete" name="categoryDelete" method="post">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -165,8 +165,37 @@
         <label for="카테고리 삭제">InputCategoryID:</label>
         <input class="form-control" type="카테고리 삭제" id="categoryID" name="categoryID" placeholder="삭제를 원하는 카테고리 ID를 입력해주세요"/>
         <br>
-        <input type="submit"  id="delete" type="button" class="btn btn-success btn-Medium"  value="완료" onclick="showCategoryMain2('deleteDiv','categoryMain')"/>   
+        <input type="submit" id="delete" class="btn btn-success btn-Medium"  value="완료" onclick="showCategoryMain2('deleteDiv','categoryMain')"/>
       </form>
       </div>
+<script>
+    $( document ).ready(function() {
+        $("#categoryAdd").ajaxForm({
+            success:function(res, frm, opt){
+                if(res.status === 's'){
+                    location.reload(true);
+                }
+                else{
+                    alert('error, ' + res.msg);
+                }
+            }
+        });
+    });
+    $( document ).ready(function() {
+        $("#categoryDelete").ajaxForm({
+            success:function(res, frm, opt){
+                if(res.status === 's'){
+                    location.reload(true);
+                }
+                else{
+                    alert('error, ' + res.msg);
+                }
+            },
+            error : function(){
+                alert('error');
+            }
+        });
+    });
+</script>
 </body>
 </html> 

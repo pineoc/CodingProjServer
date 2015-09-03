@@ -501,7 +501,7 @@ exports.editorAdd = function(req,res){
             return;
         }
         //editorCate check
-        if(typeof recvData.editorCate === 'undefined' || recvData.editorCate.length == 0){
+        if(typeof recvData.editorCate === 'undefined' || recvData.editorCate.length == 0 || typeof parseInt(recvData.editorCate) !== 'number'){
             console.log('/master/editor/add, no category');
             res.json({status:'f'});
             return;
@@ -517,8 +517,8 @@ exports.editorAdd = function(req,res){
         var file_thumnail = null;
         var fileUpload_result;
         //TODO : file upload and use result
-        if(typeof req.files.thumnailImg !== 'undefined' && req.files.thumnailImg != null){
-            fileUpload_result = fileUploadService.fileUpload('editor/'+recvData.editorName.toString(),req.files.thumnailImg);
+        if(typeof req.files.editorThumnail !== 'undefined' && req.files.editorThumnail != null){
+            fileUpload_result = fileUploadService.fileUpload('editor/'+recvData.editorName.toString(),req.files.editorThumnail);
             //console.log('file upload result',fileUpload_result);
             file_thumnail = fileUpload_result.path;
         }
@@ -535,7 +535,7 @@ exports.editorAdd = function(req,res){
                 var shasum = crypto.createHash('sha1');
                 shasum.update(recvData.editorPwd);
                 var d = shasum.digest('hex');
-
+                console.log('sha success ',d);
                 var q = 'INSERT INTO EDITOR (e_name, e_email, e_nickname, e_pwd, e_thumnail, e_category, e_intro, isValid) ' +
                     'VALUES(?,?,?,?,?,?,?,1)';
                 var params = [recvData.editorName.toString(), recvData.editorEmail.toString(),
@@ -963,14 +963,38 @@ exports.boardWrite = function(req,res){
         res.json({status:'f'});
         return;
     }
+
+    //contents count check
+    if(typeof recvData.contents === 'undefined' || recvData.contents.length < 3){
+        console.log('not enough to write board');
+        res.json({status:'f',msg:'not enough contents'});
+        return;
+    }
+
+    //define contentsData for check valid
+    var contentsArr = [];
+    for (var i = 0; i < recvData.contents.length; i++){
+        if(recvData.contents[i] !== ''){
+            contentsArr.push(recvData.contents[i]);
+        }
+    }
+    console.log('contentsArr check : ',contentsArr);
+
+    //file count check
+    if(typeof req.files.length === 'undefined' || req.files.length <3 || req.files.length == contentsArr.length){
+        console.log('not valid to write board files and data');
+        res.json({status:'f',msg:'invalid data form'});
+        return;
+    }
+
     var userData = sessionService.getSession(req);
 
     //TODO : files upload + contents
     var contentsData = [];
     var imagesData = [];
     var thumnail_image = fileUploadService.fileUpload(('board/'+userData.userName).toString(),req.files.thumnail).path;
-    for(var i=0;i<recvData.contents.length;i++){
-        var data_content = recvData.contents[i];
+    for(var i=0;i<contentsArr.length;i++){
+        var data_content = contentsArr[i];
         contentsData.push(data_content);
         var data_image = req.files.images[i];
         imagesData.push(fileUploadService.fileUpload(('board/'+userData.userName).toString(),data_image).path);
@@ -1034,6 +1058,29 @@ exports.boardWrite_test = function(req,res){
     */
     var userData = {};
     userData.userName = recvData.editorName;
+
+    //contents count check
+    if(typeof recvData.contents === 'undefined' || recvData.contents.length < 3){
+        console.log('not enough to write board');
+        res.json({status:'f',msg:'not enough contents'});
+        return;
+    }
+
+    //define contentsData for check valid
+    var contentsArr = [];
+    for (var i = 0; i < recvData.contents.length; i++){
+        if(recvData.contents[i] !== ''){
+            contentsArr.push(recvData.contents[i]);
+        }
+    }
+    console.log('contentsArr check : ',contentsArr);
+
+    //file count check
+    if(typeof req.files.length === 'undefined' || req.files.length <3 || req.files.length == contentsArr.length){
+        console.log('not valid to write board files and data');
+        res.json({status:'f',msg:'invalid data form'});
+        return;
+    }
 
     //TODO : files upload + contents
     var contentsData = [];
