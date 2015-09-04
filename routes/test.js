@@ -1093,7 +1093,7 @@ router.get('/web/hot_fashion_list', function(req, res){
     // db connect
     db.pool.getConnection(function(err, conn){
         if(err){
-            console.log('err C /web/fitting_room_list, ',err);
+            console.log('err C /web/hot_fashion_list, ',err);
             res.json({status:'f'});
             return;
         }else{
@@ -1108,10 +1108,9 @@ router.get('/web/hot_fashion_list', function(req, res){
                 query += (" WHERE HASHTAG LIKE '%" + recvData.hashtag + "%'" );
 
             }
-            console.log("Query check : " + query);
             conn.query(query, function(err2, result){
                 if(err2){
-                    console.log('err S /web/fitting_room_list, ',err2);
+                    console.log('err S /web/hot_fashion_list, ',err2);
                     res.json({status:'f'});
                     conn.release();
                     return;
@@ -1167,6 +1166,8 @@ router.get('/web/hot_fashion', function(req, res){
  * Daun Joung
  */
 router.get('/web/fitting_room', function(req, res){
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
     res.render('fitting_room');
 });
 /*
@@ -1208,5 +1209,67 @@ router.post('/web/fitting_room', function(req, res){
        }
     });
 
+});
+
+/*
+ * fitting_room_clothList
+ * type : get
+ * req :
+ * res :
+ *
+ * Daun Joung
+ */
+router.get('/web/fitting_room_clothList', function(req, res){
+    var recvData = req.query;
+    console.log('recvData : ', recvData);
+
+    // db connect
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log('err C /web/fitting_room_clothList, ',err);
+            res.json({status:'f'});
+            return;
+        }else{
+            var query = 'SELECT CLOTH_IDX, CLOTH_CATE, CLOTH_NAME, CLOTH_IMG, CLOTH_URL FROM CLOTH ';
+            if(recvData.cate){
+                switch(recvData.cate){
+                    case '1':  query += ' WHERE CLOTH_CATE = 1'; break;
+                    case '2':  query += ' WHERE CLOTH_CATE = 2'; break;
+                    case '3':  query += ' WHERE CLOTH_CATE = 3'; break;
+                    case '4':  query += ' WHERE CLOTH_CATE = 4'; break;
+                }
+            }
+            query += ' ORDER BY DATETIME';
+            console.log("Check query : " + query);
+            conn.query(query, function(err2, result){
+                if(err2){
+                    console.log('err S /web/fitting_room_clothList, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }else{
+                    var arr = [];
+                    for(var i = 0 ; i < result.length; i++){
+                        // TODO!!
+                        var d = {
+                            clothIdx : result[i].CLOTH_IDX,
+                            clothCate : result[i].CLOTH_CATE,
+                            clothName : result[i].CLOTH_NAME,
+                            clothImg : result[i].CLOTH_IMG,
+                            clothURL : result[i].CLOTH_URL
+                        };
+                        arr.push(d);
+                    }
+                    var sendData = {
+                        status : 's',
+                        cate : recvData.cate,
+                        list : arr
+                    };
+                    res.render('fitting_room_clothList',sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 module.exports = router;

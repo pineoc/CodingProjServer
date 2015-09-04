@@ -14,25 +14,34 @@
                 $("div#fitting_room_container").load("/web/fitting_room_list");
             });
             $("input#submit").click(function(){
-                var head = $("input#head").val();
-                var upper = $("input#upper").val();
-                var down = $("input#down").val();
-                var coat = $("input#coat").val();
-                var token=$("input#token").val();
+                var head = $("td#top_cloth img").attr('value');
+                var upper = $("td#top_cloth img").attr('value');
+                var down = $("td#bottom_cloth img").attr('value');
+                var coat = $("td#outer_cloth img").attr('value');
+                var postJson =  {head : head, upper : upper, down : down, coat : coat, token : 'aaa'};
 
-                $.post("/web/fitting_room", {head : head, upper : upper, down : down, coat : coat, token : token});
+                alert(postJson.toString());
+                $.post("/web/fitting_room", postJson);
 
             });
 
             $("td#top_cloth").click(function(){
                alert("Choose Top Cloth");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=1");
             });
             $("td#bottom_cloth").click(function(){
                 alert("Choose Bottom Cloth");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=2");
             });
             $("td#outer_cloth").click(function(){
                 alert("Choose Outer Cloth");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=3");
             });
+
+
+            if($("div#clothList").text().length < 10){
+              //  $("div#clothList").load("/web/fitting_room_clothList");
+            }
         });
     </script>
 </head>
@@ -41,38 +50,26 @@
         <h3> Fitting Room </h3>
         <input id="go_back" type="button" value="Go Back"/>
         <input id="submit" type="button" value="submit"/>
-        <br>
-        head : <input id="head" type = "text"> <br>
-        upper : <input id="upper" type="text"> <br>
-        down : <input id="down" type="text"> <br>
-        coat : <input id="coat" type="text"> <br>
-        <input id="token" type="hidden" value="aaa">
         <div>
             <table class=" ">
                 <tbody>
                     <tr>
-                        <td  id = "top_cloth" width="100px" height="100px">
-                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="150px"/>
+                        <td  id="top_cloth" width="100px" height="100px">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="150px" height="150px"/>
                         </td>
-                        <td  id = "bottom_cloth" width="100px" rowspan="2">
-                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+                        <td  id="bottom_cloth" width="100px" rowspan="2">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="150px" height="300px"/>
                         </td>
                     </tr>
                     <tr>
-                        <td  id = "outer_cloth" width="100px" height="100px">
-                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="150px"/>
+                        <td  id="outer_cloth" width="100px" height="100px">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="150px" height="150px"/>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="row">
-            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
-            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
-            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
-            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
-            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
-            <img class="col-md-3" src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="150px" height="300px"/>
+        <div id="clothList">
         </div>
     </div>
 </body>
