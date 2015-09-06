@@ -14,7 +14,7 @@
                 $("div#fitting_room_container").load("/web/fitting_room_list");
             });
             $("input#submit").click(function(){
-                var head = $("td#top_cloth img").attr('value');
+                var head = $("td#head img").attr('value');
                 var upper = $("td#top_cloth img").attr('value');
                 var down = $("td#bottom_cloth img").attr('value');
                 var coat = $("td#outer_cloth img").attr('value');
@@ -24,6 +24,11 @@
                 $.post("/web/fitting_room", postJson);
 
             });
+
+            $("td#head").click(function(){
+                alert("Choose Head");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=4");
+            })
 
             $("td#top_cloth").click(function(){
                alert("Choose Top Cloth");
@@ -54,16 +59,21 @@
             <table class=" ">
                 <tbody>
                     <tr>
+                        <td id="head" colspan="2">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="200px" height="100px"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td  id="top_cloth" width="100px" height="100px">
-                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="150px" height="150px"/>
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="100px"/>
                         </td>
                         <td  id="bottom_cloth" width="100px" rowspan="2">
-                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="150px" height="300px"/>
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="200px"/>
                         </td>
                     </tr>
                     <tr>
                         <td  id="outer_cloth" width="100px" height="100px">
-                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="150px" height="150px"/>
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="100px"/>
                         </td>
                     </tr>
                 </tbody>
