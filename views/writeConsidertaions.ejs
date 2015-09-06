@@ -8,12 +8,9 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/plugins/jquery.form.js"></script>
     <script>
         var count=3;
-
-        function writeContents(){
-            document.writeContent.submit();
-        }
         function displayChange(id){
             var e = document.getElementById(id);
             if(e.style.display == 'none')
@@ -95,7 +92,12 @@
     </script>
 </head>
 <body>
-<form action="/web/board/write/test?editorName=lee" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
+<form action="/web/board/write/test" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
+    <!--for test, value to editorName data, example is test -->
+    <input type="hidden" name="editorName" value="test"/>
+    <input type="hidden" name="title" value="test title"/>
+    <input type="hidden" name="category" value="2"/>
+    <!--for test -->
     <!--1-->
     <div class="container-fluid" style="display:block;background-color:#ADC2FF;margin-bottom:10px;">
         <div class="form-group">
@@ -385,5 +387,24 @@
         완료
     </button>
 </div>
+<script>
+    /*
+    $( document ).ready(function() {
+        $("#writeContent").ajaxForm({
+            success:function(res, frm, opt){
+                if(res.status === 's'){
+                    location.reload(true);
+                }
+                else{
+                    alert('에러, ' + res.msg);
+                }
+            },
+            error:function(){
+                alert('unexpected error');
+            }
+        });
+    });
+    */
+</script>
 </body>
 </html>

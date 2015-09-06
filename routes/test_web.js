@@ -249,7 +249,6 @@ exports.cateAdd = function(req,res){
             else{
                 var q = 'INSERT INTO CATEGORY (cate_idx,cate_name,cate_url) VALUES (?,?,?)';
                 var cate_img = fileUploadService.fileUpload('cate',req.files.categoryImage).path;
-                console.log("cate test : " + cate_img);
                 var params = [parseInt(recvData.categoryID),recvData.categoryName.toString(),cate_img];
                 conn.query(q,params,function(err2,result){
                     if(err2){
@@ -261,11 +260,6 @@ exports.cateAdd = function(req,res){
                     else{
                         if(result.affectedRows==1){
                             res.json({status:'s'});
-                            /*
-                            res.writeHead(200,{
-                                'Location' : '/web/master/editor'
-                            });
-                            */
                         }
                         else{
                             res.json({status:'f', msg : 'not affected'});
@@ -593,7 +587,7 @@ exports.editorDel = function(req,res){
         //editorEmail check
         if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
             console.log('/editor/del, no email');
-            res.json({status:'f'});
+            res.json({status:'f',msg:'no email'});
             return;
         }
 
@@ -601,7 +595,7 @@ exports.editorDel = function(req,res){
         db.pool.getConnection(function(err,conn){
             if(err){
                 console.log('err C /editor/del, ',err);
-                res.json({status:'f'});
+                res.json({status:'f',msg:'connection error'});
                 return;
             }
             else{
@@ -609,7 +603,7 @@ exports.editorDel = function(req,res){
                 conn.query(query,[recvData.editorEmail],function(err2,result){
                     if(err2){
                         console.log('err U /editor/del, ',err2);
-                        res.json({status:'f'});
+                        res.json({status:'f',msg:'query error'});
                         conn.release();
                         return;
                     }
@@ -618,7 +612,7 @@ exports.editorDel = function(req,res){
                             res.json({status:'s'});
                         }
                         else{
-                            res.json({status:'f'});
+                            res.json({status:'f',msg:'already changed to invalid'});
                         }
                         conn.release();
                     }
@@ -660,7 +654,7 @@ exports.boardAllList = function(req,res){
                 return;
             }
             else{
-                var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY LIMIT ?, 20';
+                var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY GROUP BY b_idx LIMIT ?, 20';
                 conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
                         console.log('err S /web/master/board, ',err2);
@@ -907,14 +901,14 @@ exports.boardDrop = function(req,res){
     else{
         if(typeof recvData.contentID === 'undefined' || recvData.contentID.length == 0){
             console.log('/board/drop, no contentID');
-            res.json({status : 'f'});
+            res.json({status : 'f',msg:'no board id'});
             return;
         }
 
         db.pool.getConnection(function(err, conn){
             if(err){
                 console.log('err C /board/drop, ', err);
-                res.json({status : 'f'});
+                res.json({status : 'f',msg:'connection error'});
                 return;
             }
             else{
@@ -922,7 +916,7 @@ exports.boardDrop = function(req,res){
                 conn.query(query,[recvData.contentID],function(err2,result){
                     if(err2){
                         console.log('err U /board/drop, ', err2);
-                        res.json({status : 'f'});
+                        res.json({status : 'f',msg:'query error'});
                         conn.release();
                         return;
                     }
@@ -931,7 +925,7 @@ exports.boardDrop = function(req,res){
                             res.json({status : 's'});
                         }
                         else{
-                            res.json({status : 'f'});
+                            res.json({status : 'f',msg:'not affected'});
                         }
                         conn.release();
                     }
@@ -964,13 +958,6 @@ exports.boardWrite = function(req,res){
         return;
     }
 
-    //contents count check
-    if(typeof recvData.contents === 'undefined' || recvData.contents.length < 3){
-        console.log('not enough to write board');
-        res.json({status:'f',msg:'not enough contents'});
-        return;
-    }
-
     //define contentsData for check valid
     var contentsArr = [];
     for (var i = 0; i < recvData.contents.length; i++){
@@ -978,10 +965,24 @@ exports.boardWrite = function(req,res){
             contentsArr.push(recvData.contents[i]);
         }
     }
-    console.log('contentsArr check : ',contentsArr);
+
+    //files check and sort
+    var filesArr = [];
+    for (var i = 0; i < req.files.length; i++){
+        if(req.files.images[i].size !== 0){
+            filesArr.push(req.files.images[i]);
+        }
+    }
+
+    //contents count check
+    if(typeof recvData.contents === 'undefined' || contentsArr.length < 3){
+        console.log('not enough to write board');
+        res.json({status:'f',msg:'not enough contents'});
+        return;
+    }
 
     //file count check
-    if(typeof req.files.length === 'undefined' || req.files.length <3 || req.files.length == contentsArr.length){
+    if(typeof req.files.length === 'undefined' || filesArr.length < 3){
         console.log('not valid to write board files and data');
         res.json({status:'f',msg:'invalid data form'});
         return;
@@ -996,7 +997,7 @@ exports.boardWrite = function(req,res){
     for(var i=0;i<contentsArr.length;i++){
         var data_content = contentsArr[i];
         contentsData.push(data_content);
-        var data_image = req.files.images[i];
+        var data_image = filesArr[i];
         imagesData.push(fileUploadService.fileUpload(('board/'+userData.userName).toString(),data_image).path);
     }
 
@@ -1059,13 +1060,6 @@ exports.boardWrite_test = function(req,res){
     var userData = {};
     userData.userName = recvData.editorName;
 
-    //contents count check
-    if(typeof recvData.contents === 'undefined' || recvData.contents.length < 3){
-        console.log('not enough to write board');
-        res.json({status:'f',msg:'not enough contents'});
-        return;
-    }
-
     //define contentsData for check valid
     var contentsArr = [];
     for (var i = 0; i < recvData.contents.length; i++){
@@ -1073,23 +1067,52 @@ exports.boardWrite_test = function(req,res){
             contentsArr.push(recvData.contents[i]);
         }
     }
-    console.log('contentsArr check : ',contentsArr);
+
+    //files check and sort
+    var filesArr = [];
+    for (var i = 0; i < req.files.images.length; i++){
+        if(req.files.images[i].size !== 0){
+            filesArr.push(req.files.images[i]);
+        }
+    }
+    console.log('contents l : ', contentsArr.length);
+    console.log('files l : ', filesArr.length);
+
+    //contents count check
+    if(typeof recvData.contents === 'undefined' || contentsArr.length < 3){
+        console.log('not enough to write board');
+        res.json({status:'f',msg:'not enough contents'});
+        return;
+    }
 
     //file count check
-    if(typeof req.files.length === 'undefined' || req.files.length <3 || req.files.length == contentsArr.length){
+    if(typeof req.files.images.length === 'undefined' || filesArr.length < 3){
         console.log('not valid to write board files and data');
         res.json({status:'f',msg:'invalid data form'});
         return;
     }
 
+    //category check
+    if(typeof recvData.category === 'undefined'){
+        console.log('no category');
+        res.json({status:'f',msg:'category no data'});
+        return;
+    }
+    if(typeof recvData.title === 'undefined' || recvData.title.length === 0){
+        console.log('no title OR no data on title');
+        res.json({status:'f',msg:'title no data'});
+        return;
+    }
+
+
     //TODO : files upload + contents
     var contentsData = [];
     var imagesData = [];
     var thumnail_image = fileUploadService.fileUpload(('board/'+userData.userName).toString(),req.files.thumnail).path;
-    for(var i=0;i<recvData.contents.length;i++){
+    for(var i = 0; i < contentsArr.length; i++){
         var data_content = recvData.contents[i];
         contentsData.push(data_content);
-        var data_image = req.files.images[i];
+        var data_image = filesArr[i];
         imagesData.push(fileUploadService.fileUpload(('board/'+userData.userName).toString(),data_image).path);
     }
 
@@ -1140,7 +1163,7 @@ exports.boardList = function(req,res){
 
     if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
         console.log('err /board/list , no pageNum');
-        res.json({status:'f'});
+        res.json({status:'f',msg:'pageNum not in'});
         return;
     }
 
@@ -1157,7 +1180,7 @@ exports.boardList = function(req,res){
     db.pool.getConnection(function(err,conn){
         if(err){
             console.log('err C /board/list, ',err);
-            res.json({status:'f'});
+            res.json({status:'f',msg:'connection error'});
             return;
         }
         else{
@@ -1166,7 +1189,7 @@ exports.boardList = function(req,res){
             conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
                 if(err2){
                     console.log('err U /board/list, ',err2);
-                    res.json({status:'f'});
+                    res.json({status:'f',msg:'query error'});
                     conn.release();
                     return;
                 }

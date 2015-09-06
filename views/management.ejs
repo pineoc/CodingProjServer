@@ -54,6 +54,8 @@
               <th>categoryID</th>
               <th>categoryName</th>
               <th>like</th>
+              <th>datetime</th>
+              <th>isValid</th>
           </tr>
           <%for(var i=0;i<contentsNum;i++){%>
           <tr>
@@ -63,6 +65,8 @@
               <td><%=datas[i].categoryID%></td>
               <td><%=datas[i].categoryName%></td>
               <td><%=datas[i].like%></td>
+              <td><%=datas[i].datetime%></td>
+              <td><%=datas[i].isValid%></td>
             </tr>
             <%}%>
           </table>

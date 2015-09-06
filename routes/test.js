@@ -181,11 +181,21 @@ router.get('/app/board', function(req,res){
                                 return;
                             }
                             else{
+                                var arr = [];
+                                for(var i=0; i<result2.length; i++){
+                                    var d = {
+                                        contentIdx : result2[i].cb_idx,
+                                        likes : result2[i].likes,
+                                        clothIdxs :[result2[i].head,result2[i].upperBody,result2[i].lowerBody,result2[i].coat],
+                                        datetime : result2[i].datetime
+                                    };
+                                    arr.push(d);
+                                }
                                 var sendData ={};
                                 sendData.status = 's';
                                 sendData.rankedData = result;
-                                sendData.datas = result2;
-                                sendData.contentsNum = result2.length;
+                                sendData.datas = arr;
+                                sendData.contentsNum = arr.length;
                                 res.json(sendData);
                             }
                             conn.release();
@@ -499,7 +509,7 @@ router.post('/app/board/like', function(req, res){
     }
 
     if(recvData.contentID.length == 0 || recvData.appID.length == 0){
-        console.log('undefined datas, contentID or appID');
+        console.log('no datas, contentID or appID');
         res.json({status : 'f'});
         return;
     }
@@ -571,13 +581,13 @@ router.post('/app/board/commentwrite', function(req, res){
     }
 
     if(recvData.contentID.length == 0 || recvData.appID.length == 0){
-        console.log('undefined datas, contentID or appID');
+        console.log('no datas, contentID or appID');
         res.json({status : 'f'});
         return;
     }    
 
-    if(recvData.comment.length == 0){
-        console.log('undefinded data, comment');
+    if(typeof recvData.comment === 'undefined' || recvData.comment.length == 0){
+        console.log('no data OR undefined, comment');
         res.json({status : 'f'});
         return;
     }
@@ -590,7 +600,7 @@ router.post('/app/board/commentwrite', function(req, res){
         }
         else{
             var query = 'INSERT INTO COMMENTS(user_token, c_content, b_idx) VALUES (?, ?, ?)';
-            conn.query(query, [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result2){
+            conn.query(query, [recvData.appID.toString(), recvData.comment, parseInt(recvData.contentID)], function(err2, result){
                 if(err2){
                     console.log('err INSERT COMMENT, ', err2);
                     res.json({status : 'f'});
