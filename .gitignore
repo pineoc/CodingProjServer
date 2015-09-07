@@ -28,3 +28,4 @@ node_modules
 .idea
 routes/db_config.js
 public/img
+
