@@ -25,7 +25,6 @@
         var url = $("input#url").val();
 
 
-
         if(name == ""){
           alert("please write name");
         }else if(category == ""){
@@ -34,12 +33,26 @@
           alert("please write url");
         }else {
           var data = new FormData();
+          var info = [];
           data.append("name", name);
           data.append("category", category);
           data.append("url", url);
-          $.each($("#imageFile")[0].files, function(i, file){
-            data.append("imageFile", file);
+          var clothCnt = 0;
+          $("input#color").each(function(){
+              info[clothCnt++] = ""+$(this).val();
           });
+          alert(info);
+
+          for (var i = 0; i < info.length; i++) {
+            data.append('info[]', info[i]);
+          }
+          clothCnt = 0;
+          $("input#imageFile").each(function(){
+            $.each($(this)[0].files, function(i, file){
+              data.append("imageFile"+(clothCnt++), file);
+            });
+          });
+          data.append("cnt",clothCnt);
           $.ajax({
             url: '/web/master/addCloth',
             data: data,

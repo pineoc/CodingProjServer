@@ -976,20 +976,23 @@ router.post('/web/master/addCloth',multipartMiddleware, function(req, res){
     console.log('recvData : ', recvData);
 
     // check file is exist
-    if(typeof req.files.imageFile == 'undefined' || req.files.imageFile == null){
+    /*if(typeof req.files.imageFile == 'undefined' || req.files.imageFile == null){
         console.log('/web/master/addCloth no imageFile');
         res.json({status:"f", msg:"no image file"});
         return;
     }
-
+*/
     db.pool.getConnection(function(err, conn){
         if(err){
             console.log("err C, /web/mater/addCloth, ",err);
             res.json({status:"f"});
             return;
         }else{
+            console.log("image file check : " + req.files.length);
+            var cnt = parseInt(recvData.cnt);
+            for(var i = 0 ; i < cnt; i++){
             var q = 'INSERT INTO CLOTH(cloth_cate, cloth_name, cloth_img, cloth_url, isValid) VALUES(?,?,?,?,?)';
-            var img = fileUploadService.fileUpload('cloth',req.files.imageFile).path;
+            var img = fileUploadService.fileClothUpload("cloth",req.files.imageFile0, recvData.name.toString()+"_"+recvData.info[i].toString()).path;
             var params = [parseInt(recvData.category), recvData.name.toString(), img, recvData.url.toString(), true ];
             console.log("tsd : " + params);
 
@@ -1001,13 +1004,15 @@ router.post('/web/master/addCloth',multipartMiddleware, function(req, res){
                     return;
                 }else{
                     if(result.affectedRows==1){
-                        res.json({status:'s'});
                     }else{
                     res.json({status:'f', msg:'not affected'});
+                        conn.release();
                     }
-                    conn.release();
                 }
             });
+        }
+            res.json({status:'s'});
+            conn.release();
         }
     });
 });
