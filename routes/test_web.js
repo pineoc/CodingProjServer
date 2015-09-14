@@ -654,7 +654,14 @@ exports.boardAllList = function(req,res){
                 return;
             }
             else{
-                var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY GROUP BY b_idx LIMIT ?, 20';
+                var query = 'SELECT * FROM ('
+                    + 'SELECT BOARD.b_idx, BOARD.e_name, EDITOR.e_nickname, BOARD.category, BOARD.title, '
+                    + 'BOARD.likes, BOARD.datetime, BOARD.isValid '
+                    + 'FROM BOARD JOIN EDITOR '
+                    + 'ON BOARD.e_name = EDITOR.e_name) '
+                    + ' t1 JOIN CATEGORY ON t1.category = CATEGORY.cate_idx '
+                    + 'GROUP BY b_idx LIMIT ?, 20';
+                //var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY GROUP BY b_idx LIMIT ?, 20';
                 conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
                         console.log('err S /web/master/board, ',err2);
