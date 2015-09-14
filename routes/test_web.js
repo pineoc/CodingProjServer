@@ -972,7 +972,47 @@ exports.boardDrop = function(req,res){
 };
 
 exports.boardWriteGet = function(req,res){
-    res.render('writeConsidertaions',{status:'s'});
+    //res.render('writeConsidertaions',{status:'s'});
+
+    db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /board/write/get, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM CATEGORY';
+                conn.query(query,[],function(err,result){
+                    if(err){
+                        console.log('err S /board/write/get during select category, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var d = {
+                                cateID : result[i].cate_idx,
+                                cateName : result[i].cate_name,
+                                cateURL : result[i].cate_url
+                            };
+                            arr.push(d);
+                        }
+                        var sendData = {
+                            status : 's',
+                            categoryNum : result.length,
+                            categorys : arr
+                        };
+                        res.render('category',sendData);
+                        console.log(sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
+
+
 };
 
 /*
