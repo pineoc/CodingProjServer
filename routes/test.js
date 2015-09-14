@@ -228,12 +228,12 @@ router.get('/app/board', function(req,res){
                         var arr = [];
                         for (var i=0; i<result.length;i++){
                             var data = {};
-                            data.contentIdx = result.b_idx;
-                            data.likes = result.likes;
-                            data.title = result.title;
-                            data.titleImg = result.thumnail;
-                            data.editor = result.editor;
-                            data.dateTime = result.datetime;
+                            data.contentIdx = result[i].b_idx;
+                            data.likes = result[i].likes;
+                            data.title = result[i].title;
+                            data.titleImg = result[i].thumnail;
+                            data.editor = result[i].editor;
+                            data.dateTime = result[i].datetime;
                             arr.push(data);
                         }
                         var sendData = {
