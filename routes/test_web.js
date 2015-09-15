@@ -654,7 +654,10 @@ exports.boardAllList = function(req,res){
                 return;
             }
             else{
-                var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY GROUP BY b_idx LIMIT ?, 20';
+                var query = 'SELECT b.b_idx,e.e_name,b.title,c.cate_idx,c.cate_name,b.likes,b.datetime,b.isValid FROM BOARD b '
+                +'INNER JOIN EDITOR e ON b.e_name = e.e_name '
+                +'INNER JOIN CATEGORY c ON b.category = c.cate_idx '
+                +'LIMIT ?, 20 ';
                 conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
                         console.log('err S /web/master/board, ',err2);
@@ -682,6 +685,7 @@ exports.boardAllList = function(req,res){
                             contentsNum : arr.length,
                             datas : arr
                         };
+                        console.log('renderData : ',renderData);
                         res.render('management',renderData);
                         conn.release();
                     }
@@ -968,7 +972,7 @@ exports.boardWrite = function(req,res){
 
     //files check and sort
     var filesArr = [];
-    for (var i = 0; i < req.files.length; i++){
+    for (var i = 0; i < req.files.images.length; i++){
         if(req.files.images[i].size !== 0){
             filesArr.push(req.files.images[i]);
         }
@@ -982,9 +986,21 @@ exports.boardWrite = function(req,res){
     }
 
     //file count check
-    if(typeof req.files.length === 'undefined' || filesArr.length < 3){
+    if(typeof req.files.images.length === 'undefined' || filesArr.length < 3){
         console.log('not valid to write board files and data');
         res.json({status:'f',msg:'invalid data form'});
+        return;
+    }
+
+    //category check
+    if(typeof recvData.category === 'undefined'){
+        console.log('no category');
+        res.json({status:'f',msg:'category no data'});
+        return;
+    }
+    if(typeof recvData.title === 'undefined' || recvData.title.length === 0){
+        console.log('no title OR no data on title');
+        res.json({status:'f',msg:'title no data'});
         return;
     }
 
@@ -1075,8 +1091,6 @@ exports.boardWrite_test = function(req,res){
             filesArr.push(req.files.images[i]);
         }
     }
-    console.log('contents l : ', contentsArr.length);
-    console.log('files l : ', filesArr.length);
 
     //contents count check
     if(typeof recvData.contents === 'undefined' || contentsArr.length < 3){
