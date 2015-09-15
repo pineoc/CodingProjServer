@@ -372,6 +372,7 @@ exports.editorList = function(req,res){
          return;
          }
         db.pool.getConnection(function(err,conn){
+            var sendData = {};
             if(err){
                 console.log('err C /editor/List, ',err);
                 res.json({status:'f'});
@@ -401,15 +402,43 @@ exports.editorList = function(req,res){
                             arr.push(d);
                         }
 
-                        var sendData = {
+                        sendData = {
                             status : 's',
                             editorsNum : arr.length,
                             editors : arr
                         };
+                        //res.render('editor',sendData);
+                        //conn.release();
+                    }
+                });
+                
+                var query2 = 'SELECT * FROM CATEGORY';
+                conn.query(query2,[],function(err3,result){
+                    if(err3){
+                        console.log('err S /editor/list during select category', err3);
+                        res.json({status : 'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var d = {
+                                cateID : result[i].cate_idx,
+                                cateName : result[i].cate_name,
+                                cateURL : result[i].cate_url
+                            };
+                            arr.push(d);
+                        }
+
+                        sendData['categoryNum'] = result.length;
+                        sendData['categorys'] = arr;
+                        console.log(sendData);
                         res.render('editor',sendData);
                         conn.release();
                     }
                 });
+
             }
         });
     }
@@ -506,7 +535,7 @@ exports.editorAdd = function(req,res){
             res.json({status:'f'});
             return;
         }
-
+        
 
         var file_thumnail = null;
         var fileUpload_result;
@@ -654,10 +683,13 @@ exports.boardAllList = function(req,res){
                 return;
             }
             else{
-                var query = 'SELECT b.b_idx,e.e_name,b.title,c.cate_idx,c.cate_name,b.likes,b.datetime,b.isValid FROM BOARD b '
-                +'INNER JOIN EDITOR e ON b.e_name = e.e_name '
-                +'INNER JOIN CATEGORY c ON b.category = c.cate_idx '
-                +'LIMIT ?, 20 ';
+                var query = 'SELECT * FROM ('
+                    + 'SELECT BOARD.b_idx, BOARD.e_name, EDITOR.e_nickname, BOARD.category, BOARD.title, '
+                    + 'BOARD.likes, BOARD.datetime, BOARD.isValid '
+                    + 'FROM BOARD JOIN EDITOR '
+                    + 'ON BOARD.e_name = EDITOR.e_name) '
+                    + ' t1 JOIN CATEGORY ON t1.category = CATEGORY.cate_idx '
+                    + 'GROUP BY b_idx LIMIT ?, 20';
                 conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                     if(err2){
                         console.log('err S /web/master/board, ',err2);
@@ -940,7 +972,47 @@ exports.boardDrop = function(req,res){
 };
 
 exports.boardWriteGet = function(req,res){
-    res.render('writeConsidertaions',{status:'s'});
+    //res.render('writeConsidertaions',{status:'s'});
+
+    db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /board/write/get, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM CATEGORY';
+                conn.query(query,[],function(err,result){
+                    if(err){
+                        console.log('err S /board/write/get during select category, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var d = {
+                                cateID : result[i].cate_idx,
+                                cateName : result[i].cate_name,
+                                cateURL : result[i].cate_url
+                            };
+                            arr.push(d);
+                        }
+                        var sendData = {
+                            status : 's',
+                            categoryNum : result.length,
+                            categorys : arr
+                        };
+                        res.render('category',sendData);
+                        console.log(sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
+
+
 };
 
 /*
