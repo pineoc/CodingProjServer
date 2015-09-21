@@ -652,6 +652,65 @@ exports.editorDel = function(req,res){
 };
 
 /*
+ * editor drop
+ * type : post
+ * req : editorEmail
+ * res : status
+ * */
+exports.editorDrop = function(req,res){
+    var recvData = req.body;
+    console.log('recvData : ',recvData);
+
+    //TODO : check session is master
+    //test for if
+    //if(!sessionService.isMaster(req)){
+    if(0){
+        console.log('/editor/drop,  not master');
+        res.json({status:'f'});
+        return;
+    }
+    else{
+        //TODO : check datas is null and valid
+        //editorEmail check
+        if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
+            console.log('/editor/drop, no email');
+            res.json({status:'f',msg:'no email'});
+            return;
+        }
+
+        //TODO : DELETE to EDITOR TABLE these datas
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /editor/drop, ',err);
+                res.json({status:'f',msg:'connection error'});
+                return;
+            }
+            else{
+                var query = 'DELETE FROM EDITOR WHERE e_email=?';
+                conn.query(query,[recvData.editorEmail],function(err2,result){
+                    if(err2){
+                        console.log('err D /editor/drop, ',err2);
+                        res.json({status:'f',msg:'query error'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        if(result.changedRows==1){
+                            res.json({status:'s'});
+                        }
+                        else{
+                            res.json({status:'f',msg:'already changed to invalid'});
+                        }
+                        conn.release();
+                    }
+                });
+            }
+        });
+    }
+};
+
+
+/*
  * all board content list
  * type : get
  * req : pageNum
@@ -915,9 +974,8 @@ exports.boardDel = function(req,res){
 };
 
 
-
 /*
-* board drop (drop from table)
+* board drop (delete from table)
 * type : post
 * req : contentID
 * res : status
@@ -1253,60 +1311,106 @@ exports.boardList = function(req,res){
         return;
     }
 
-/*
     //TODO : check session is editor
     if(!sessionService.hasSession(req)){
         console.log('invalid approach, /boardList');
         res.json({status:'f'});
         return;
     }
-*/
-
-    //TODO : SELECT data from board TABLE
-    db.pool.getConnection(function(err,conn){
-        if(err){
-            console.log('err C /board/list, ',err);
-            res.json({status:'f',msg:'connection error'});
-            return;
-        }
-        else{
-            var editorName = sessionService.getSession(req).userName;
-            var query = 'SELECT * FROM BOARD WHERE e_name=? LIMIT ?,20';
-            conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
-                if(err2){
-                    console.log('err U /board/list, ',err2);
-                    res.json({status:'f',msg:'query error'});
-                    conn.release();
+    else{
+        if(sessionService.isMaster(req)){
+            //master - boardAllList
+            //TODO : SELECT data from board TABLE
+            db.pool.getConnection(function(err,conn){
+                if(err){
+                    console.log('err C /board/list, ',err);
+                    res.json({status:'f'});
                     return;
                 }
                 else{
-                    var arr = [];
-                    for(var i=0; i<result.length;i++){
-                        var d = {
-                            contentID : result[i].b_idx,
-                            writer : result[i].e_nickname,
-                            title : result[i].title,
-                            categoryID : result[i].category,
-                            categoryName : result[i].cate_name,
-                            like : result[i].likes,
-                            datetime : result[i].datetime,
-                            isValid : result[i].isValid
-                        };
-                        arr.push(d);
-                    }
-                    var renderData = {
-                        status : 's',
-                        contentsNum : arr.length,
-                        datas : arr
-                    };
-                    res.render('management',renderData);
+                    var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY GROUP BY b_idx LIMIT ?, 20';
+                    conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
+                        if(err2){
+                            console.log('err S /web/master/board, ',err2);
+                            res.json({status:'f'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                            var arr = [];
+                            for(var i=0; i<result.length;i++){
+                                var d = {
+                                    contentID : result[i].b_idx,
+                                    writer : result[i].e_nickname,
+                                    title : result[i].title,
+                                    categoryID : result[i].category,
+                                    categoryName : result[i].cate_name,
+                                    like : result[i].likes,
+                                    datetime : result[i].datetime,
+                                    isValid : result[i].isValid
+                                };
+                                arr.push(d);
+                            }
+                            var renderData = {
+                                status : 's',
+                                contentsNum : arr.length,
+                                datas : arr
+                            };
+                            res.render('management',renderData);
+                            conn.release();
+                        }
+                    });
                 }
-                conn.release();
-
             });
 
         }
-    });
+        else{
+            //editor - my board list
+            //TODO : SELECT data from board TABLE
+            db.pool.getConnection(function(err,conn){
+                if(err){
+                    console.log('err C /board/list, ',err);
+                    res.json({status:'f',msg:'connection error'});
+                    return;
+                }
+                else{
+                    var editorName = sessionService.getSession(req).userName;
+                    var query = 'SELECT * FROM BOARD WHERE e_name=? LIMIT ?,20';
+                    conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
+                        if(err2){
+                            console.log('err U /board/list, ',err2);
+                            res.json({status:'f',msg:'query error'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                            var arr = [];
+                            for(var i=0; i<result.length;i++){
+                                var d = {
+                                    contentID : result[i].b_idx,
+                                    writer : result[i].e_nickname,
+                                    title : result[i].title,
+                                    categoryID : result[i].category,
+                                    categoryName : result[i].cate_name,
+                                    like : result[i].likes,
+                                    datetime : result[i].datetime,
+                                    isValid : result[i].isValid
+                                };
+                                arr.push(d);
+                            }
+                            var renderData = {
+                                status : 's',
+                                contentsNum : arr.length,
+                                datas : arr
+                            };
+                            res.render('management',renderData);
+                        }
+                        conn.release();
+                    });
+                }
+            });
+        }
+    }
 
     /*
     var renderData = {
