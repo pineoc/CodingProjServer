@@ -94,9 +94,19 @@
 <body>
 <form action="/web/board/write/test" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
     <!--for test, value to editorName data, example is test -->
-    <input type="hidden" name="editorName" value="test"/>
-    <input type="hidden" name="title" value="test title"/>
-    <input type="hidden" name="category" value="2"/>
+    <input class="form-control" type="hidden" name="editorName" value="test"/>
+    <label for="제목">제목</label>
+    <input class="form-control" type="text" name="title" value="test title"/>
+    <br/>
+    <div class="form-group">
+        <label for="카테고리">카테고리</label>
+        <select class="form-control" id="sel1">
+            <%for(var i=0;i<categoryNum;i++){%>
+            <option><%=categorys[i].cateID%> : <%=categorys[i].cateName%></option>
+            <%}%>
+        </select>
+    </div>
+    <br/>
     <!--for test -->
     <!--1-->
     <div class="container-fluid" style="display:block;background-color:#ADC2FF;margin-bottom:10px;">

@@ -1,6 +1,7 @@
 /**
  * Created by pineoc on 2015-07-25.
  */
+var path = require('path');
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
@@ -14,7 +15,7 @@ var fileUploadService = require('./fileUploadService');
 //test code start
 //namjungnaedle category number
 const CLOTHIDX = 1;
-var urlpath_base = path.join(config.server_data.domain,'img');
+var urlpath_base = path.join(db.server_data.domain,'img');
 
 //login
 // first time, sign + login, after then login

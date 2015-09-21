@@ -342,8 +342,6 @@ exports.cateDel = function(req,res){
             }
         });
     }
-
-
 };
 
 /*
@@ -407,8 +405,6 @@ exports.editorList = function(req,res){
                             editorsNum : arr.length,
                             editors : arr
                         };
-                        //res.render('editor',sendData);
-                        //conn.release();
                     }
                 });
                 
@@ -438,49 +434,9 @@ exports.editorList = function(req,res){
                         conn.release();
                     }
                 });
-
             }
         });
     }
-
-/*
-    var renderData = {
-        status:'s',
-        editorsNum : 3,
-        editors:[
-            {
-                editorEmail:"pineoc@naver.com",
-                editorName:"lee",
-                editorNick:"namu",
-                editorCate : 2,
-                editorIntro : 'asdqwezxc',
-                editorThumnail : "http://localhost:3000/img/editor/lee.png",
-                editorValid : 1
-            },
-            {
-                editorEmail:"ssc@naver.com",
-                editorName:"doo",
-                editorNick:"da",
-                ditorCate : 2,
-                editorIntro : 'asdqwezxc123123',
-                editorThumnail : "http://localhost:3000/img/editor/doo.png",
-                editorValid : 1
-            },
-            {
-                editorEmail:"sdc@naver.com",
-                editorName:"soo",
-                editorNick:"mm",
-                editorCate : 2,
-                editorIntro : 'asd3q333w3e313323zxc',
-                editorThumnail : "http://localhost:3000/img/editor/soo.png",
-                editorValid : 1
-            }
-        ]
-    };
-
-    res.render('editor',renderData);
-*/
-
 };
 
 /*
@@ -576,10 +532,6 @@ exports.editorAdd = function(req,res){
                         if(result.affectedRows==1){
                             console.log('editor add success');
                             res.json({status:'s'});
-                            /*
-                            res.writeHead(200,{
-                                'Location' : '/web/master/editor'
-                            });*/
                         }
                         else{
                             console.log('err S /editor/add, ',err);
@@ -784,119 +736,148 @@ exports.boardAllList = function(req,res){
             }
         });
     }
+};
 
 /*
-    var renderData = {
-        status : 's',
-        contentsNum : 10,
-        datas:[
-            {
-                "contentID":1,
-                "writer":"asd",
-                "title":"qwert",
-                "categoryID":2,
-                "categoryName":"car",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":2,
-                "writer":"asd",
-                "title":"qwert33",
-                "categoryID":2,
-                "categoryName":"car",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":3,
-                "writer":"asd",
-                "title":"qwert22",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":4,
-                "writer":"asd4",
-                "title":"qwert2244",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":5,
-                "writer":"asd5",
-                "title":"qwert2255",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":6,
-                "writer":"asd6",
-                "title":"qwert2266",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":7,
-                "writer":"asd7",
-                "title":"qwert2277",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":8,
-                "writer":"asd8",
-                "title":"qwert2288",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":9,
-                "writer":"asd9",
-                "title":"qwert2299",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":10,
-                "writer":"asd10",
-                "title":"qwert2200",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            }
-        ]
-    };
+ * board content list
+ * type : get
+ * req : pageNum
+ * res : status, contentNum, datas
+ * */
+exports.boardList = function(req,res){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
 
+    if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
+        console.log('err /board/list , no pageNum');
+        res.json({status:'f',msg:'pageNum not in'});
+        return;
+    }
 
-    res.render('management',renderData);
-*/
-
+    //TODO : check session is editor
+    if(!sessionService.hasSession(req)){
+        //if(0){
+        console.log('invalid approach, /boardList');
+        res.json({status:'f'});
+        return;
+    }
+    else{
+        if(sessionService.isMaster(req)){
+            //if(0){
+            //master - boardAllList
+            //TODO : SELECT data from board TABLE
+            db.pool.getConnection(function(err,conn){
+                if(err){
+                    console.log('err C /board/list, ',err);
+                    res.json({status:'f'});
+                    return;
+                }
+                else{
+                    var query = 'SELECT * FROM ('
+                        + 'SELECT BOARD.b_idx, BOARD.e_name, EDITOR.e_nickname, BOARD.category, BOARD.title, '
+                        + 'BOARD.likes, BOARD.datetime, BOARD.isValid '
+                        + 'FROM BOARD JOIN EDITOR '
+                        + 'ON BOARD.e_name = EDITOR.e_name) '
+                        + 't1 JOIN CATEGORY ON t1.category = CATEGORY.cate_idx '
+                        + 'GROUP BY b_idx LIMIT ?, 20';
+                    conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
+                        if(err2){
+                            console.log('err S /web/board/list, ',err2);
+                            res.json({status:'f'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                            var arr = [];
+                            for(var i=0; i<result.length;i++){
+                                var d = {
+                                    contentID : result[i].b_idx,
+                                    writer : result[i].e_nickname,
+                                    title : result[i].title,
+                                    categoryID : result[i].category,
+                                    categoryName : result[i].cate_name,
+                                    like : result[i].likes,
+                                    datetime : result[i].datetime,
+                                    isValid : result[i].isValid
+                                };
+                                arr.push(d);
+                            }
+                            var renderData = {
+                                status : 's',
+                                contentsNum : arr.length,
+                                datas : arr
+                            };
+                            res.render('management',renderData);
+                            conn.release();
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            //editor - my board list
+            //TODO : SELECT data from board TABLE
+            db.pool.getConnection(function(err,conn){
+                if(err){
+                    console.log('err C /board/list, ',err);
+                    res.json({status:'f',msg:'connection error'});
+                    return;
+                }
+                else{
+                    var editorName = sessionService.getSession(req).userName;
+                    /*
+                     SELECT b.b_idx, b.e_name, e.e_nickname, b.category, c.cate_name, b.title,
+                     b.likes, b.datetime, b.isValid FROM BOARD b
+                     INNER JOIN EDITOR e
+                     ON b.e_name = e.e_name
+                     INNER JOIN CATEGORY c
+                     ON b.category = c.cate_idx
+                     WHERE e.e_name=?
+                     ORDER BY b_idx LIMIT ?,20;
+                    */
+                    var query = 'SELECT b.b_idx, b.e_name, e.e_nickname, b.category, c.cate_name, b.title,'
+                        +'b.likes, b.datetime, b.isValid FROM BOARD b '
+                        +'INNER JOIN EDITOR e '
+                        +'ON b.e_name = e.e_name '
+                        +'INNER JOIN CATEGORY c '
+                        +'ON b.category = c.cate_idx '
+                        +'WHERE e.e_name=? '
+                        +'ORDER BY b_idx LIMIT ?,20';
+                    conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
+                        if(err2){
+                            console.log('err U /board/list, ',err2);
+                            res.json({status:'f',msg:'query error'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                            var arr = [];
+                            for(var i=0; i<result.length;i++){
+                                var d = {
+                                    contentID : result[i].b_idx,
+                                    writer : result[i].e_nickname,
+                                    title : result[i].title,
+                                    categoryID : result[i].category,
+                                    categoryName : result[i].cate_name,
+                                    like : result[i].likes,
+                                    datetime : result[i].datetime,
+                                    isValid : result[i].isValid
+                                };
+                                arr.push(d);
+                            }
+                            var renderData = {
+                                status : 's',
+                                contentsNum : arr.length,
+                                datas : arr
+                            };
+                            res.render('management',renderData);
+                        }
+                        conn.release();
+                    });
+                }
+            });
+        }
+    }
 };
 
 /*
@@ -1059,9 +1040,10 @@ exports.boardWriteGet = function(req,res){
                         }
                         var sendData = {
                             status : 's',
-                            categoryNum : result.length,
+                            categoryNum : arr.length,
                             categorys : arr
                         };
+                        console.log(sendData);
                         res.render('writeConsidertaions',sendData);
                         conn.release();
                     }
@@ -1292,209 +1274,7 @@ exports.boardWrite_test = function(req,res){
     });
 };
 
-/*
- * board content list
- * type : get
- * req : pageNum
- * res : status, contentNum, datas
- * */
-exports.boardList = function(req,res){
-    var recvData = req.query;
-    console.log('recvData : ',recvData);
 
-    if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
-        console.log('err /board/list , no pageNum');
-        res.json({status:'f',msg:'pageNum not in'});
-        return;
-    }
-
-    //TODO : check session is editor
-    if(!sessionService.hasSession(req)){
-    //if(0){
-        console.log('invalid approach, /boardList');
-        res.json({status:'f'});
-        return;
-    }
-    else{
-        if(sessionService.isMaster(req)){
-        //if(0){
-            //master - boardAllList
-            //TODO : SELECT data from board TABLE
-            db.pool.getConnection(function(err,conn){
-                if(err){
-                    console.log('err C /board/list, ',err);
-                    res.json({status:'f'});
-                    return;
-                }
-                else{
-                    var query = 'SELECT * FROM ('
-                        + 'SELECT BOARD.b_idx, BOARD.e_name, EDITOR.e_nickname, BOARD.category, BOARD.title, '
-                        + 'BOARD.likes, BOARD.datetime, BOARD.isValid '
-                        + 'FROM BOARD JOIN EDITOR '
-                        + 'ON BOARD.e_name = EDITOR.e_name) '
-                        + 't1 JOIN CATEGORY ON t1.category = CATEGORY.cate_idx '
-                        + 'GROUP BY b_idx LIMIT ?, 20';
-                    conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
-                        if(err2){
-                            console.log('err S /web/board/list, ',err2);
-                            res.json({status:'f'});
-                            conn.release();
-                            return;
-                        }
-                        else{
-                            var arr = [];
-                            for(var i=0; i<result.length;i++){
-                                var d = {
-                                    contentID : result[i].b_idx,
-                                    writer : result[i].e_nickname,
-                                    title : result[i].title,
-                                    categoryID : result[i].category,
-                                    categoryName : result[i].cate_name,
-                                    like : result[i].likes,
-                                    datetime : result[i].datetime,
-                                    isValid : result[i].isValid
-                                };
-                                arr.push(d);
-                            }
-                            var renderData = {
-                                status : 's',
-                                contentsNum : arr.length,
-                                datas : arr
-                            };
-                            res.render('management',renderData);
-                            conn.release();
-                        }
-                    });
-                }
-            });
-        }
-        else{
-            //editor - my board list
-            //TODO : SELECT data from board TABLE
-            db.pool.getConnection(function(err,conn){
-                if(err){
-                    console.log('err C /board/list, ',err);
-                    res.json({status:'f',msg:'connection error'});
-                    return;
-                }
-                else{
-                    var editorName = sessionService.getSession(req).userName;
-                    //editorName='lee';
-                    var query = 'SELECT b.b_idx, b.e_name, e.e_nickname, b.category, c.cate_name, b.title,'
-                        +'b.likes, b.datetime, b.isValid FROM BOARD b '
-                        +'INNER JOIN EDITOR e '
-                        +'ON b.e_name = e.e_name '
-                        +'INNER JOIN CATEGORY c '
-                        +'ON b.category = c.cate_idx '
-                        +'WHERE e.e_name=? '
-                        +'ORDER BY b_idx LIMIT ?,20';
-                    conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
-                        if(err2){
-                            console.log('err U /board/list, ',err2);
-                            res.json({status:'f',msg:'query error'});
-                            conn.release();
-                            return;
-                        }
-                        else{
-                            var arr = [];
-                            for(var i=0; i<result.length;i++){
-                                var d = {
-                                    contentID : result[i].b_idx,
-                                    writer : result[i].e_nickname,
-                                    title : result[i].title,
-                                    categoryID : result[i].category,
-                                    categoryName : result[i].cate_name,
-                                    like : result[i].likes,
-                                    datetime : result[i].datetime,
-                                    isValid : result[i].isValid
-                                };
-                                arr.push(d);
-                            }
-                            var renderData = {
-                                status : 's',
-                                contentsNum : arr.length,
-                                datas : arr
-                            };
-                            res.render('management',renderData);
-                        }
-                        conn.release();
-                    });
-                }
-            });
-        }
-    }
-
-    /*
-    var renderData = {
-        status : 's',
-        contentsNum : 6,
-        datas:[
-            {
-                "contentID":1,
-                "writer":"asd",
-                "title":"qwert",
-                "categoryID":2,
-                "categoryName":"car",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":2,
-                "writer":"asd",
-                "title":"qwert33",
-                "categoryID":2,
-                "categoryName":"car",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":3,
-                "writer":"asd",
-                "title":"qwert22",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":4,
-                "writer":"asd4",
-                "title":"qwert2244",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":5,
-                "writer":"asd5",
-                "title":"qwert2255",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            },
-            {
-                "contentID":6,
-                "writer":"asd6",
-                "title":"qwert2266",
-                "categoryID":3,
-                "categoryName":"sport",
-                "like":3,
-                datetime : '20150829T1354',
-                isValid : 1
-            }
-        ]
-    };
-
-    res.render('management',renderData);
-    */
-};
 
 /*
 * cloth list
