@@ -1062,15 +1062,12 @@ exports.boardWriteGet = function(req,res){
                             categoryNum : result.length,
                             categorys : arr
                         };
-                        res.render('category',sendData);
-                        console.log(sendData);
+                        res.render('writeConsidertaions',sendData);
                         conn.release();
                     }
                 });
             }
         });
-
-
 };
 
 /*
@@ -1313,12 +1310,14 @@ exports.boardList = function(req,res){
 
     //TODO : check session is editor
     if(!sessionService.hasSession(req)){
+    //if(0){
         console.log('invalid approach, /boardList');
         res.json({status:'f'});
         return;
     }
     else{
         if(sessionService.isMaster(req)){
+        //if(0){
             //master - boardAllList
             //TODO : SELECT data from board TABLE
             db.pool.getConnection(function(err,conn){
@@ -1328,10 +1327,16 @@ exports.boardList = function(req,res){
                     return;
                 }
                 else{
-                    var query = 'SELECT * FROM BOARD NATURAL JOIN EDITOR NATURAL JOIN CATEGORY GROUP BY b_idx LIMIT ?, 20';
+                    var query = 'SELECT * FROM ('
+                        + 'SELECT BOARD.b_idx, BOARD.e_name, EDITOR.e_nickname, BOARD.category, BOARD.title, '
+                        + 'BOARD.likes, BOARD.datetime, BOARD.isValid '
+                        + 'FROM BOARD JOIN EDITOR '
+                        + 'ON BOARD.e_name = EDITOR.e_name) '
+                        + 't1 JOIN CATEGORY ON t1.category = CATEGORY.cate_idx '
+                        + 'GROUP BY b_idx LIMIT ?, 20';
                     conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                         if(err2){
-                            console.log('err S /web/master/board, ',err2);
+                            console.log('err S /web/board/list, ',err2);
                             res.json({status:'f'});
                             conn.release();
                             return;
@@ -1362,7 +1367,6 @@ exports.boardList = function(req,res){
                     });
                 }
             });
-
         }
         else{
             //editor - my board list
@@ -1375,7 +1379,15 @@ exports.boardList = function(req,res){
                 }
                 else{
                     var editorName = sessionService.getSession(req).userName;
-                    var query = 'SELECT * FROM BOARD WHERE e_name=? LIMIT ?,20';
+                    //editorName='lee';
+                    var query = 'SELECT b.b_idx, b.e_name, e.e_nickname, b.category, c.cate_name, b.title,'
+                        +'b.likes, b.datetime, b.isValid FROM BOARD b '
+                        +'INNER JOIN EDITOR e '
+                        +'ON b.e_name = e.e_name '
+                        +'INNER JOIN CATEGORY c '
+                        +'ON b.category = c.cate_idx '
+                        +'WHERE e.e_name=? '
+                        +'ORDER BY b_idx LIMIT ?,20';
                     conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
                         if(err2){
                             console.log('err U /board/list, ',err2);

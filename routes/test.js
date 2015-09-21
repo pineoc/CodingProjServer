@@ -10,12 +10,11 @@ var multipartMiddleware = multipart();
 
 var web = require('./test_web');
 var db = require('./db_config');
-
-
 var fileUploadService = require('./fileUploadService');
 //test code start
 //namjungnaedle category number
 const CLOTHIDX = 1;
+var urlpath_base = path.join(config.server_data.domain,'img');
 
 //login
 // first time, sign + login, after then login
@@ -136,7 +135,6 @@ router.get('/app/menu',function(req,res){
                 }
                 conn.release();
             });
-
         }
     });
 });
@@ -817,7 +815,7 @@ router.post('/web/master/editor/delete',web.editorDel);
  * req : pageNum
  * res : status, contentNum, datas
  * */
-router.get('/web/master/board',web.boardAllList);
+router.get('/web/board/list',web.boardList);
 
 /*
  * board update
