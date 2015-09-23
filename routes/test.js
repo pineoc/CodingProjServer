@@ -237,7 +237,7 @@ router.get('/app/board', function(req,res){
                         }
                         var sendData = {
                             status : 's',
-                            pageContentsNum : result.length,
+                            contentsNum : result.length,
                             datas : arr
                         };
                         res.json(sendData);
@@ -654,7 +654,7 @@ router.get('/app/board/commentview', function(req, res){
                     }
                     var sendData = {
                         status : 's',
-                        commentNum : result.length,
+                        commentNum : arr.length,
                         datas : arr
                     };
                     res.json(sendData);
