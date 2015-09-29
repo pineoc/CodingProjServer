@@ -14,7 +14,6 @@
 <body>
 <div style="width:300px;height:100px;margin:0 auto;text-align:center;">
 <h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
 
 <p></p>
 </div>
@@ -94,14 +93,7 @@ var pressEnter=function(){
             });
             event.preventDefault();
         }
-    
-    //click test event, alert will execute
-    $( document ).ready(function() {
-        $( "h1" ).click(function( event ) {
-            alert( "The link will no longer take you to jquery.com" );
-            event.preventDefault();
-        });
-    });
+
     $( document ).ready(function() {
         $( ".j_btn" ).click(function( event ) {
             var inputEmail = $(".j_email_class").val();
@@ -149,8 +141,6 @@ var pressEnter=function(){
                 }
 
             });
-
-
             event.preventDefault();
         });
     });
