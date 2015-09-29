@@ -10,6 +10,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script language="javascript">
+  function writeConsidertaions(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/board/write";
+  	//getElementById("buttons4").className="btn btn-primary active";
+  }
+  function management(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/board/list?pageNum=0";
+  	//getElementById("buttons3").className="btn btn-primary active";
+  }
   </script>
 </head>
   <body>
@@ -35,17 +47,17 @@
 					<tbody>
 						<tr>
 							<th>
-								<button type="button" nnonclick="category()" class="btn btn-link btn-Medium" id="bottons1">내 글 관리</button>
+								<button type="button" onclick="management()" class="btn btn-link btn-Medium" id="bottons1">내 글 관리</button>
 							</th>
 						</tr>
 						<tr>
 							<th>
-								<button type="button" onclick="editor()" class="btn btn-link btn-Medium" id="bottons2">카테고리 목록</button>
+								<button type="button" onclick="" class="btn btn-link btn-Medium" id="bottons2">카테고리 목록</button>
 							</th>
 						</tr>
 						<tr>
 							<th>
-								<button type="button" onclick="editor()" class="btn btn-link btn-Medium" id="bottons2">글 쓰기</button>
+								<button type="button" onclick="writeConsidertaions()" class="btn btn-link btn-Medium" id="bottons2">글 쓰기</button>
 							</th>
 						</tr>
 					</tbody>
