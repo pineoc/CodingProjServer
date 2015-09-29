@@ -663,31 +663,7 @@ router.get('/app/board/commentview', function(req, res){
             });
         }
     });
-    /*
-    var data = [
-        {
-            "nick" : "a1",
-            "comment" : "c1"
-        },
-        {
-         "nick" : "a2",
-         "comment" : "c2"
-        },
-        {
-            "nick" : "a3",
-            "comment" : "c3"
-        }
-    ];
 
-
-    var sendData = {};
-    sendData.status = 's';
-    sendData.commentNum = '3';
-    sendData.datas = data;
-
-
-    res.json(sendData);
-    */
 });
 
 
@@ -728,6 +704,7 @@ router.get('/app/clothList', function(req, res){
         }
     });
 });
+
 //login test page
 //type : get
 //show login test
@@ -744,7 +721,7 @@ router.post('/web/login_test',web.login_test_post);
 * login page
 * type : get
 * show login page
-* */
+*/
 router.get('/web/login',web.login_test_get);
 
 //login page for get login data
@@ -758,7 +735,7 @@ router.post('/web/login',web.login);
 * type : get
 * req : none
 * res : none
-* */
+*/
 router.get('/web/editor/main',web.editorMain);
 
 /*
@@ -766,7 +743,7 @@ router.get('/web/editor/main',web.editorMain);
 * type : get
 * req : none
 * res : none
-* */
+*/
 router.get('/web/master/main',web.masterMain);
 
 /*

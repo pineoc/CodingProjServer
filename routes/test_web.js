@@ -52,6 +52,7 @@ exports.login = function(req,res){
         sendData.isMaster = true;
         sessionService.registerSession(req,recvData.email,'root',true);
         res.send(sendData);
+        return;
     }
 
 
@@ -120,21 +121,21 @@ exports.editorMain = function(req,res){
         res.render('editorPage',{status:'s'});
     }
     else{
-        res.render('error',{status:'f'});
+        res.render('errorPage',{status:'f'});
     }
 };
 
 exports.masterMain = function(req,res){
-    /*
+
     if(sessionService.getSession(req).isMaster){
-        res.render('master_masterPage',{status:'s'});
+        res.render('masterPage',{status:'s'});
     }
     else{
-        res.render('master_masterPage',{status:'f'});
+        res.render('errorPage',{status:'f'});
     }
-    */
 
-    res.render('masterPage',{status:'s'});
+
+    //res.render('masterPage',{status:'s'});
 };
 
 /*
@@ -352,11 +353,11 @@ exports.editorList = function(req,res){
         return;
     }
     else{
-         if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
-         console.log('err /editor/list , no pageNum');
-         res.json({status:'f'});
-         return;
-         }
+        if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
+            console.log('err /editor/list , no pageNum');
+            res.json({status:'f'});
+            return;
+        }
         db.pool.getConnection(function(err,conn){
             var sendData = {};
             if(err){
@@ -395,7 +396,7 @@ exports.editorList = function(req,res){
                         };
                     }
                 });
-                
+
                 var query2 = 'SELECT * FROM CATEGORY';
                 conn.query(query2,[],function(err3,result){
                     if(err3){
@@ -479,7 +480,7 @@ exports.editorAdd = function(req,res){
             res.json({status:'f'});
             return;
         }
-        
+
 
         var file_thumnail = null;
         var fileUpload_result;
@@ -669,11 +670,11 @@ exports.boardAllList = function(req,res){
         return;
     }
     else{
-         if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
-         console.log('err /master/board , no pageNum');
-         res.json({status:'f'});
-         return;
-         }
+        if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
+            console.log('err /master/board , no pageNum');
+            res.json({status:'f'});
+            return;
+        }
         //TODO : SELECT data from board TABLE
         db.pool.getConnection(function(err,conn){
             if(err){
@@ -821,7 +822,7 @@ exports.boardList = function(req,res){
                      ON b.category = c.cate_idx
                      WHERE e.e_name=?
                      ORDER BY b_idx LIMIT ?,20;
-                    */
+                     */
                     var query = 'SELECT b.b_idx, b.e_name, e.e_nickname, b.category, c.cate_name, b.title,'
                         +'b.likes, b.datetime, b.isValid FROM BOARD b '
                         +'INNER JOIN EDITOR e '
@@ -943,11 +944,11 @@ exports.boardDel = function(req,res){
 
 
 /*
-* board drop (delete from table)
-* type : post
-* req : contentID
-* res : status
-* */
+ * board drop (delete from table)
+ * type : post
+ * req : contentID
+ * res : status
+ * */
 exports.boardDrop = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
@@ -998,45 +999,44 @@ exports.boardDrop = function(req,res){
 };
 
 exports.boardWriteGet = function(req,res){
-    //res.render('writeConsidertaions',{status:'s'});
 
     db.pool.getConnection(function(err,conn){
-            if(err){
-                console.log('err C /board/write/get, ',err);
-                res.json({status:'f'});
-                return;
-            }
-            else{
-                var query = 'SELECT * FROM CATEGORY';
-                conn.query(query,[],function(err,result){
-                    if(err){
-                        console.log('err S /board/write/get during select category, ',err);
-                        res.json({status:'f'});
-                        conn.release();
-                        return;
-                    }
-                    else{
-                        var arr = [];
-                        for (var i=0; i<result.length;i++){
-                            var d = {
-                                cateID : result[i].cate_idx,
-                                cateName : result[i].cate_name,
-                                cateURL : result[i].cate_url
-                            };
-                            arr.push(d);
-                        }
-                        var sendData = {
-                            status : 's',
-                            categoryNum : arr.length,
-                            categorys : arr
+        if(err){
+            console.log('err C /board/write/get, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'SELECT * FROM CATEGORY';
+            conn.query(query,[],function(err,result){
+                if(err){
+                    console.log('err S /board/write/get during select category, ',err);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var arr = [];
+                    for (var i=0; i<result.length;i++){
+                        var d = {
+                            cateID : result[i].cate_idx,
+                            cateName : result[i].cate_name,
+                            cateURL : result[i].cate_url
                         };
-                        console.log(sendData);
-                        res.render('master_writeConsidertaions',sendData);
-                        conn.release();
+                        arr.push(d);
                     }
-                });
-            }
-        });
+                    var sendData = {
+                        status : 's',
+                        editorName : sessionService.getSession(req).userName,
+                        categoryNum : arr.length,
+                        categorys : arr
+                    };
+                    res.render('master_writeConsidertaions',sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 };
 
 /*
@@ -1124,7 +1124,7 @@ exports.boardWrite = function(req,res){
             var query = 'INSERT INTO BOARD(e_name,category,title,thumnail,likes,pagesNum,contents,images,isValid) ' +
                 'VALUES(?,?,?,?,0,?,?,?,1)';
             var param_arr = [userData.userName,parseInt(recvData.category),recvData.title,thumnail_image,
-            parseInt(contentsData.length),JSON.stringify(contentsData),JSON.stringify(imagesData)];
+                parseInt(contentsData.length),JSON.stringify(contentsData),JSON.stringify(imagesData)];
             conn.query(query,param_arr,function(err2,result){
                 if(err2){
                     console.log('err I /board/write, ',err2);
@@ -1163,12 +1163,12 @@ exports.boardWrite_test = function(req,res){
 
     //TODO : check session is master or editor validation
     /*
-    if(!sessionService.hasSession(req)){
-        console.log('invalid approach, /boardWrite');
-        res.json({status:'f'});
-        return;
-    }
-    */
+     if(!sessionService.hasSession(req)){
+     console.log('invalid approach, /boardWrite');
+     res.json({status:'f'});
+     return;
+     }
+     */
     var userData = {};
     userData.userName = recvData.editorName;
 
@@ -1264,12 +1264,12 @@ exports.boardWrite_test = function(req,res){
 
 
 /*
-* cloth list
-* type : get
-* req : pageNum
-* res : datas
-*
-* */
+ * cloth list
+ * type : get
+ * req : pageNum
+ * res : datas
+ *
+ * */
 exports.clothList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
@@ -1341,12 +1341,12 @@ exports.clothList = function(req,res){
 };
 
 /*
-* cloth add view page
-* type : get
-* req : none
-* res :
-*
-* */
+ * cloth add view page
+ * type : get
+ * req : none
+ * res :
+ *
+ * */
 exports.clothAddView = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
@@ -1370,12 +1370,12 @@ exports.clothAddView = function(req,res){
 };
 
 /*
-* cloth add
-* type : post
-* req : cloth_cate, cloth_img, cloth_name, cloth_url, cloth_info
-* res : status
-*
-* */
+ * cloth add
+ * type : post
+ * req : cloth_cate, cloth_img, cloth_name, cloth_url, cloth_info
+ * res : status
+ *
+ * */
 exports.clothAdd = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
@@ -1402,12 +1402,12 @@ exports.clothAdd = function(req,res){
 };
 
 /*
-* cloth delete
-* type : post
-* req : cloth_idx
-* res :
-*
-* */
+ * cloth delete
+ * type : post
+ * req : cloth_idx
+ * res :
+ *
+ * */
 exports.clothDel = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
@@ -1433,11 +1433,11 @@ exports.clothDel = function(req,res){
 };
 
 /*
-* file upload test
-* type : post
-* req : param1, param2, file1, file2, file3
-* res : status
-* */
+ * file upload test
+ * type : post
+ * req : param1, param2, file1, file2, file3
+ * res : status
+ * */
 exports.fileUploadTest = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
