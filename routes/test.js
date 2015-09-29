@@ -15,7 +15,7 @@ var fileUploadService = require('./fileUploadService');
 //test code start
 //namjungnaedle category number
 const CLOTHIDX = 1;
-var urlpath_base = path.join(db.server_data.domain,'img');
+var urlpath_base = db.server_data.domain;
 
 //login
 // first time, sign + login, after then login
@@ -129,9 +129,18 @@ router.get('/app/menu',function(req,res){
                     return;
                 }
                 else{
+                    var arr = [];
+                    for (var i=0; i<result.length;i++){
+                        var d = {
+                            cate_idx : result[i].cate_idx,
+                            cate_name : result[i].cate_name,
+                            cate_url : urlpath_base + result[i].cate_url
+                        };
+                        arr.push(d);
+                    }
                     var sendData = {};
                     sendData.status = 's';
-                    sendData.categorys = result;
+                    sendData.categorys = arr;
                     res.json(sendData);
                 }
                 conn.release();
@@ -230,7 +239,7 @@ router.get('/app/board', function(req,res){
                             data.contentIdx = result[i].b_idx;
                             data.likes = result[i].likes;
                             data.title = result[i].title;
-                            data.titleImg = result[i].thumnail;
+                            data.titleImg = urlpath_base + result[i].thumnail;
                             data.editor = result[i].editor;
                             data.dateTime = result[i].datetime;
                             arr.push(data);
@@ -246,62 +255,6 @@ router.get('/app/board', function(req,res){
                 });
             }
         });
-        /*
-        var sendData = {
-            status:"s",
-            pageContentsNum : 6,
-            datas:[
-                {
-                    "contentIdx":11,
-                    "likes":1,
-                    "title":"asdasd",
-                    "titleImg":"http://localhost/img/url/img1.png",
-                    "editor":"qqq",
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":14,
-                    "likes":1,
-                    "title":"asdasd",
-                    "titleImg":"http://localhost/img/url/img1.png",
-                    "editor":"qqq",
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":132,
-                    "likes":1,
-                    "title":"asdasd",
-                    "titleImg":"http://localhost/img/url/img1.png",
-                    "editor":"qqq",
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":114,
-                    "likes":1,
-                    "title":"asdasd",
-                    "titleImg":"http://localhost/img/url/img1.png",
-                    "editor":"qqq",
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":115,
-                    "likes":1,
-                    "title":"asdasd",
-                    "titleImg":"http://localhost/img/url/img1.png",
-                    "editor":"qqq",
-                    "dateTime":"20150509T1134"
-                },
-                {
-                    "contentIdx":116,
-                    "likes":1,
-                    "title":"asdasd",
-                    "titleImg":"http://localhost/img/url/img1.png",
-                    "editor":"qqq",
-                    "dateTime":"20150509T1134"
-                }
-            ]
-        };
-        res.json(sendData);*/
     }
 });
 
@@ -388,11 +341,21 @@ router.get('/app/board/view',function(req,res){
                             return;
                         }
                         var arr = [];
-                        var c_data = JSON.parse(result[0].contents);
-                        var i_data = JSON.parse(result[0].images);
+                        var c_data;
+                        var i_data;
+                        //error check
+                        try {
+                            c_data = JSON.parse(result[0].contents);
+                            i_data = JSON.parse(result[0].images);
+                        } catch(e) {
+                            console.log('parse error : ',e);
+                            res.json({status:'f',msg:'parse error'});
+                            return;
+                        }
+
                         for (var i = 0; i < c_data.length; i++){
                             var data = {
-                                img : i_data[i],
+                                img : urlpath_base + i_data[i],
                                 content : c_data[i]
                             };
                             arr.push(data);
@@ -413,59 +376,6 @@ router.get('/app/board/view',function(req,res){
                 });
             }
         });
-        /*
-        var sendData = {
-            status : 's',
-            contentID:123,
-            likes : 12,
-            editor : 'asd',
-            title : 'asdasdasd',
-            pageNum : 10,
-            datas : [
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe1'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe2'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe3'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe4'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe5'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe6'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe7'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe8'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe9'
-                },
-                {
-                    img : "http://localhost:3000/img/url/1.png",
-                    content : 'asddwqwe10'
-                }
-            ]
-        };
-        res.json(sendData);
-        */
     }
 });
 

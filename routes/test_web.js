@@ -475,18 +475,16 @@ exports.editorList = function(req,res){
                     }
                     else{
                         var arr = [];
-                        for (var i=0; i<result.length;i++){
+                        for (var i = 1; i<result.length;i++){
                             var d = {
                                 cateID : result[i].cate_idx,
-                                cateName : result[i].cate_name,
-                                cateURL : result[i].cate_url
+                                cateName : result[i].cate_name
                             };
                             arr.push(d);
                         }
 
-                        sendData['categoryNum'] = result.length;
+                        sendData['categoryNum'] = arr.length;
                         sendData['categorys'] = arr;
-                        console.log(sendData);
                         res.render('master_editor',sendData);
                         conn.release();
                     }
@@ -1119,7 +1117,7 @@ exports.boardWriteGet = function(req,res){
                 }
                 else{
                     var arr = [];
-                    for (var i=0; i<result.length;i++){
+                    for (var i = 1; i<result.length;i++){
                         var d = {
                             cateID : result[i].cate_idx,
                             cateName : result[i].cate_name,
@@ -1207,12 +1205,28 @@ exports.boardWrite = function(req,res){
     //TODO : files upload + contents
     var contentsData = [];
     var imagesData = [];
-    var thumnail_image = fileUploadService.fileUpload(('board/'+userData.userName).toString(),req.files.thumnail).path;
-    for(var i=0;i<contentsArr.length;i++){
+    var thumnail_image_upload_result = fileUploadService.fileUpload(('board/' + userData.userName).toString(), req.files.thumnail);
+    if(thumnail_image_upload_result.error){
+        console.log('thumnail file upload error : ', thumnail_image_upload_result.msg);
+        res.json({
+            status : 'f',
+            msg : thumnail_image_upload_result.msg});
+        return;
+    }
+    var thumnail_image = thumnail_image_upload_result.path;
+    for(var i = 0; i < contentsArr.length; i++){
         var data_content = contentsArr[i];
         contentsData.push(data_content);
         var data_image = filesArr[i];
-        imagesData.push(fileUploadService.fileUpload(('board/'+userData.userName).toString(),data_image).path);
+        var image_upload_result = fileUploadService.fileUpload(('board/' + userData.userName).toString(), data_image);
+        if(image_upload_result.error){
+            console.log('image file upload error files[%d] : ', i, image_upload_result.msg);
+            res.json({
+                status : 'f',
+                msg : image_upload_result.msg});
+            return;
+        }
+        imagesData.push(image_upload_result.path);
     }
 
     //TODO : DB INSERT BOARD
@@ -1225,8 +1239,8 @@ exports.boardWrite = function(req,res){
         else{
             var query = 'INSERT INTO BOARD(e_name,category,title,thumnail,likes,pagesNum,contents,images,isValid) ' +
                 'VALUES(?,?,?,?,0,?,?,?,1)';
-            var param_arr = [userData.userName,parseInt(recvData.category),recvData.title,thumnail_image,
-                parseInt(contentsData.length),JSON.stringify(contentsData),JSON.stringify(imagesData)];
+            var param_arr = [userData.userName, parseInt(recvData.category), recvData.title, thumnail_image,
+                parseInt(contentsData.length), JSON.stringify(contentsData), JSON.stringify(imagesData)];
             conn.query(query,param_arr,function(err2,result){
                 if(err2){
                     console.log('err I /board/write, ',err2);

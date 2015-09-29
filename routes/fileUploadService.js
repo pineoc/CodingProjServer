@@ -39,8 +39,10 @@ exports.fileUpload = function(name,file){
     var resData = {};
     if(typeof file === 'undefined' || file == null){
         console.log('fileService, no file');
-        resData.path = urlpath_base+'/'+'null.png';
+        resData.path = '/img/'+'null.png';
         resData.result = false;
+        resData.error = true;
+        resData.msg = 'no file';
         return resData;
     }
     var filename = file.name;
@@ -53,24 +55,40 @@ exports.fileUpload = function(name,file){
         console.log('file ext invalid, ext : ',path.extname(filename));
         resData.path = null;
         resData.result = false;
+        resData.error = true;
+        resData.msg = 'file ext invalid';
+        return resData;
+    }
+    try {
+        if(!fs.existsSync(folder)){
+            mkdirp(folder,function(err){
+                if(err){
+                    console.log('error mkdirp, ',err);
+                    resData.path = null;
+                    resData.result = false;
+                    resData.error = true;
+                    resData.msg = 'mkdirp err';
+                    return resData;
+                }
+                else
+                    console.log('mkdirp success');
+            });
+        }
+    } catch(e) {
+        console.log('Unexpected error mkdirp : ', e);
+        resData.path = null;
+        resData.result = false;
+        resData.error = true;
+        resData.msg = 'mkdirp unexpected err';
         return resData;
     }
 
-    if(!fs.existsSync(folder)){
-        mkdirp(folder,function(err){
-            if(err){
-                console.log('error mkdirp, ',err);
-                resData.path = null;
-                resData.result = false;
-                return resData;
-            }
-            else
-                console.log('mkdirp success');
-        });
-    }
+    //for unique file name
+    var dateData = new Date().getTime().toString();
     var md5sum = crypto.createHash('md5');
-    md5sum.update(filename);
-    var hashedFilename = md5sum.digest('hex')+path.extname(filename);
+    md5sum.update(filename+dateData);
+
+    var hashedFilename = md5sum.digest('hex') + path.extname(filename);
 
     destpath = path.resolve(folder,hashedFilename);
     var is = fs.createReadStream(srcpath); //소스로부터 스트림을 입력받음
@@ -78,11 +96,17 @@ exports.fileUpload = function(name,file){
 
     is.pipe(os);
     is.on('end',function(){
-        fs.unlinkSync(srcpath);
+        try {
+            fs.unlinkSync(srcpath);
+        } catch(e) {
+            console.log('unlinkSync error : ',e);
+        }
     });
 
-    resData.path = urlpath_base+'/'+name+'/'+hashedFilename;
+    resData.path = '/img/' + name + '/' + hashedFilename;
     resData.result = true;
+    resData.error = false;
+    resData.msg = 'success';
     return resData;
 };
 
