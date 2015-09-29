@@ -85,17 +85,17 @@
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
+            <th>categoryImg</th>
             <th>categoryID</th>
             <th>categoryName</th>
-            <th>categoryImg</th>
         </tr>
         </thead>
         <tbody>
         <% for (var i=0; i < categoryNum; i++) { %>
         <tr>
+            <td> <img src="<%=categorys[i].cateURL%>" alt="Category Image" height="42" width="42"/> </td>
             <td><%=categorys[i].cateID%></td>
             <td><%=categorys[i].cateName%></td>
-            <td> <img src="<%=categorys[i].cateURL%>" alt="Category Image" height="42" width="42"/> </td>
         </tr>
         <%}%>
         </tbody>
