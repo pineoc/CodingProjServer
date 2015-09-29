@@ -739,6 +739,14 @@ router.post('/web/login',web.login);
 router.get('/web/editor/main',web.editorMain);
 
 /*
+* editor category page
+* type : get
+* req : none
+* res : none
+* */
+router.get('/web/editor/category',web.e_cateList);
+
+/*
 * master main page
 * type : get
 * req : none

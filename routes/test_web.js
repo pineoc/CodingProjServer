@@ -116,6 +116,12 @@ exports.login = function(req,res){
 
 };
 
+/*
+ * editor main page
+ * type : get
+ * req : none
+ * res : none
+ */
 exports.editorMain = function(req,res){
     /*
     if(sessionService.hasSession(req) && sessionService.getSession(req).isMaster==false){
@@ -128,6 +134,66 @@ exports.editorMain = function(req,res){
     res.render('editorPage',{status:'s'});
 };
 
+/*
+ * editor category page
+ * type : get
+ * req : none
+ * res : none
+ * */
+exports.e_cateList = function(req,res){
+
+    //if(!sessionService.hasSession(req)){
+    if(0){
+        console.log('/editor/cateList,  not editor');
+        res.render('errorPage');
+        return;
+    }
+    else{
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                console.log('err C /editor/cateList, ',err);
+                res.json({status:'f'});
+                return;
+            }
+            else{
+                var query = 'SELECT * FROM CATEGORY';
+                conn.query(query,[],function(err2,result){
+                    if(err2){
+                        console.log('err S /cate/List, ',err);
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    else{
+                        var arr = [];
+                        for (var i=0; i<result.length;i++){
+                            var d = {
+                                cateID : result[i].cate_idx,
+                                cateName : result[i].cate_name,
+                                cateURL : result[i].cate_url
+                            };
+                            arr.push(d);
+                        }
+                        var sendData = {
+                            status : 's',
+                            categoryNum : result.length,
+                            categorys : arr
+                        };
+                        res.render('editor_category',sendData);
+                        conn.release();
+                    }
+                });
+            }
+        });
+    }
+};
+
+/*
+ * master main page
+ * type : get
+ * req : none
+ * res : none
+ */
 exports.masterMain = function(req,res){
 
     if(sessionService.getSession(req).isMaster){
@@ -148,8 +214,6 @@ exports.masterMain = function(req,res){
  * res : status, categoryNum, categorys
  * */
 exports.cateList = function(req,res){
-    var recvData = req.body;
-    console.log('recvData : ',recvData);
 
     //TODO : check session is master
     //test for if
