@@ -44,6 +44,18 @@ exports.login = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
+
+    //for test
+    if(recvData.email===db.data.email && recvData.pwd ==='1234'){
+        var sendData = {};
+        sendData.status = 's';
+        sendData.isMaster = true;
+        sessionService.registerSession(req,recvData.email,'root',true);
+        res.send(sendData);
+    }
+
+
+
     //TODO : check id, pwd are not null
     if(typeof recvData.email ==='undefined' || typeof recvData.pwd ==='undefined'){
         console.log('email OR pwd undefined');
@@ -103,9 +115,22 @@ exports.login = function(req,res){
 
 };
 
+exports.editorMain = function(req,res){
+    if(sessionService.hasSession(req) && sessionService.getSession(req).isMaster==false){
+        var renderData = {
+            status : 's',
+
+        };
+        res.render('editorPage',{status:'s'});
+    }
+    else{
+        res.render('error',{status:'f'});
+    }
+};
+
 exports.masterMain = function(req,res){
     /*
-    if(sessionService.getSession().isMaster){
+    if(sessionService.getSession(req).isMaster){
         res.render('masterPage',{status:'s'});
     }
     else{

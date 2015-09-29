@@ -120,9 +120,9 @@
             <input class="form-control" type="에디터 닉네임" id="editorNick" name="editorNick" placeholder="에디터의 닉네임을 입력해주세요">
             <div class="form-group">
                 <label for="에디터 카테고리">Editor's Category:</label>
-                <select class="form-control" id="sel1">
+                <select class="form-control" id="sel1" name="editorCate">
                     <%for(var i=0;i<categoryNum;i++){%>
-                    <option><%=categorys[i].cateID%> : <%=categorys[i].cateName%></option>
+                    <option value="<%=categorys[i].cateID%>"><%=categorys[i].cateID%> : <%=categorys[i].cateName%></option>
                     <%}%>
                 </select>
             </div>

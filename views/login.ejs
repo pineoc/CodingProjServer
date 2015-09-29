@@ -69,7 +69,7 @@ var pressEnter=function(){
 
             //ajax started
             $.ajax({
-                url: '/web/login_test',
+                url: '/web/login',
                 type: 'POST',
                 data:param,
                 error: function errorHandler(jqXHR, textStatus, errorThrown) {
@@ -79,9 +79,11 @@ var pressEnter=function(){
                     if (data.status === 's') {
                         alert('login success');
                         if(data.isMaster==true){
-                            window.location.replace("/web/login")
+                            window.location.replace("/web/master/main");
                         }
-                        window.location.replace("/web/master/main");
+                        else{
+                            window.location.replace('/web/editor/main');
+                        }
                         return;
                     }
                     else{

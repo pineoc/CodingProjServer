@@ -740,11 +740,26 @@ router.get('/web/login_test',web.login_test_get);
 //res : status, isMaster
 router.post('/web/login_test',web.login_test_post);
 
+/*
+* login page
+* type : get
+* show login page
+* */
+router.get('/web/login',web.login_test_get);
+
 //login page for get login data
 //type : post
 //req : id, pwd
 //res : status, isMaster
 router.post('/web/login',web.login);
+
+/*
+* editor main page
+* type : get
+* req : none
+* res : none
+* */
+router.get('/web/editor/main',web.editorMain);
 
 /*
 * master main page
