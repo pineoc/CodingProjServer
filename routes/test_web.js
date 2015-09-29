@@ -196,15 +196,16 @@ exports.e_cateList = function(req,res){
  */
 exports.masterMain = function(req,res){
 
+    /*
     if(sessionService.getSession(req).isMaster){
         res.render('masterPage',{status:'s'});
     }
     else{
         res.render('errorPage',{status:'f'});
     }
+    */
 
-
-    //res.render('masterPage',{status:'s'});
+    res.render('masterPage',{status:'s'});
 };
 
 /*
@@ -810,10 +811,10 @@ exports.boardList = function(req,res){
     }
 
     //TODO : check session is editor
-    if(!sessionService.hasSession(req)){
-        //if(0){
+    //if(!sessionService.hasSession(req)){
+    if(0){
         console.log('invalid approach, /boardList');
-        res.json({status:'f'});
+        res.json({status:'f',msg:'no session'});
         return;
     }
     else{
@@ -824,7 +825,7 @@ exports.boardList = function(req,res){
             db.pool.getConnection(function(err,conn){
                 if(err){
                     console.log('err C /board/list, ',err);
-                    res.json({status:'f'});
+                    res.json({status:'f',msg:'c, master board list fail'});
                     return;
                 }
                 else{
@@ -838,7 +839,7 @@ exports.boardList = function(req,res){
                     conn.query(query,[parseInt(recvData.pageNum)*20],function(err2,result){
                         if(err2){
                             console.log('err S /web/board/list, ',err2);
-                            res.json({status:'f'});
+                            res.json({status:'f',msg:'q, master board list fail'});
                             conn.release();
                             return;
                         }
@@ -875,7 +876,7 @@ exports.boardList = function(req,res){
             db.pool.getConnection(function(err,conn){
                 if(err){
                     console.log('err C /board/list, ',err);
-                    res.json({status:'f',msg:'connection error'});
+                    res.json({status:'f',msg:'c, editor board list fail'});
                     return;
                 }
                 else{
@@ -901,7 +902,7 @@ exports.boardList = function(req,res){
                     conn.query(query,[editorName,parseInt(recvData.pageNum)*20],function(err2,result){
                         if(err2){
                             console.log('err U /board/list, ',err2);
-                            res.json({status:'f',msg:'query error'});
+                            res.json({status:'f',msg:'q, editor board list fail'});
                             conn.release();
                             return;
                         }
@@ -979,33 +980,67 @@ exports.boardDel = function(req,res){
             return;
         }
 
-        db.pool.getConnection(function(err, conn){
-            if(err){
-                console.log('err C /board/del, ', err);
-                res.json({status : 'f'});
-                return;
-            }
-            else{
-                var query = 'UPDATE BOARD SET isValid=0 WHERE b_idx=?';
-                conn.query(query,[recvData.contentID],function(err2,result){
-                    if(err2){
-                        console.log('err U /board/del, ', err2);
-                        res.json({status : 'f'});
-                        conn.release();
-                        return;
-                    }
-                    else{
-                        if(result.changedRows==1){
-                            res.json({status : 's'});
+        if(sessionService.isMaster(req)){
+            //master
+            db.pool.getConnection(function(err, conn){
+                if(err){
+                    console.log('err C /board/del, ', err);
+                    res.json({status : 'f'});
+                    return;
+                }
+                else{
+                    var query = 'UPDATE BOARD SET isValid=0 WHERE b_idx=?';
+                    conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
+                        if(err2){
+                            console.log('err U /board/del, ', err2);
+                            res.json({status : 'f', msg:'q, Board Index error'});
+                            conn.release();
+                            return;
                         }
                         else{
-                            res.json({status : 'f'});
+                            if(result.changedRows==1){
+                                res.json({status : 's',msg:'게시 보류 성공'});
+                            }
+                            else{
+                                res.json({status : 'f',msg:'게시 보류 실패'});
+                            }
+                            conn.release();
                         }
-                        conn.release();
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+        else{
+            //editor
+            var editorName = sessionService.getSession(req).userName;
+            db.pool.getConnection(function(err, conn){
+                if(err){
+                    console.log('err C /board/del, ', err);
+                    res.json({status : 'f'});
+                    return;
+                }
+                else{
+                    var query = 'UPDATE BOARD SET isValid=0 WHERE b_idx=? AND e_name=?';
+                    conn.query(query,[parseInt(recvData.contentID),editorName],function(err2,result){
+                        if(err2){
+                            console.log('err U /board/del, ', err2);
+                            res.json({status : 'f',msg:'q, editor OR board Index not valid'});
+                            conn.release();
+                            return;
+                        }
+                        else{
+                            if(result.changedRows==1){
+                                res.json({status : 's', msg:'게시 보류 성공'});
+                            }
+                            else{
+                                res.json({status : 'f', msg:'게시 보류 실패'});
+                            }
+                            conn.release();
+                        }
+                    });
+                }
+            });
+        }
     }
 };
 
@@ -1078,7 +1113,7 @@ exports.boardWriteGet = function(req,res){
             conn.query(query,[],function(err,result){
                 if(err){
                     console.log('err S /board/write/get during select category, ',err);
-                    res.json({status:'f'});
+                    res.json({status:'f',msg:'query error'});
                     conn.release();
                     return;
                 }
