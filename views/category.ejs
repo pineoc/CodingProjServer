@@ -95,7 +95,7 @@
         <tr>
             <td><%=categorys[i].cateID%></td>
             <td><%=categorys[i].cateName%></td>
-            <td><a href="<%=categorys[i].cateURL%>"><%=categorys[i].cateURL%></a></td>
+            <td> <img src="<%=categorys[i].cateURL%>" alt="Category Image" height="42" width="42"/> </td>
         </tr>
         <%}%>
         </tbody>
@@ -110,7 +110,7 @@
             <label for="카테고리 이름">CategoryName:</label>
             <input class="form-control" type="카테고리 이름" id="categoryName" name="categoryName" placeholder="카테고리 이름을 입력해주세요">
             <label for="카테고리 아이디">CategoryId:</label>
-            <input class="form-control" type="카테고리 아이디" id="categoryID" name="categoryID" placeholder="카테고리 아이디를 입력해주세요">
+            <input class="form-control" type="카테고리 아이디" id="categoryID" name="categoryID" placeholder="카테고리 아이디를 입력해주세요(숫자만 가능)">
             <label for="카테고리 이미지">CategoryImage:</label>
             <input type="file" id="categoryImage" name="categoryImage" placeholder="카테고리를 입력해주세요">
             <br>
