@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Master page</title>
+  <title>Editor page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -11,12 +11,44 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script language="javascript">
   </script>
+</head>
   <body>
   	<div class="container-fluid">
 		<div class="jumbotron" style="margin-top:15px;background-color:#FF4D4D;padding-top:15px;
 	padding-bottom:15px;
 	margin-bottom:20px;">
-			<h1>Master Page</h1>
-			<p>Welcome Master!</p>
+			<h1>Editor Page</h1>
+			<p>Welcome Editor!</p>
 		</div>
 	</div>
+	<div class="row" style="margin:2px">
+			<div class="col-lg-2">
+				<nav>
+				<table class="table table-striped well">
+					<thead>
+						<tr>
+							<th>
+								관리
+							</th>	
+						</tr>	
+					</thead>
+					<tbody>
+						<tr>
+							<th>
+								<button type="button" onclick="category()" class="btn btn-link btn-Medium" id="bottons1">내 글 관리</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="editor()" class="btn btn-link btn-Medium" id="bottons2">카테고리 목록</button>
+							</th>
+						</tr>
+					</tbody>
+				</table>
+				</nav>
+			</div>
+			<iframe id="main" width="80%" height="600px" scrolling="yes" frameborder="0" style="background-color:#F3F7F7" src="/default_iframe"></iframe>
+	</div>
+	</div>
+</body>
+</html>
