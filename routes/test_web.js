@@ -10,7 +10,7 @@ var crypto = require('crypto');
 //type : get
 //show login test
 exports.login_test_get = function(req, res){
-    res.render('test_web', { title: 'Test Web' });
+    res.render('login', { title: '남정네들 관리 페이지' });
 };
 
 //login test request
