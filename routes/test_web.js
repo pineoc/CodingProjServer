@@ -117,12 +117,15 @@ exports.login = function(req,res){
 };
 
 exports.editorMain = function(req,res){
+    /*
     if(sessionService.hasSession(req) && sessionService.getSession(req).isMaster==false){
         res.render('editorPage',{status:'s'});
     }
     else{
         res.render('errorPage',{status:'f'});
     }
+    */
+    res.render('editorPage',{status:'s'});
 };
 
 exports.masterMain = function(req,res){
