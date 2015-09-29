@@ -1,15 +1,21 @@
+/*
 iframe.main{
-		position:absolute;
-		left:220px;
-		top:120px;
-		width:1000px;
-		height:600px;
-	}
-	nav{
-		width:180px;
-		height:600px;
-		float:left;
-	}
+	position:absolute;
+	left:220px;
+	top:120px;
+	width:1000px;
+	height:600px;
+}
+*/
+iframe.main{
+	overflow: hidden;
+	float:right;
+}
+nav{
+	width:180px;
+	height:600px;
+	float:left;
+}
 .errorPage{
 	position:absolute;
 	left:220px;

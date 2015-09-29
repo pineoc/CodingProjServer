@@ -1,6 +1,7 @@
 /**
  * Created by pineoc on 2015-07-25.
  */
+var path = require('path');
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
@@ -10,12 +11,11 @@ var multipartMiddleware = multipart();
 
 var web = require('./test_web');
 var db = require('./db_config');
-
-
 var fileUploadService = require('./fileUploadService');
 //test code start
 //namjungnaedle category number
 const CLOTHIDX = 1;
+var urlpath_base = path.join(db.server_data.domain,'img');
 
 //login
 // first time, sign + login, after then login
@@ -136,7 +136,6 @@ router.get('/app/menu',function(req,res){
                 }
                 conn.release();
             });
-
         }
     });
 });
@@ -238,7 +237,7 @@ router.get('/app/board', function(req,res){
                         }
                         var sendData = {
                             status : 's',
-                            pageContentsNum : result.length,
+                            contentsNum : result.length,
                             datas : arr
                         };
                         res.json(sendData);
@@ -655,7 +654,7 @@ router.get('/app/board/commentview', function(req, res){
                     }
                     var sendData = {
                         status : 's',
-                        commentNum : result.length,
+                        commentNum : arr.length,
                         datas : arr
                     };
                     res.json(sendData);
@@ -817,7 +816,7 @@ router.post('/web/master/editor/delete',web.editorDel);
  * req : pageNum
  * res : status, contentNum, datas
  * */
-router.get('/web/master/board',web.boardAllList);
+router.get('/web/board/list',web.boardList);
 
 /*
  * board update

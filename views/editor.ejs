@@ -118,8 +118,14 @@
             <input class="form-control" type="에디터 이름" id="editorName" name="editorName" placeholder="에디터의 이름을 입력해주세요">
             <label for="에디터 닉네임">Editor's NickName:</label>
             <input class="form-control" type="에디터 닉네임" id="editorNick" name="editorNick" placeholder="에디터의 닉네임을 입력해주세요">
-            <label for="에디터 카테고리">Editor's Category:</label>
-            <input class="form-control" type="에디터 카테고리" id="editorCate" name="editorCate" placeholder="에디터의 카테고리를 입력해주세요">
+            <div class="form-group">
+                <label for="에디터 카테고리">Editor's Category:</label>
+                <select class="form-control" id="sel1">
+                    <%for(var i=0;i<categoryNum;i++){%>
+                    <option><%=categorys[i].cateID%> : <%=categorys[i].cateName%></option>
+                    <%}%>
+                </select>
+            </div>
             <label for="에디터 썸네일">Editor's Thumnail:</label>
             <input type="file" id="editorThumnail" name="editorThumnail" placeholder="썸네일을 입력해주세요">
             <label for="에디터 소개">Editor's Intro:</label>
