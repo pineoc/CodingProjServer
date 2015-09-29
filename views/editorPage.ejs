@@ -22,6 +22,13 @@
   	main.contentWindow.location="/web/board/list?pageNum=0";
   	//getElementById("buttons3").className="btn btn-primary active";
   }
+   function category(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/editor/category";
+  	//getElementById("buttons1").className="btn btn-primary active";
+  	//getElementById("buttons2").className="btn btn-link btn-Medium"
+  }
   </script>
 </head>
   <body>
@@ -52,7 +59,7 @@
 						</tr>
 						<tr>
 							<th>
-								<button type="button" onclick="" class="btn btn-link btn-Medium" id="bottons2">카테고리 목록</button>
+								<button type="button" onclick="category()" class="btn btn-link btn-Medium" id="bottons2">카테고리 목록</button>
 							</th>
 						</tr>
 						<tr>
