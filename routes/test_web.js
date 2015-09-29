@@ -117,10 +117,6 @@ exports.login = function(req,res){
 
 exports.editorMain = function(req,res){
     if(sessionService.hasSession(req) && sessionService.getSession(req).isMaster==false){
-        var renderData = {
-            status : 's',
-
-        };
         res.render('editorPage',{status:'s'});
     }
     else{
@@ -131,10 +127,10 @@ exports.editorMain = function(req,res){
 exports.masterMain = function(req,res){
     /*
     if(sessionService.getSession(req).isMaster){
-        res.render('masterPage',{status:'s'});
+        res.render('master_masterPage',{status:'s'});
     }
     else{
-        res.render('masterPage',{status:'f'});
+        res.render('master_masterPage',{status:'f'});
     }
     */
 
@@ -190,46 +186,13 @@ exports.cateList = function(req,res){
                             categoryNum : result.length,
                             categorys : arr
                         };
-                        res.render('category',sendData);
+                        res.render('master_category',sendData);
                         conn.release();
                     }
                 });
             }
         });
     }
-
-
-/*
-    var renderData = {
-        status:'s',
-        categoryNum : 5,
-        categorys : [
-            {
-                "cateID":1,
-                "cateName":"남정네들"
-            },
-            {
-                "cateID":2,
-                "cateName":"패션"
-            },
-            {
-                "cateID":3,
-                "cateName":"자동차"
-            },
-            {
-                "cateID":4,
-                "cateName":"게임"
-            },
-            {
-                "cateID":5,
-                "cateName":"스포츠"
-            }
-        ]
-    };
-
-
-    res.render('category',renderData);
-    */
 
 };
 
@@ -455,7 +418,7 @@ exports.editorList = function(req,res){
                         sendData['categoryNum'] = result.length;
                         sendData['categorys'] = arr;
                         console.log(sendData);
-                        res.render('editor',sendData);
+                        res.render('master_editor',sendData);
                         conn.release();
                     }
                 });
@@ -753,8 +716,7 @@ exports.boardAllList = function(req,res){
                             contentsNum : arr.length,
                             datas : arr
                         };
-                        console.log('renderData : ',renderData);
-                        res.render('management',renderData);
+                        res.render('master_management',renderData);
                         conn.release();
                     }
                 });
@@ -832,7 +794,7 @@ exports.boardList = function(req,res){
                                 contentsNum : arr.length,
                                 datas : arr
                             };
-                            res.render('management',renderData);
+                            res.render('master_management',renderData);
                             conn.release();
                         }
                     });
@@ -895,7 +857,7 @@ exports.boardList = function(req,res){
                                 contentsNum : arr.length,
                                 datas : arr
                             };
-                            res.render('management',renderData);
+                            res.render('master_management',renderData);
                         }
                         conn.release();
                     });
@@ -1069,7 +1031,7 @@ exports.boardWriteGet = function(req,res){
                             categorys : arr
                         };
                         console.log(sendData);
-                        res.render('writeConsidertaions',sendData);
+                        res.render('master_writeConsidertaions',sendData);
                         conn.release();
                     }
                 });
