@@ -829,7 +829,7 @@ exports.boardList = function(req,res){
                 else{
                     var query = 'SELECT * FROM ('
                         + 'SELECT BOARD.b_idx, BOARD.e_name, EDITOR.e_nickname, BOARD.category, BOARD.title, '
-                        + 'BOARD.likes, BOARD.datetime, BOARD.isValid '
+                        + 'BOARD.likes, DATE_FORMAT(BOARD.datetime,"%Y-%c-%d %H:%i") datetime, BOARD.isValid '
                         + 'FROM BOARD JOIN EDITOR '
                         + 'ON BOARD.e_name = EDITOR.e_name) '
                         + 't1 JOIN CATEGORY ON t1.category = CATEGORY.cate_idx '
@@ -890,7 +890,7 @@ exports.boardList = function(req,res){
                      ORDER BY b_idx LIMIT ?,20;
                      */
                     var query = 'SELECT b.b_idx, b.e_name, e.e_nickname, b.category, c.cate_name, b.title,'
-                        +'b.likes, b.datetime, b.isValid FROM BOARD b '
+                        +'b.likes, DATE_FORMAT(b.datetime,"%Y-%c-%d %H:%i") datetime, b.isValid FROM BOARD b '
                         +'INNER JOIN EDITOR e '
                         +'ON b.e_name = e.e_name '
                         +'INNER JOIN CATEGORY c '
@@ -1401,7 +1401,8 @@ exports.board_view_func = function(req,res){
             return;
         }
         else{
-            var query = 'SELECT * FROM BOARD WHERE b_idx=?';
+            var query = 'SELECT b_idx, likes, e_name, title, pagesNum, contents, images, ' +
+                'DATE_FORMAT(datetime,"%Y-%c-%d %H:%i") datetime FROM BOARD WHERE b_idx=?';
             conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
                 if(err2){
                     console.log('err S /view, test cate!=1, ',err2);
@@ -1440,6 +1441,7 @@ exports.board_view_func = function(req,res){
                     var sendData = {
                         status : 's',
                         contentID : result[0].b_idx,
+                        datetime : result[0].datetime,
                         likes : result[0].likes,
                         editor : result[0].e_name,
                         title : result[0].title,
