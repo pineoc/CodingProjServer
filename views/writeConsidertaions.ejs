@@ -95,12 +95,12 @@
 <form action="/web/board/write/test" method="post" name="writeContent" id="writeContent" enctype="multipart/form-data">
     <!--for test -->
     <!--1-->
-    <input class="form-control" type="hidden" name="editorName" value="test"/>
+    <input class="form-control" type="hidden" id="editorName" name="editorName" value="test"/>
     <div class="container-fluid">
         <br>
         <div class="form-group">
             <label for="글제목">글 제목:</label>
-            <input type="text" class="form-control" id="titlle" name="title" placeholder="글 제목을 입력해 주세요"/>
+            <input type="text" class="form-control" id="title" name="title" placeholder="글 제목을 입력해 주세요"/>
         </div>
     </div>
     <div class="container-fluid">
@@ -112,6 +112,13 @@
                 <option value="<%=categorys[i].cateID%>"><%=categorys[i].cateID%> : <%=categorys[i].cateName%></option>
                 <%}%>
             </select>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <br>
+        <div class="form-group">
+            <label for="썸네일">썸네일</label>
+            <input type="file" id="thumnail" name="thumnail"/>
         </div>
     </div>
     <div class="container-fluid" style="display:block;background-color:#ADC2FF;margin-bottom:10px;">

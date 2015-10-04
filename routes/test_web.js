@@ -1131,7 +1131,7 @@ exports.boardWriteGet = function(req,res){
                         categoryNum : arr.length,
                         categorys : arr
                     };
-                    res.render('master_writeConsidertaions',sendData);
+                    res.render('writeConsidertaions',sendData);
                     conn.release();
                 }
             });
