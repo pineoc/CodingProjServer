@@ -762,13 +762,14 @@ router.get('/web/board/write',web.boardWriteGet);
  * */
 router.post('/web/board/write',multipartMiddleware,web.boardWrite);
 router.post('/web/board/write/test',multipartMiddleware,web.boardWrite_test);
+
 /*
- * board content list
+ * board view
  * type : get
- * req : pageNum
- * res : status, contentNum, datas
+ * req : contentID
+ * res : ~
  * */
-router.get('/web/board/list',web.boardList);
+router.get('/web/board/view',web.board_view_func);
 
 /*
  * cloth list

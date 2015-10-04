@@ -1,0 +1,90 @@
+<!--
+#get data list
+var sendData = {
+      status : 's',
+      contentID : result[0].b_idx,
+      title : result[0].title,
+      editor : result[0].editor,
+      likes : result[0].likes,
+      pagesNum : result[0].pagesNum,
+      datas : arr
+   };
+var data = {
+      img : i_data[i],
+      content : c_data[i]
+};
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>board view</title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap and style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <style>
+        /*
+        table {
+            table-layout: auto;
+            word-wrap: break-word;
+        }*/
+        .content{
+            resize:none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<%if(status==='s'){%>
+    <h2>데이터 받아오기 성공</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Param</th>
+            <th>data</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>글 번호</td>
+            <td><%=contentID%></td>
+        </tr>
+        <tr>
+            <td>글 제목</td>
+            <td><%=title%></td>
+        </tr>
+        <tr>
+            <td>작성자</td>
+            <td><%=editor%></td>
+        </tr>
+        <tr>
+            <td>좋아요 수</td>
+            <td><%=likes%></td>
+        </tr>
+        <tr>
+            <td>페이지 수</td>
+            <td><%=pagesNum%></td>
+        </tr>
+        <%for(var i=0;i<pagesNum;i++){%>
+        <tr>
+            <td>data <%=i%>'s content</td>
+            <td><textarea rows="5" cols="30" readonly="" class="content"><%=datas[i].content%></textarea></td>
+        </tr>
+        <tr>
+            <td>data <%=i%>'s img</td>
+            <td><img src="<%=datas[i].img%>"/></td>
+        </tr>
+        <%}%>
+
+        </tbody>
+    </table>
+<%} else {%>
+    <h2>데이터 받아오기 실패</h2><p></p>
+    <h2>다시 시도해주세요</h2>
+<%}%>
+
+</div>
+</body>
+</html>

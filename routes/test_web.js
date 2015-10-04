@@ -1098,6 +1098,12 @@ exports.boardDrop = function(req,res){
     }
 };
 
+/*
+* board write page view
+* type : get
+* req : none
+* res : none
+* */
 exports.boardWriteGet = function(req,res){
 
     db.pool.getConnection(function(err,conn){
@@ -1377,7 +1383,76 @@ exports.boardWrite_test = function(req,res){
     });
 };
 
+/*
+* board view
+* type : get
+* req : contentID
+* res : ~
+* */
+exports.board_view_func = function(req,res){
+    var recvData = req.query;
+    console.log('recvData : ',recvData);
 
+    //TODO: board DB data SELECT where category!=1 AND contentID
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err conn /view, test cate!=1, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'SELECT * FROM BOARD WHERE b_idx=?';
+            conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
+                if(err2){
+                    console.log('err S /view, test cate!=1, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    if(result.length<1){
+                        console.log('err S /view, test cate!=1, no data');
+                        res.json({status:'f'});
+                        conn.release();
+                        return;
+                    }
+                    var arr = [];
+                    var c_data;
+                    var i_data;
+                    //error check
+                    try {
+                        c_data = JSON.parse(result[0].contents);
+                        i_data = JSON.parse(result[0].images);
+                    } catch(e) {
+                        console.log('parse error : ',e);
+                        res.json({status:'f',msg:'parse error'});
+                        return;
+                    }
+
+                    for (var i = 0; i < c_data.length; i++){
+                        var data = {
+                            img : i_data[i],
+                            content : c_data[i]
+                        };
+                        arr.push(data);
+                    }
+
+                    var sendData = {
+                        status : 's',
+                        contentID : result[0].b_idx,
+                        likes : result[0].likes,
+                        editor : result[0].e_name,
+                        title : result[0].title,
+                        pagesNum : result[0].pagesNum,
+                        datas : arr
+                    };
+                    res.render('board_view', sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
+};
 
 /*
  * cloth list

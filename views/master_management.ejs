@@ -1,105 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Master page</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css
-		" href="/stylesheets/stylesheet_masterPage.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script>
-  function printValue(value){
-    console.log(value);
-   }
- function showDeleteDiv(id,id2){
-     var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
+    <title>Master page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script>
+        function printValue(value){
+            console.log(value);
+        }
+        function showDeleteDiv(id,id2){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
 
-        var e2 = document.getElementById(id2);
-       if(e2.style.display == 'block')
-          e2.style.display = 'none';
-       else
-          e2.style.display = 'block';
-   }
-   function showManagementMain(id,id2){
-    var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
+            var e2 = document.getElementById(id2);
+            if(e2.style.display == 'block')
+                e2.style.display = 'none';
+            else
+                e2.style.display = 'block';
+        }
+        function showManagementMain(id,id2){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
 
-        var e2 = document.getElementById(id2);
-       if(e2.style.display == 'block')
-          e2.style.display = 'none';
-       else
-          e2.style.display = 'block';
+            var e2 = document.getElementById(id2);
+            if(e2.style.display == 'block')
+                e2.style.display = 'none';
+            else
+                e2.style.display = 'block';
 
-        document.deleteContent.submit();
-   }
-   </script>
+            document.deleteContent.submit();
+        }
+        function showBoardContent(num){
+            //console.log('clicked',num);
+            window.location.replace("/web/board/view?contentID="+num);
+        }
+    </script>
 </head>
 <body>
-  <!--글관리 메인-->
-     <div class="container-fluid" id="managementMain" style="display:block">
+<!--글관리 메인-->
+<div class="container-fluid" id="managementMain" style="display:block">
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>contentID</th>
+            <th>writer</th>
+            <th>title</th>
+            <th>categoryID</th>
+            <th>categoryName</th>
+            <th>like</th>
+            <th>datetime</th>
+            <th>isValid</th>
+            <th>view</th>
+        </tr>
+        <%for(var i=0;i<contentsNum;i++){%>
+        <tr>
+            <td><%=datas[i].contentID%></td>
+            <td><%=datas[i].writer%></td>
+            <td><%=datas[i].title%></td>
+            <td><%=datas[i].categoryID%></td>
+            <td><%=datas[i].categoryName%></td>
+            <td><%=datas[i].like%></td>
+            <td><%=datas[i].datetime%></td>
+            <td><%=datas[i].isValid%></td>
+            <td>
+                <button type="button" class="btn btn-lg btn-success"
+                        style="font-size: 15px; height: 20px; padding-top: 0px;"
+                        onclick="showBoardContent(<%=datas[i].contentID%>)">
+                    view
+                </button>
+            </td>
+        </tr>
+        <%}%>
+    </table>
+    <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','managementMain')">글 삭제</button>
+</div>
+<!--글 삭제-->
+<div id="deleteDiv" style="display:none">
+    <form action="/web/board/delete" method="post" name="deleteContent">
         <table class="table table-striped table-bordered">
-          <tr>
-              <th>contentID</th>
-              <th>writer</th>
-              <th>title</th>
-              <th>categoryID</th>
-              <th>categoryName</th>
-              <th>like</th>
-              <th>datetime</th>
-              <th>isValid</th>
-          </tr>
-          <%for(var i=0;i<contentsNum;i++){%>
-          <tr>
-              <td><%=datas[i].contentID%></td>
-              <td><%=datas[i].writer%></td>
-              <td><%=datas[i].title%></td>
-              <td><%=datas[i].categoryID%></td>
-              <td><%=datas[i].categoryName%></td>
-              <td><%=datas[i].like%></td>
-              <td><%=datas[i].datetime%></td>
-              <td><%=datas[i].isValid%></td>
+            <tr>
+                <th>contentID</th>
+                <th>writer</th>
+                <th>title</th>
+                <th>categoryID</th>
+                <th>categoryName</th>
+                <th>like</th>
+                <th>삭제</th>
+            </tr>
+            <%for(var i=0;i<contentsNum;i++){%>
+            <tr>
+                <td><%=datas[i].contentID%></td>
+                <td><%=datas[i].writer%></td>
+                <td><%=datas[i].title%></td>
+                <td><%=datas[i].categoryID%></td>
+                <td><%=datas[i].categoryName%></td>
+                <td><%=datas[i].like%></td>
             </tr>
             <%}%>
-          </table>
-          <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','managementMain')">글 삭제</button>
-      </div>
-      <!--글 삭제-->
-      <div id="deleteDiv" style="display:none">
-      <form action="/web/board/delete" method="post" name="deleteContent">
-      <table class="table table-striped table-bordered">
-          <tr>
-              <th>contentID</th>
-              <th>writer</th>
-              <th>title</th>
-              <th>categoryID</th>
-              <th>categoryName</th>
-              <th>like</th>
-              <th>삭제</th>
-          </tr>
-          <%for(var i=0;i<contentsNum;i++){%>
-          <tr>
-              <td><%=datas[i].contentID%></td>
-              <td><%=datas[i].writer%></td>
-              <td><%=datas[i].title%></td>
-              <td><%=datas[i].categoryID%></td>
-              <td><%=datas[i].categoryName%></td>
-              <td><%=datas[i].like%></td>
-            </tr>
-            <%}%>
-          </table>
-          <label for="글 삭제">Input Content's ID</label>
-          <input class="form-control" type="글 삭제" id="contentID" name="contentID" placeholder="삭제를 원하는 글의 ID를 입력해주세요"/>
-          <br>
-          <input type="submit" value="완료" class="btn btn-success" onclick="showManagementMain('deleteDiv','managementMain')"/>
-        </form>
+        </table>
+        <label for="글 삭제">Input Content's ID</label>
+        <input class="form-control" type="글 삭제" id="contentID" name="contentID" placeholder="삭제를 원하는 글의 ID를 입력해주세요"/>
+        <br>
+        <input type="submit" value="완료" class="btn btn-success" onclick="showManagementMain('deleteDiv','managementMain')"/>
+    </form>
+</div>
 </body>
 </html>
