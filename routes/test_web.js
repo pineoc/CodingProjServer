@@ -816,8 +816,8 @@ exports.boardList = function(req,res){
         return;
     }
     else{
-        if(sessionService.isMaster(req)){
-            //if(0){
+        //if(sessionService.isMaster(req)){
+            if(1){
             //master - boardAllList
             //TODO : SELECT data from board TABLE
             db.pool.getConnection(function(err,conn){
