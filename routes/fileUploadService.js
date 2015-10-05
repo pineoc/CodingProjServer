@@ -124,13 +124,13 @@ exports.fileClothUpload = function(name,file,savefilename){
         return resData;
     }
     var filename = file.name;
-    var folder = path.resolve(mypath,name);
+    var folder = path.resolve(mypath, name);
     var srcpath = file.path;
     var destpath;
 
 
     if(imgFile_check(filename)==false){
-        console.log('file ext invalid, ext : ',path.extname(filename));
+        console.log('file ext invalid, ext : ', path.extname(filename));
         resData.path = null;
         resData.result = false;
         return resData;
@@ -149,7 +149,7 @@ exports.fileClothUpload = function(name,file,savefilename){
         });
     }
 
-    destpath = path.resolve(folder,savefilename+path.extname(filename));
+    destpath = path.resolve(folder, savefilename + path.extname(filename));
     var is = fs.createReadStream(srcpath); //소스로부터 스트림을 입력받음
     var os = fs.createWriteStream(destpath); //읽어온 스트림을 통해서 사진파일 생성
 
@@ -158,7 +158,7 @@ exports.fileClothUpload = function(name,file,savefilename){
         fs.unlinkSync(srcpath);
     });
 
-    resData.path = urlpath_base+'/'+name+'/'+savefilename+path.extname(filename);
+    resData.path = '/img/' + name + '/' + savefilename + path.extname(filename);
     resData.result = true;
     return resData;
 };
