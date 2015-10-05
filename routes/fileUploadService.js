@@ -155,7 +155,11 @@ exports.fileClothUpload = function(name,file,savefilename){
 
     is.pipe(os);
     is.on('end',function(){
-        fs.unlinkSync(srcpath);
+        try {
+            fs.unlinkSync(srcpath);
+        } catch(e) {
+            console.log('unlinkSync error : ', e);
+        }
     });
 
     resData.path = '/img/' + name + '/' + savefilename + path.extname(filename);
