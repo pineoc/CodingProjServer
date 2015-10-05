@@ -825,8 +825,9 @@ router.get('/web/master/clothesList', function(req, res){
                 query += ("WHERE cloth_name LIKE '%" + recvData.name + "%' ");
             }
             if(recvData.pageNo){
-                query += ("LIMIT " + ((recvData.pageNo-1)*20) + ", 20");
+                query += ("LIMIT " + ((recvData.pageNo-1)*20) + ", 20 ORDER BY cloth_idx DESC");
             }
+
             conn.query(query,function(err2, result){
                 if(err2) {
                     console.log('err S / clothList, ', err2);
@@ -904,7 +905,7 @@ router.post('/web/master/addCloth',multipartMiddleware, function(req, res){
             var q = 'INSERT INTO CLOTH(cloth_cate, cloth_name, cloth_img, cloth_url, isValid) VALUES(?,?,?,?,?)';
             var img = fileUploadService.fileClothUpload("cloth",req.files.imageFile0, recvData.name.toString()+"_"+recvData.info[i].toString()).path;
             var params = [parseInt(recvData.category), recvData.name.toString(), img, recvData.url.toString(), true ];
-            console.log("tsd : " + params);
+
 
             conn.query(q, params, function(err2, result){
                 if(err2){
@@ -962,7 +963,7 @@ router.get('/web/fitting_room_list', function(req, res){
                 + 'IF(UPPERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = UPPERBODY), NULL) AS UPPERURL,'
                 + 'IF(LOWERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = LOWERBODY), NULL) AS LOWERURL, '
                 + 'IF(COAT IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = COAT), NULL) AS COATURL'
-                + ' FROM CLOTH_BOARD';
+                + ' FROM CLOTH_BOARD ORDER BY CB_IDX DESC';
 
             conn.query(query, function(err2, result){
                 if(err2){
