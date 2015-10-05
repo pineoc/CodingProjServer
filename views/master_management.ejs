@@ -86,8 +86,15 @@
         </tr>
         <%}%>
     </table>
+    <div style="display:inline-block;">
     <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','managementMain')">글 삭제</button>
-
+     <ul class="pagination" style="margin: 0px 43%;
+display: inline-flex;">
+        <li><a href="" value=""> ◁ </li>
+        <li><a href="" value=""> <%=pageNum%> </li>
+        <li><a href="" value=""> ▷ </li>
+    </ul>
+    </div>
 </div>
 <!--글 삭제-->
 <div id="deleteDiv" style="display:none">
