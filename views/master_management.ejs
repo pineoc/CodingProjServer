@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
-        var pageNum = parseInt("<%=boardRowsNum%>");
+        var currPageNum = parseInt("<%=currPage%>");
         function printValue(value){
             console.log(value);
         }
@@ -45,10 +45,19 @@
             //console.log('clicked',num);
             window.location.replace("/web/board/view?contentID="+num);
         }
-        console.log("boardRows : ","<%=boardRowsNum%>");
         function pageNumChange(num){
             window.location.replace("/web/board?pageNum="+num);
         }
+        function pageNext(){
+            currPageNum++;
+            pageNumChange(currPageNum+1);
+        }
+        function pagePriv(){
+            if(currPageNum>0)
+                currPageNum--;
+            pageNumChange(currPageNum);
+        }
+
     </script>
 </head>
 <body>

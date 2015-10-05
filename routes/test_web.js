@@ -888,27 +888,9 @@ exports.boardList = function(req,res){
                                 };
                                 arr.push(d);
                             }
-                            var iBoardRowsNum = 0;
-
-                            var query2 = 'SELECT COUNT(1) c FROM BOARD;';
-                            conn.query(query2,[],function(err3,result2){
-                                if(err2){
-                                    console.log('err q check board rows, ',err3);
-                                }
-                                else{
-                                    if(result2.length==1){
-                                        console.log(result2[0].c);
-                                        iBoardRowsNum = result2[0].c;
-                                    }
-                                }
-                            });
-
-                            if(iBoardRowsNum==0)
-                                iBoardRowsNum = arr.length;
-                            console.log(iBoardRowsNum);
                             var renderData = {
                                 status : 's',
-                                boardRowsNum : iBoardRowsNum,
+                                currPage : recvData.pageNum,
                                 contentsNum : arr.length,
                                 datas : arr
                             };
@@ -970,27 +952,9 @@ exports.boardList = function(req,res){
                                 };
                                 arr.push(d);
                             }
-                            var iBoardRowsNum = 0;
-
-                            var query2 = 'SELECT COUNT(1) c FROM BOARD;';
-                            conn.query(query2,[],function(err3,result2){
-                                if(err2){
-                                    console.log('err q check board rows, ',err3);
-                                }
-                                else{
-                                    if(result2.length==1){
-                                        console.log(result2[0].c);
-                                        iBoardRowsNum = result2[0].c;
-                                    }
-                                }
-                            });
-
-                            if(iBoardRowsNum==0)
-                                iBoardRowsNum = arr.length;
-                            console.log(iBoardRowsNum);
                             var renderData = {
                                 status : 's',
-                                boardRowsNum : iBoardRowsNum,
+                                currPage : recvData.pageNum,
                                 contentsNum : arr.length,
                                 datas : arr
                             };
