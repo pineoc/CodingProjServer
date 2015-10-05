@@ -6,6 +6,38 @@ var fileUploadService = require('./fileUploadService');
 
 var crypto = require('crypto');
 
+
+function getBoardRowsCount(){
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err C check board rows, ',err);
+            return 0;
+        }
+        else{
+            var query = 'SELECT COUNT(1) c FROM BOARD;';
+            conn.query(query,[],function(err2,result){
+                if(err2){
+                    console.log('err q check board rows, ',err2);
+                    conn.release();
+                    return 0;
+                }
+                else{
+                    if(result.length==1){
+                        conn.release();
+                        console.log(result[0].c);
+                        return result[0].c;
+                    }
+                    conn.release();
+                    return 0;
+                }
+            });
+        }
+    });
+}
+
+
+
+
 //login test page
 //type : get
 //show login test
@@ -856,8 +888,27 @@ exports.boardList = function(req,res){
                                 };
                                 arr.push(d);
                             }
+                            var iBoardRowsNum = 0;
+
+                            var query2 = 'SELECT COUNT(1) c FROM BOARD;';
+                            conn.query(query2,[],function(err3,result2){
+                                if(err2){
+                                    console.log('err q check board rows, ',err3);
+                                }
+                                else{
+                                    if(result2.length==1){
+                                        console.log(result2[0].c);
+                                        iBoardRowsNum = result2[0].c;
+                                    }
+                                }
+                            });
+
+                            if(iBoardRowsNum==0)
+                                iBoardRowsNum = arr.length;
+                            console.log(iBoardRowsNum);
                             var renderData = {
                                 status : 's',
+                                boardRowsNum : iBoardRowsNum,
                                 contentsNum : arr.length,
                                 datas : arr
                             };
@@ -919,8 +970,27 @@ exports.boardList = function(req,res){
                                 };
                                 arr.push(d);
                             }
+                            var iBoardRowsNum = 0;
+
+                            var query2 = 'SELECT COUNT(1) c FROM BOARD;';
+                            conn.query(query2,[],function(err3,result2){
+                                if(err2){
+                                    console.log('err q check board rows, ',err3);
+                                }
+                                else{
+                                    if(result2.length==1){
+                                        console.log(result2[0].c);
+                                        iBoardRowsNum = result2[0].c;
+                                    }
+                                }
+                            });
+
+                            if(iBoardRowsNum==0)
+                                iBoardRowsNum = arr.length;
+                            console.log(iBoardRowsNum);
                             var renderData = {
                                 status : 's',
+                                boardRowsNum : iBoardRowsNum,
                                 contentsNum : arr.length,
                                 datas : arr
                             };
