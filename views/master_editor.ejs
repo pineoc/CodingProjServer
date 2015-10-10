@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Master page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet_masterPage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/plugins/jquery.form.js"></script>
+    <script>
+        function showAddDiv(id,id2){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+
+            var e2 = document.getElementById(id2);
+            if(e2.style.display == 'block')
+                e2.style.display = 'none';
+            else
+                e2.style.display = 'block';
+        }
+        function showEditorMain1(id,id2){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+
+            var e2 = document.getElementById(id2);
+            if(e2.style.display == 'block')
+                e2.style.display = 'none';
+            else
+                e2.style.display = 'block';
+
+            //document.categoryAdd.submit();
+        }
+        function showEditorMain2(id,id2){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+
+            var e2 = document.getElementById(id2);
+            if(e2.style.display == 'block')
+                e2.style.display = 'none';
+            else
+                e2.style.display = 'block';
+
+            //document.editorDelete.submit();
+        }
+        function printValue(value){
+            console.log(value);
+        }
+        function showDeleteDiv(id,id2){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+
+            var e2 = document.getElementById(id2);
+            if(e2.style.display == 'block')
+                e2.style.display = 'none';
+            else
+                e2.style.display = 'block';
+        }
+    </script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding : 5px;
+        }
+    </style>
+
+</head>
+<body>
+<!--에디터 메인-->
+<div class="container-fluid" id="editorMain" style="display:block">
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>editorThumnail</th>
+            <th>editorEmail</th>
+            <th>editorName</th>
+            <th>editorNick</th>
+            <th>editorCate</th>
+            <th>editorIntro</th>
+            <th>editorValid</th>
+        </tr>
+        <% for (var i=0; i < editorsNum; i++) { %>
+        <tr>
+            <td><img src="<%=editors[i].editorThumnail%>" alt="Thumnail" height="42" width="42"</td>
+            <td><%=editors[i].editorEmail%></td>
+            <td><%=editors[i].editorName%></td>
+            <td><%=editors[i].editorNick%></td>
+            <td><%=editors[i].editorCate%></td>
+            <td><%=editors[i].editorIntro%></td>
+            <td><%=editors[i].editorValid%></td>
+        </tr>
+        <%}%>
+    </table>
+    <button  class="btn btn-success" onclick="showAddDiv('addDiv','editorMain')">에디터 추가</button>
+    <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','editorMain')">에디터 삭제</button>
+    <ul class="pagination" style="margin: 0px 43%;display: inline-flex;">
+        <li><a href="/web/master/editor?pageNum=<%=parseInt(currPage)-1%>" value="">◁</a></li>
+        <li><a href="" value="<%=currPage%>" disabled><%=currPage%></a></li>
+        <li><a href="/web/master/editor?pageNum=<%=parseInt(currPage)+1%>" value="">▷</a></li>
+    </ul>
+</div>
+<!--에디터 추가-->
+<div id="addDiv" style="display:none">
+    <form action="/web/master/editor/add" method="post" id = "editorAdd" name="editorAdd" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="에디터 이메일">Editor's Email:</label>
+            <input class="form-control" type="에디터 이메일" id="editorEmail" name="editorEmail" placeholder="에디터의 이메일을 입력해주세요">
+            <label for="에디터 이름">Editor's Pwd:</label>
+            <input class="form-control" type="password" id="editorPwd" name="editorPwd" placeholder="에디터의 비밀번호를 입력해주세요">
+            <label for="에디터 이름">Editor's Name:</label>
+            <input class="form-control" type="에디터 이름" id="editorName" name="editorName" placeholder="에디터의 이름을 입력해주세요">
+            <label for="에디터 닉네임">Editor's NickName:</label>
+            <input class="form-control" type="에디터 닉네임" id="editorNick" name="editorNick" placeholder="에디터의 닉네임을 입력해주세요">
+            <div class="form-group">
+                <label for="에디터 카테고리">Editor's Category:</label>
+                <select class="form-control" id="sel1" name="editorCate">
+                    <%for(var i=0;i<categoryNum;i++){%>
+                    <option value="<%=categorys[i].cateID%>"><%=categorys[i].cateID%> : <%=categorys[i].cateName%></option>
+                    <%}%>
+                </select>
+            </div>
+            <label for="에디터 썸네일">Editor's Thumnail:</label>
+            <input type="file" id="editorThumnail" name="editorThumnail" placeholder="썸네일을 입력해주세요">
+            <label for="에디터 소개">Editor's Intro:</label>
+            <input class="form-control" type="에디터 소개" id="editorIntro" name="editorIntro" placeholder="에디터의 소개를 입력해주세요">
+            <br>
+            <input type="submit" value="완료" class="btn btn-success" onclick="showEditorMain1('addDiv','editorMain')"/>
+        </div>
+    </form>
+</div>
+<!--에디터 삭제-->
+<div id="deleteDiv" style="display:none">
+    <form action="/web/master/editor/delete" method="post" id="editorDelete" name="editorDelete">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>editorEmail</th>
+                <th>editorName</th>
+                <th>editorNick</th>
+                <th>editorCate</th>
+                <th>editorThumnail</th>
+                <th>editorIntro</th>
+                <th>editorValid</th>
+            </tr>
+            <% for (var i=0; i < editorsNum; i++) { %>
+            <tr>
+                <td><%=editors[i].editorEmail%></td>
+                <td><%=editors[i].editorName%></td>
+                <td><%=editors[i].editorNick%></td>
+                <td><%=editors[i].editorCate%></td>
+                <td><%=editors[i].editorThumnail%></td>
+                <td><%=editors[i].editorIntro%></td>
+                <td><%=editors[i].editorValid%></td>
+            </tr>
+            <%}%>
+        </table>
+        <label for="에디터 삭제">InputEditor's Email:</label>
+        <input class="form-control" type="에디터 삭제" id="editorEmail" name="editorEmail" placeholder="삭제를 원하는 에디터의 이메일을 입력해주세요"/>
+        <br>
+        <input type="submit" value="완료" class="btn btn-success" onclick="showEditorMain2('deleteDiv','editorMain')"/>
+    </form>
+</div>
+<script>
+    $( document ).ready(function() {
+        $("#editorAdd").ajaxForm({
+            success:function(res, frm, opt){
+                console.log(res,frm,opt);
+                if(res.status === 's'){
+                    location.reload(true);
+                }
+                else{
+                    alert('error, ' + res.msg);
+                }
+            },
+            error : function(){
+                alert('error');
+            }
+        });
+    });
+    $( document ).ready(function() {
+        $("#editorDelete").ajaxForm({
+            success:function(res, frm, opt){
+                console.log(res,frm,opt);
+                if(res.status === 's'){
+                    location.reload(true);
+                }
+                else{
+                    alert('error, ' + res.msg);
+                }
+            },
+            error : function(){
+                alert('error');
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <script>
+        $(document).ready(function(){
+            switch($("h3#title").text().replace(/ /g,'')){
+                case '1': $("h3#title").text("Top Cloth"); break;
+                case '2': $("h3#title").text("Bottom Cloth"); break;
+                case '3': $("h3#title").text("Coat Cloth"); break;
+                case '4': $("h3#title").text("Hat"); break;
+            }
+            $("img#clothes").click(function(){
+                var cate = $("h3#title").text();
+                alert($(this).text());
+                switch($("h3#title").text()){
+                    case "Top Cloth" : $("td#top_cloth").text(''); $("td#top_cloth").append(this); break;
+                    case "Bottom Cloth" : $("td#bottom_cloth").text(''); $("td#bottom_cloth").append(this); break;
+                    case "Coat Cloth" : $("td#outer_cloth").text(''); $("td#outer_cloth").append(this); break;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3 id="title">  <%=cate%></h3>
+        <div class="row">
+            <% for(var i = 0; i < list.length; i++){%>
+                <img id="clothes" class="col-md-3" src=<%=list[i].clothImg%> value=<%=list[i].clothIdx%> width="150px" height="300px"/>
+            <% }%>
+        </div>
+    </div>
+</body>
+</html>

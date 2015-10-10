@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <!-- import jquey -->
+  <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+  <!-- import bootstrap and style sheet -->
+  <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+
+  <script>
+    $(document).ready(function(){
+      if($("div#cloth_list_container").length < 10){
+        $("div#cloth_list_container").load("/web/master/clothesList");
+      }
+
+      // when click search button
+      $("input#search").click(function(){
+        var linkUrl = '/web/master/clothesList';
+        // c heck there are serch data
+        linkUrl += ('?name=' + $("input#clothName").val());
+        linkUrl += ('&category=' + $("select[name=category]").val());
+        linkUrl += ('&pageNo=' + '1');
+        $("div#cloth_list_container").load(linkUrl);
+      });
+    });
+
+  </script>
+
+</head>
+<body>
+<div class="container">
+  <h3> Manage Clothes Page </h3>
+  <div class="row">
+    <div class="col-xs-2"> 의상 명 : </div>
+    <div class="col-xs-3"> <input type="text" id="clothName"/> </div>
+    <div class="col-xs-2"> 카테고리 : </div>
+    <div class="col-xs-3">
+      <select name="category">
+        <option value=""> </option>
+        <option value="1"> Top </option>
+        <option value="2"> Bottom </option>
+        <option value="3"> Coat </option>
+      </select>
+    </div>
+    <div class="col-xs-2"> <input type="button" value="Search" id="search"> </div>
+  </div>
+
+  <div id="cloth_list_container"></div>
+
+</div>
+</body>
+</html>

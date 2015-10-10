@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test" : "node ./bin/test" 
+    "test" : "node ./bin/test"
   },
   "dependencies": {
     "body-parser": "~1.12.4",
@@ -15,6 +15,8 @@
     "morgan": "~1.5.3",
     "serve-favicon": "~2.2.1",
     "express-session":"*",
-    "socket.io":"*"
+    "mysql":"*",
+    "mkdirp":"*",
+    "connect-multiparty":"*"
   }
 }

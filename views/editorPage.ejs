@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Editor page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css
+		" href="/stylesheets/stylesheet_masterPage.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script language="javascript">
+  function writeConsidertaions(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/board/write";
+  	//getElementById("buttons4").className="btn btn-primary active";
+  }
+  function management(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/board/list?pageNum=0";
+  	//getElementById("buttons3").className="btn btn-primary active";
+  }
+   function category(){
+  	var main=document.getElementById("main");
+
+  	main.contentWindow.location="/web/editor/category";
+  	//getElementById("buttons1").className="btn btn-primary active";
+  	//getElementById("buttons2").className="btn btn-link btn-Medium"
+  }
+  </script>
+</head>
+  <body>
+  	<div class="container-fluid">
+		<div class="jumbotron" style="margin-top:15px;background-color:#FF4D4D;padding-top:15px;
+	padding-bottom:15px;
+	margin-bottom:20px;">
+			<h1>Editor Page</h1>
+			<p>Welcome Editor!</p>
+		</div>
+	</div>
+	<div class="row" style="margin:2px">
+			<div class="col-lg-2">
+				<nav>
+				<table class="table table-striped well">
+					<thead>
+						<tr>
+							<th>
+								관리
+							</th>	
+						</tr>	
+					</thead>
+					<tbody>
+						<tr>
+							<th>
+								<button type="button" onclick="management()" class="btn btn-link btn-Medium" id="bottons1">내 글 관리</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="category()" class="btn btn-link btn-Medium" id="bottons2">카테고리 목록</button>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<button type="button" onclick="writeConsidertaions()" class="btn btn-link btn-Medium" id="bottons2">글 쓰기</button>
+							</th>
+						</tr>
+					</tbody>
+				</table>
+				</nav>
+			</div>
+			<iframe id="main" width="80%" height="600px" scrolling="yes" frameborder="0" style="background-color:#F3F7F7" src="/default_iframe"></iframe>
+	</div>
+	</div>
+</body>
+</html>

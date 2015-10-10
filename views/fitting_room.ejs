@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- import jquey -->
+    <script type="text/javascript" src="/plugins/jquery-1.11.3.min.js"></script>
+    <!-- import bootstrap style sheet -->
+    <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/bootstrap.min.css">
+    <script>
+        $(document).ready(function(){
+            $("input#go_back").click(function(){
+                $("div#fitting_room_container").load("/web/fitting_room_list");
+            });
+            $("input#submit").click(function(){
+                var head = $("td#head img").attr('value');
+                var upper = $("td#top_cloth img").attr('value');
+                var down = $("td#bottom_cloth img").attr('value');
+                var coat = $("td#outer_cloth img").attr('value');
+                var postJson =  {head : head, upper : upper, down : down, coat : coat, token : 'aaa'};
+
+                alert(postJson.toString());
+                $.post("/web/fitting_room", postJson);
+
+            });
+
+            $("td#head").click(function(){
+                alert("Choose Head");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=4");
+            })
+
+            $("td#top_cloth").click(function(){
+               alert("Choose Top Cloth");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=1");
+            });
+            $("td#bottom_cloth").click(function(){
+                alert("Choose Bottom Cloth");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=2");
+            });
+            $("td#outer_cloth").click(function(){
+                alert("Choose Outer Cloth");
+                $("div#clothList").load("/web/fitting_room_clothList?cate=3");
+            });
+
+
+            if($("div#clothList").text().length < 10){
+              //  $("div#clothList").load("/web/fitting_room_clothList");
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3> Fitting Room </h3>
+        <input id="go_back" type="button" value="Go Back"/>
+        <input id="submit" type="button" value="submit"/>
+        <div>
+            <table class=" ">
+                <tbody>
+                    <tr>
+                        <td id="head" colspan="2">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="200px" height="100px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id="top_cloth" width="100px" height="100px">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="100px"/>
+                        </td>
+                        <td  id="bottom_cloth" width="100px" rowspan="2">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="200px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id="outer_cloth" width="100px" height="100px">
+                            <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="100px"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="clothList">
+        </div>
+    </div>
+</body>
+</html>
