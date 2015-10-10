@@ -443,6 +443,10 @@ exports.editorList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
+    if (typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0) {
+        recvData.pageNum=0;
+    }
+
 
     //TODO : check session is master
     //test for if
@@ -491,6 +495,7 @@ exports.editorList = function(req,res){
 
                         sendData = {
                             status : 's',
+                            currPage : recvData.pageNum,
                             editorsNum : arr.length,
                             editors : arr
                         };
@@ -834,10 +839,8 @@ exports.boardList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
-        console.log('err /board/list , no pageNum');
-        res.json({status:'f',msg:'pageNum not in'});
-        return;
+    if (typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0) {
+        recvData.pageNum=0;
     }
 
     //TODO : check session is editor

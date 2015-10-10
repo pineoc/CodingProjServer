@@ -9,7 +9,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
-        var currPageNum = parseInt("<%=currPage%>");
         function printValue(value){
             console.log(value);
         }
@@ -43,21 +42,8 @@
         }
         function showBoardContent(num){
             //console.log('clicked',num);
-            window.location.replace("/web/board/view?contentID="+num);
+            window.location.assign("/web/board/view?contentID="+num);
         }
-        function pageNumChange(num){
-            window.location.replace("/web/board?pageNum="+num);
-        }
-        function pageNext(){
-            currPageNum++;
-            pageNumChange(currPageNum+1);
-        }
-        function pagePriv(){
-            if(currPageNum>0)
-                currPageNum--;
-            pageNumChange(currPageNum);
-        }
-
     </script>
 </head>
 <body>
@@ -98,9 +84,9 @@
     <div style="display:inline-block;">
     <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','managementMain')">글 삭제</button>
      <ul class="pagination" style="margin: 0px 43%;display: inline-flex;">
-        <li><a href="" value="" onclick="pagePriv()">◁</a></li>
-        <li><a href="" value=""><%=currPage%></a></li>
-        <li><a href="" value="" onclick="pageNext()">▷</a></li>
+        <li><a href="/web/board/list?pageNum=<%=parseInt(currPage)-1%>" value="">◁</a></li>
+        <li><a href="" value="<%=currPage%>"><%=currPage%></a></li>
+        <li><a href="/web/board/list?pageNum=<%=parseInt(currPage)+1%>" value="">▷</a></li>
     </ul>
     </div>
 </div>

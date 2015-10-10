@@ -105,6 +105,11 @@
     </table>
     <button  class="btn btn-success" onclick="showAddDiv('addDiv','editorMain')">에디터 추가</button>
     <button  class="btn btn-success" onclick="showDeleteDiv('deleteDiv','editorMain')">에디터 삭제</button>
+    <ul class="pagination" style="margin: 0px 43%;display: inline-flex;">
+        <li><a href="/web/master/editor?pageNum=<%=parseInt(currPage)-1%>" value="">◁</a></li>
+        <li><a href="" value="<%=currPage%>" disabled><%=currPage%></a></li>
+        <li><a href="/web/master/editor?pageNum=<%=parseInt(currPage)+1%>" value="">▷</a></li>
+    </ul>
 </div>
 <!--에디터 추가-->
 <div id="addDiv" style="display:none">
