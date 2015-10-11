@@ -17,6 +17,11 @@
                 $("div#fitting_room_container").load("/web/fitting_room");
             });
 
+            $(".date").each(function(){
+                var str = $(this).text();
+                var res = str.split(" ",4);
+                $(this).text(res[3] + "." + res[1] + "." + res[2] + "(" + res[0]+")");
+            });
             $('[data-toggle="popover"]').popover({html: true});
         });
 
@@ -55,7 +60,7 @@
                             <img src=<%=list[i].coatUrl%> width="100px" height="100px"/>
                         </a></td>
                     <td><%=list[i].hashtag%></td>
-                    <td> <%=list[i].datetime%> </td>
+                    <td class="date"><%=list[i].datetime%> </td>
                     <td id="more"> 자세히 보기 </td>
                 </tr>
                 <%}%>
