@@ -1028,7 +1028,7 @@ router.get('/web/hot_fashion_list', function(req, res){
                 + 'IF(UPPERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = UPPERBODY), NULL) AS UPPERURL,'
                 + 'IF(LOWERBODY IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = LOWERBODY), NULL) AS LOWERURL, '
                 + 'IF(COAT IS NOT NULL, (SELECT CLOTH.CLOTH_IMG FROM CLOTH WHERE CLOTH.CLOTH_IDX = COAT), NULL) AS COATURL'
-                + ' FROM CLOTH_BOARD';
+                + ' FROM CLOTH_BOARD ORDER BY LIKES DESC';
             if(recvData.hashtag){
                 // if hastag is exist
                 query += (" WHERE HASHTAG LIKE '%" + recvData.hashtag + "%'" );
