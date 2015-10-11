@@ -1073,6 +1073,46 @@ router.get('/web/hot_fashion_list', function(req, res){
     });
 });
 
+/* * fasion_like
+ * type : post
+ * req :
+ * res :
+ * When press like btn
+ * Daun Joung
+ */
+router.post('/web/fasion_like', function(req, res){
+    var recvData = req.body;
+    console.log('recvData : ', recvData);
+
+    db.pool.getConnection(function(err, conn){
+        if(err){
+            console.log("err C, /web/fasion_like, ", err);
+            res.json({status:'f'});
+            return;
+        } else{
+            var q = "UPDATE CLOTH_BOARD SET LIKES = ? WHERE CB_IDX = ?";
+            var params = [parseInt(recvData.likeCnt)+1, parseInt(recvData.cbIdx)];
+
+            conn.query(q, params, function(err2, result){
+                if(err2){
+                    console.log('err l, /web/fitting_room, ',err2);
+                    res.json({status:'f', msg:'query err'});
+                    conn.release();
+                    return;
+                }else{
+                    if(result.affectedRows == 1){
+                        res.json({status:'s'});
+                    }else{
+                        res.json({status:'f', msg:'not affected'});
+                    }
+                    conn.release();
+                }
+            });
+        }
+    });
+
+});
+
 /*
  * hot_fashion
  * type : get

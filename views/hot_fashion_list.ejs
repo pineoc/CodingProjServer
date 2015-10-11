@@ -32,6 +32,16 @@
                 var url = "/web/hot_fashion_list?hashtag=" + clickTag;
                 $("div#hot_fashion_container").load(url);
             });
+            // when press like btn
+            $("td#like").click(function(){
+                var cbIdx = $(this).attr('cbIdx');
+                var likeCnt = $(this).parent().children("td#likeCnt").text();
+                var postJson =  {cbIdx : cbIdx, likeCnt : likeCnt};
+
+                //alert(postJson.toString());
+                $.post("/web/fasion_like", postJson);
+                $(this).parent().children("td#likeCnt").text(parseInt($(this).parent().children("td#likeCnt").text())+1);
+            });
            // var res = str.split("");
             $('[data-toggle="popover"]').popover({html: true});
         });
@@ -58,6 +68,8 @@
                 <th> 하의 </th>
                 <th> 코트 </th>
                 <th> 태그 </th>
+                <th> 추천 </th>
+                <th> 추천수 </th
             </thead>
             <tbody>
             <%for(var i = 0 ; i < list.length; i++){ %>
@@ -75,6 +87,8 @@
                             <img src=<%=list[i].coatUrl%> width="100px" height="100px"/>
                         </a></td>
                     <td id="hashTag"><%=list[i].hashtag%></td>
+                    <td id="like" cbIdx=<%=list[i].cbIdx%>> 추천 </td>
+                    <td id="likeCnt" tmp="123"> <%=list[i].likes%></td>
                 </tr>
             <%}%>
             </tbody>
