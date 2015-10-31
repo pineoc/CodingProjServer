@@ -60,57 +60,41 @@
             <u id='hashTag'> #카키 </u> &nbsp
             <u id='hashTag'> #반팔티 </u>
         </div>
+        </br></br>
+        <div class="container">
+            <%for(var i = 0 ; i < list.length; i++){%>
+            <div class="table-responsive col-sm-3">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td id="head" colspan="2">
+                            <img src=<%=list[i].headUrl%> value="0" width="200px" height="100px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id="top_cloth" width="100px" height="100px">
+                            <img src=<%=list[i].upperUrl%> value="0" width="100px" height="100px"/>
+                        </td>
+                        <td  id="bottom_cloth" width="100px" rowspan="2">
+                            <img src=<%=list[i].lowerUrl%> value="0" width="100px" height="200px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id="outer_cloth" width="100px" height="100px">
+                            <img src=<%=list[i].coatUrl%> value="0" width="100px" height="100px"/>
+                        </td>
+                    </tr>
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <th> indx </th>
-                <th> 모자 </th>
-                <th> 상의 </th>
-                <th> 하의 </th>
-                <th> 코트 </th>
-                <th> 태그 </th>
-                <th> 추천 </th>
-                <th> 추천수 </th>
-            </thead>
-            <tbody>
-            <%for(var i = 0 ; i < list.length; i++){ %>
-                <tr>
-                    <td><%=i+1%></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].headUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].upperUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].lowerUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].coatUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td id="hashTag"><%=list[i].hashtag%></td>
-                    <td id="like" cbIdx=<%=list[i].cbIdx%>> 추천 </td>
-                    <td id="likeCnt" tmp="123"> <%=list[i].likes%></td>
-                </tr>
+                    <tr><td id="hashTag" colsapn="2"><%=list[i].hashtag%></td></tr>
+                    <tr>
+                        <td id="like" cbIdx=<%=list[i].cbIdx%>> 추천 </td>
+                        <td id="likeCnt" tmp="123"> <%=list[i].likes%></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <%}%>
-            </tbody>
-        </table>
-
-        <!--
-        <div class="row">
-            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
-            </a>
-            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
-            </a>
-            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
-            </a>
-            #가을 #트랜치코트 #배기바지 #소풍 #데이트룩
-
         </div>
-        -->
     </div>
 </body>
 </html>
