@@ -30,11 +30,11 @@
 <!--jQuery test -->
 <div style="border:dotted;background-color:#F3F7F7;padding:10px;width:500px;height:200px;margin:0 auto;">
     <h2 style="text-align:center;">login</h2>
-    <div style="float:left; margin-left:100px">
+    <div style="float:left; margin-left:20%">
     <input class="j_email_class"type="text" name="j_email" id="j_email" placeholder="이메일 입력"  onkeypress="return enterEvent(event)" autofocus/><br/>
     <input class="j_pwd_class" type="password" name="j_pwd" id="j_pwd" placeholder="비밀번호 입력"  onkeypress="return enterEvent(event)" /><br/>
     </div>
-    <div style="float:right; margin-right:120px;">
+    <div style="float:right; margin-right:20%;">
     <button class="j_btn btn btn-success btn-lg" style="padding:12px 20px;cursor: pointer;">로그인</button>
     </div>
 </div>
@@ -73,22 +73,20 @@ var pressEnter=function(){
                 type: 'POST',
                 data:param,
                 error: function errorHandler(jqXHR, textStatus, errorThrown) {
-                    alert("login fail! (Server error)");
+                    alert("로그인에 실패했습니다! (서버 에러)");
                 },
                 success: function successHandler(data, status, xhr) {
                     if (data.status === 's') {
-                        alert('login success');
-                        if(data.isMaster==true){
+                        alert('로그인에 성공했습니다.');
+                        if(data.isMaster == true){
                             window.location.replace("/web/master/main");
                         }
                         else{
                             window.location.replace('/web/editor/main');
                         }
-                        return;
                     }
                     else{
-                        alert('login fail');
-                        return;
+                        alert('로그인에 실패했습니다.');
                     }
                 }
 
@@ -103,15 +101,15 @@ var pressEnter=function(){
             var param;
 
             if(!inputEmail){
-                alert('input the email please');
+                alert('이메일을 입력해주세요.');
                 document.getElementById("j_email").focus();
-                return;
+                return false;
             }
 
             if(!inputPwd){
-                alert('input the password please');
+                alert('비밀번호를 입력해주세요.');
                 document.getElementById("j_pwd").focus();
-                return;
+                return false;
             }
 
             param = {
@@ -121,27 +119,26 @@ var pressEnter=function(){
 
             //ajax started
             $.ajax({
-                url: '/web/login_test',
+                url: '/web/login',
                 type: 'POST',
                 data:param,
                 error: function errorHandler(jqXHR, textStatus, errorThrown) {
-                    alert("login fail! (Server error)");
+                    alert("로그인에 실패했습니다! (서버 에러)");
                 },
                 success: function successHandler(data, status, xhr) {
                     if (data.status === 's') {
-                        alert('login success');
-                        if(data.isMaster==true){
-                            window.location.replace("/web/login")
+                        alert('로그인에 성공했습니다.');
+                        if(data.isMaster == true){
+                            window.location.replace("/web/master/main");
                         }
-                        window.location.replace("/web/master/main");
-                        return;
+                        else{
+                            window.location.replace('/web/editor/main');
+                        }
                     }
                     else{
-                        alert('login fail');
-                        return;
+                        alert('로그인에 실패했습니다.');
                     }
                 }
-
             });
             event.preventDefault();
         });

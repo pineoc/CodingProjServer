@@ -22,7 +22,6 @@ exports.login = function(req,res){
     console.log('recvData : ', recvData);
 
 
-    //TODO : check id, pwd are not null
     if(typeof recvData.email ==='undefined' || typeof recvData.pwd ==='undefined'){
         console.log('email OR pwd undefined');
         res.json({status:'f'});
@@ -34,7 +33,6 @@ exports.login = function(req,res){
         return;
     }
 
-    //TODO : SELECT DB on writers table
     db.pool.getConnection(function(err,conn){
         if(err){
             console.log('err c /web/login, ',err);
@@ -42,7 +40,6 @@ exports.login = function(req,res){
             return;
         }
         else{
-            //TODO : recvData.pwd should do hash
             var shasum = crypto.createHash('sha1');
             shasum.update(recvData.pwd);
             var d = shasum.digest('hex');
@@ -56,7 +53,6 @@ exports.login = function(req,res){
                 else{
                     if(result.length == 1){
                         //success login
-                        //TODO : register session, response success
                         var param = {};
                         param.email = result[0].e_email;
                         param.name = result[0].e_name;
@@ -66,8 +62,11 @@ exports.login = function(req,res){
                         else{
                             param.isMaster = false;
                         }
-                        sessionService.registerSession(req,param.email,param.name,param.isMaster);
-                        res.json({status:'s'});
+                        sessionService.registerSession(req, param.email, param.name, param.isMaster);
+                        res.json({
+                            status: 's',
+                            isMaster: param.isMaster
+                        });
                     }
                     else{
                         //fail
@@ -339,8 +338,6 @@ exports.editorList = function(req,res){
     console.log('recvData : ',recvData);
 
 
-    //TODO : check session is master
-    //test for if
     if(!sessionService.isMaster(req)){
         console.log('/editor/list,  not master');
         res.json({status:'f'});
@@ -431,15 +428,12 @@ exports.editorAdd = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
-    //TODO : check session is master
-    //test for if
     if(!sessionService.isMaster(req)){
         console.log('/master/editor/add,  not master');
         res.json({status:'f'});
         return;
     }
     else{
-        //TODO : check datas is null and valid
 
         //editorEmail check
         if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
@@ -475,14 +469,12 @@ exports.editorAdd = function(req,res){
 
         var file_thumnail = null;
         var fileUpload_result;
-        //TODO : file upload and use result
         if(typeof req.files.editorThumnail !== 'undefined' && req.files.editorThumnail != null){
             fileUpload_result = fileUploadService.fileUpload('editor/'+recvData.editorName.toString(),req.files.editorThumnail);
             //console.log('file upload result',fileUpload_result);
             file_thumnail = fileUpload_result.path;
         }
 
-        //TODO : INSERT INTO EDITOR TABLE these datas
         db.pool.getConnection(function(err,conn){
             if(err){
                 console.log('err C /editor/add, ',err);
@@ -535,7 +527,6 @@ exports.editorDel = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
-    //TODO : check session is master
     //test for if
     if(!sessionService.isMaster(req)){
         console.log('/editor/delete,  not master');
@@ -543,7 +534,6 @@ exports.editorDel = function(req,res){
         return;
     }
     else{
-        //TODO : check datas is null and valid
         //editorEmail check
         if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
             console.log('/editor/del, no email');
@@ -551,7 +541,6 @@ exports.editorDel = function(req,res){
             return;
         }
 
-        //TODO : DELETE to EDITOR TABLE these datas
         db.pool.getConnection(function(err,conn){
             if(err){
                 console.log('err C /editor/del, ',err);
@@ -592,15 +581,12 @@ exports.editorDrop = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
-    //TODO : check session is master
-    //test for if
     if(!sessionService.isMaster(req)){
         console.log('/editor/drop,  not master');
         res.json({status:'f'});
         return;
     }
     else{
-        //TODO : check datas is null and valid
         //editorEmail check
         if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
             console.log('/editor/drop, no email');
@@ -608,7 +594,6 @@ exports.editorDrop = function(req,res){
             return;
         }
 
-        //TODO : DELETE to EDITOR TABLE these datas
         db.pool.getConnection(function(err,conn){
             if(err){
                 console.log('err C /editor/drop, ',err);
@@ -656,7 +641,6 @@ exports.boardList = function(req,res){
         return;
     }
 
-    //TODO : check session is editor
     if(!sessionService.hasSession(req)){
         console.log('invalid approach, /boardList');
         res.json({status:'f',msg:'no session'});
@@ -665,7 +649,6 @@ exports.boardList = function(req,res){
     else{
         if(sessionService.isMaster(req)){
             //master - boardAllList
-            //TODO : SELECT data from board TABLE
             db.pool.getConnection(function(err,conn){
                 if(err){
                     console.log('err C /board/list, ',err);
@@ -704,6 +687,7 @@ exports.boardList = function(req,res){
                             }
                             var renderData = {
                                 status : 's',
+                                currPage : recvData.pageNum,
                                 contentsNum : arr.length,
                                 datas : arr
                             };
@@ -716,7 +700,6 @@ exports.boardList = function(req,res){
         }
         else{
             //editor - my board list
-            //TODO : SELECT data from board TABLE
             db.pool.getConnection(function(err,conn){
                 if(err){
                     console.log('err C /board/list, ',err);
@@ -767,6 +750,7 @@ exports.boardList = function(req,res){
                             }
                             var renderData = {
                                 status : 's',
+                                currPage : recvData.pageNum,
                                 contentsNum : arr.length,
                                 datas : arr
                             };
@@ -790,7 +774,6 @@ exports.boardDel = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
-    //TODO : check session is master or editor validation
     //test for if
     if(!sessionService.hasSession(req)){
         console.log('invalid approach, /board/del');
@@ -798,7 +781,6 @@ exports.boardDel = function(req,res){
         return;
     }
     else{
-        //TODO : DB UPDATE board TABLE, valid set false
         //To check that whether b_idx is valid or not
         if(typeof recvData.contentID === 'undefined' || recvData.contentID.length == 0){
             console.log('/board/delete, no contentID');
@@ -881,7 +863,6 @@ exports.boardDrop = function(req,res){
     var recvData = req.body;
     console.log('recvData : ',recvData);
 
-    //TODO : check session is master validation
     //test for if
     if(!sessionService.isMaster(req)){
         //if(0){
@@ -985,7 +966,6 @@ exports.boardWrite = function(req,res){
     console.log('recvData : ',recvData);
 
 
-    //TODO : check session is master or editor validation
     if(!sessionService.hasSession(req)){
         console.log('invalid approach, /boardWrite');
         res.json({status:'f'});
@@ -1036,7 +1016,6 @@ exports.boardWrite = function(req,res){
 
     var userData = sessionService.getSession(req);
 
-    //TODO : files upload + contents
     var contentsData = [];
     var imagesData = [];
     var thumnail_image_upload_result = fileUploadService.fileUpload(('board/' + userData.userName).toString(), req.files.thumnail);
@@ -1063,7 +1042,6 @@ exports.boardWrite = function(req,res){
         imagesData.push(image_upload_result.path);
     }
 
-    //TODO : DB INSERT BOARD
     db.pool.getConnection(function(err,conn){
         if(err){
             console.log('err C, /board/write, ',err);
@@ -1098,6 +1076,7 @@ exports.boardWrite = function(req,res){
     });
 };
 
+
 /*
  * board view
  * type : get
@@ -1108,7 +1087,6 @@ exports.board_view_func = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    //TODO: board DB data SELECT where category!=1 AND contentID
     db.pool.getConnection(function(err,conn){
         if(err){
             console.log('err conn /view, test cate!=1, ',err);

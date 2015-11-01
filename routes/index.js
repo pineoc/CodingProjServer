@@ -32,7 +32,6 @@ router.post('/app/login',function(req,res){
     return;
   }
 
-  //TODO: if first, INSERT to USER, else, SELECT FROM USER
   if(recvData.appID.length==0){
     if(typeof recvData.nickName === 'undefined' || typeof recvData.key === 'undefined'){
       console.log('undefined datas, nick or key');
@@ -41,7 +40,6 @@ router.post('/app/login',function(req,res){
     }
 
     //access first Time, sign
-    //TODO : INSERT INTO USER
     db.pool.getConnection(function(err,conn){
       if(err){
         console.log('err conn /login sign, ',err);
@@ -75,7 +73,6 @@ router.post('/app/login',function(req,res){
   }
   else{
     //login
-    //TODO : SELECT FROM USER
     db.pool.getConnection(function(err,conn){
       if(err){
         console.log('err conn /login login, ',err);
@@ -112,8 +109,6 @@ router.get('/app/menu',function(req,res){
   var recvData = req.body;
   console.log('recvData : ',recvData);
 
-
-  //TODO: DB category SELECT
 
   db.pool.getConnection(function(err,conn){
     if(err){
@@ -165,7 +160,6 @@ router.get('/app/board', function(req,res){
   if(recvData.cateID == CLOTHIDX){
     //cloth board
 
-    //TODO: board DB data SELECT where category=1
 
     db.pool.getConnection(function(err,conn){
       if(err){
@@ -217,7 +211,6 @@ router.get('/app/board', function(req,res){
   else{
     //normal board
 
-    //TODO: board DB data SELECT where category!=1
     db.pool.getConnection(function(err,conn){
       if(err){
         console.log('err conn /board cate!=1, ',err);
@@ -273,7 +266,6 @@ router.get('/app/board/view',function(req,res){
   if(recvData.cateID == CLOTHIDX){
     //cloth content view
 
-    //TODO: board DB data SELECT where category=1 AND contentID
     db.pool.getConnection(function(err,conn){
       if(err){
         console.log('err conn /view cate=1, ',err);
@@ -318,7 +310,6 @@ router.get('/app/board/view',function(req,res){
   else{
     //normal board view
 
-    //TODO: board DB data SELECT where category!=1 AND contentID
     db.pool.getConnection(function(err,conn){
       if(err){
         console.log('err conn /view cate!=1, ',err);
@@ -378,28 +369,6 @@ router.get('/app/board/view',function(req,res){
       }
     });
   }
-});
-
-
-/* write (¿ÊÀÔÈ÷±â)
- type : POST
- req : appID, nickName, data1, data2, data3, data4, data5, data6
- res : status, contentID
- */
-router.post('/app/board/write', function(req, res){
-  var recvData = req.body;
-  console.log('recvData : ', recvData);
-
-  //DB¿¡¼­ ¹«¾ð°¡¸¦ ÇØÁà¾ß°ÚÁö¿ä?
-
-  var sendData = {
-    status : 's',
-    contentID : '123'
-    //DB´Ü°è ¿Ï·áÇÏ¸é contentID´Â ÀÚµ¿ÀûÀ¸·Î ºÎ¿©µÉ °Í.
-  };
-
-
-  res.json(sendData);
 });
 
 
@@ -538,7 +507,6 @@ router.get('/app/board/commentview', function(req, res){
   var recvData = req.query;
   console.log('recvData : ', recvData);
 
-  //DB¿¡¼­ contentID¿¡ µû¸¥ ±ÛÀÇ commentÁ¤º¸¸¦ ¹Þ¾Æ¿Â´Ù.
   db.pool.getConnection(function(err,conn){
     if(err){
       console.log('err conn /commview, ',err);
@@ -734,7 +702,7 @@ router.post('/web/board/delete',web.boardDel);
  * req : none
  * res : status
  * */
-router.get('/web/board/write',web.boardWriteGet);
+router.get('/web/board/write', web.boardWriteGet);
 
 
 /*
@@ -744,7 +712,7 @@ router.get('/web/board/write',web.boardWriteGet);
  *       contents(array), images(file array)
  * res : status
  * */
-router.post('/web/board/write',multipartMiddleware,web.boardWrite);
+router.post('/web/board/write', multipartMiddleware, web.boardWrite);
 
 /*
  * board view
@@ -752,7 +720,7 @@ router.post('/web/board/write',multipartMiddleware,web.boardWrite);
  * req : contentID
  * res : ~
  * */
-router.get('/web/board/view',web.board_view_func);
+router.get('/web/board/view', web.board_view_func);
 
 /*
  * cloth management
@@ -785,17 +753,17 @@ router.get('/web/master/clothesList', function(req, res){
       res.json({status:"f"});
       return;
     }else{
-      var query = 'SELECT * FROM CLOTH ';      // TODO CHANGE!! Äõ¸® ¼öÁ¤ÇØ¾ßÇÔ
+      var query = 'SELECT * FROM CLOTH ';      // TODO CHANGE!! ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
       // if there is request param
 
       if((recvData.category) && (recvData.name)){
-        // category ¿Í name µÑ´Ù Á¶°ÇÀÌ Á¸ÀçÇÏ´Â °æ¿ì
+        // category ï¿½ï¿½ name ï¿½Ñ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
         query += ("WHERE cloth_cate=" + recvData.category + " AND cloth_name LIKE '%" + recvData.name + "%' ");
       }else if(recvData.category){
-        // category Á¶°Ç¸¸ ÀÖ´Â °æ¿ì
+        // category ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½
         query += ("WHERE cloth_cate=" + recvData.category + " ");
       }else if(recvData.name){
-        // name Á¶°Ç¸¸ ÀÖ´Â °æ¿ì
+        // name ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½
         query += ("WHERE cloth_name LIKE '%" + recvData.name + "%' ");
       }
       if(recvData.pageNo){
