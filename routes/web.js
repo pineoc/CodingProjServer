@@ -22,7 +22,7 @@ exports.login = function(req,res){
     console.log('recvData : ', recvData);
 
 
-    if(typeof recvData.email ==='undefined' || typeof recvData.pwd ==='undefined'){
+    if(typeof recvData.email === 'undefined' || typeof recvData.pwd ==='undefined'){
         console.log('email OR pwd undefined');
         res.json({status:'f'});
         return;
@@ -43,7 +43,7 @@ exports.login = function(req,res){
             var shasum = crypto.createHash('sha1');
             shasum.update(recvData.pwd);
             var d = shasum.digest('hex');
-            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?',[recvData.email,d],function(err2,result){
+            conn.query('SELECT * FROM EDITOR WHERE e_email=? AND e_pwd=?', [recvData.email, d], function(err2,result){
                 if(err2){
                     console.log('err S /login, ',err2);
                     res.json({status:'f'});
@@ -87,7 +87,7 @@ exports.login = function(req,res){
  * res : none
  */
 exports.editorMain = function(req,res){
-     if(sessionService.hasSession(req) && sessionService.getSession(req).isMaster==false){
+     if(sessionService.hasSession(req) && sessionService.getSession(req).isMaster == false){
         res.render('editorPage',{status:'s'});
      }
      else{
@@ -428,8 +428,8 @@ exports.editorAdd = function(req,res){
     console.log('recvData : ',recvData);
 
     if(!sessionService.isMaster(req)){
-        console.log('/master/editor/add,  not master');
-        res.json({status:'f'});
+        console.log('/master/editor/add, not master');
+        res.json({status:'f', msg: 'not master'});
         return;
     }
     else{
@@ -437,31 +437,31 @@ exports.editorAdd = function(req,res){
         //editorEmail check
         if(typeof recvData.editorEmail === 'undefined' || recvData.editorEmail.length == 0){
             console.log('/master/editor/add, no email');
-            res.json({status:'f'});
+            res.json({status:'f', msg: 'no email'});
             return;
         }
         //editorPwd check
         if(typeof recvData.editorPwd === 'undefined' || recvData.editorPwd.length == 0){
             console.log('/master/editor/add, no pwd');
-            res.json({status:'f'});
+            res.json({status:'f', msg: 'no pwd'});
             return;
         }
         //editorName check
         if(typeof recvData.editorName === 'undefined' || recvData.editorName.length == 0){
             console.log('/master/editor/add, no name');
-            res.json({status:'f'});
+            res.json({status:'f', msg: 'no name'});
             return;
         }
         //editorCate check
         if(typeof recvData.editorCate === 'undefined' || recvData.editorCate.length == 0 || typeof parseInt(recvData.editorCate) !== 'number'){
             console.log('/master/editor/add, no category');
-            res.json({status:'f'});
+            res.json({status:'f', msg: 'no cate'});
             return;
         }
         //editorNick check
         if(typeof recvData.editorNick === 'undefined' || recvData.editorNick.length == 0){
             console.log('/master/editor/add, no nick');
-            res.json({status:'f'});
+            res.json({status:'f', msg: 'no nick'});
             return;
         }
 
@@ -485,7 +485,6 @@ exports.editorAdd = function(req,res){
                 var shasum = crypto.createHash('sha1');
                 shasum.update(recvData.editorPwd);
                 var d = shasum.digest('hex');
-                console.log('sha success ',d);
                 var q = 'INSERT INTO EDITOR (e_name, e_email, e_nickname, e_pwd, e_thumnail, e_category, e_intro, isValid) ' +
                     'VALUES(?,?,?,?,?,?,?,1)';
                 var params = [recvData.editorName.toString(), recvData.editorEmail.toString(),
@@ -494,7 +493,7 @@ exports.editorAdd = function(req,res){
                 conn.query(q,params,function(err2,result){
                     if(err2){
                         console.log('err I /editor/add, ',err2);
-                        res.json({status:'f'});
+                        res.json({status:'f', msg: 'invalid'});
                         conn.release();
                         return;
                     }
@@ -505,8 +504,7 @@ exports.editorAdd = function(req,res){
                             res.json({status:'s'});
                         }
                         else{
-                            console.log('err S /editor/add, ',err);
-                            res.json({status:'f'});
+                            res.json({status:'f',msg: 'not affected'});
                         }
                         conn.release();
                     }

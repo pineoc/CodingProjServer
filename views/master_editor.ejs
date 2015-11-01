@@ -172,6 +172,7 @@
     </form>
 </div>
 <script>
+    //editor add function
     $( document ).ready(function() {
         $("#editorAdd").ajaxForm({
             success:function(res, frm, opt){
@@ -180,7 +181,9 @@
                     location.reload(true);
                 }
                 else{
-                    alert('error, ' + res.msg);
+                    if (res.msg == 'invalid') {
+                        alert('이메일 또는 에디터 이름이 중복됩니다.');
+                    }
                 }
             },
             error : function(){
@@ -188,6 +191,7 @@
             }
         });
     });
+    //editor delete function
     $( document ).ready(function() {
         $("#editorDelete").ajaxForm({
             success:function(res, frm, opt){
