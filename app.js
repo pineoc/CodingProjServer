@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -24,14 +23,35 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: 'keyboard cat',
+  secret: 'coding-project',
   resave: false,
   saveUninitialized: true
 }));
 
-
 app.use('/', routes);
-app.use('/users', users);
+
+app.get('/img/:string',function(req,res){
+  var recvData = req.params;
+  var split = recvData.string;
+
+  if(split.search('..')!=-1){
+    res.send('<p>wrong approach</p>');
+    return;
+  }
+  else{
+    var file = __dirname+'/public/img/'+split;
+    var filestream = fs.createReadStream(file);
+
+    filestream.on('open',function(){
+      filestream.pipe(res);
+    });
+    filestream.on('error',function(err){
+      if(err){
+        res.json({result:'f'});
+      }
+    });
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
