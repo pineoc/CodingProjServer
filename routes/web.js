@@ -337,6 +337,9 @@ exports.editorList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
+    if (typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0) {
+        recvData.pageNum=0;
+    }
 
     if(!sessionService.isMaster(req)){
         console.log('/editor/list,  not master');
@@ -344,11 +347,6 @@ exports.editorList = function(req,res){
         return;
     }
     else{
-        if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
-            console.log('err /editor/list , no pageNum');
-            res.json({status:'f'});
-            return;
-        }
         db.pool.getConnection(function(err,conn){
             var sendData = {};
             if(err){
@@ -382,6 +380,7 @@ exports.editorList = function(req,res){
 
                         sendData = {
                             status : 's',
+                            currPage: parseInt(recvData.pageNum),
                             editorsNum : arr.length,
                             editors : arr
                         };
@@ -635,10 +634,8 @@ exports.boardList = function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    if(typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0){
-        console.log('err /board/list , no pageNum');
-        res.json({status:'f',msg:'pageNum not in'});
-        return;
+    if (typeof recvData.pageNum === 'undefined' || recvData.pageNum < 0) {
+        recvData.pageNum=0;
     }
 
     if(!sessionService.hasSession(req)){
