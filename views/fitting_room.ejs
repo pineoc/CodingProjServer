@@ -18,9 +18,11 @@
                 var upper = $("td#top_cloth img").attr('value');
                 var down = $("td#bottom_cloth img").attr('value');
                 var coat = $("td#outer_cloth img").attr('value');
-                var postJson =  {head : head, upper : upper, down : down, coat : coat, token : 'aaa'};
+                var hash = $("input#hash_tag").val();
+                var token = $("input#Token").val();
+                var postJson =  {head : head, upper : upper, down : down, coat : coat, token : token, hash : hash};
 
-                alert(postJson.toString());
+               // alert(postJson.toString());
                 $.post("/web/fitting_room", postJson);
 
             });
@@ -67,13 +69,29 @@
                         <td  id="top_cloth" width="100px" height="100px">
                             <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="100px"/>
                         </td>
-                        <td  id="bottom_cloth" width="100px" rowspan="2">
+                        <td  id="outer_cloth" width="100px" rowspan="2">
                             <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="200px"/>
                         </td>
                     </tr>
                     <tr>
-                        <td  id="outer_cloth" width="100px" height="100px">
+                        <td  id="bottom_cloth" width="100px" height="100px">
                             <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" value="0" width="100px" height="100px"/>
+                        </td>
+                    </tr>
+                <tr>
+                    <td>
+                        Hash Tag :
+                    </td>
+                    <td>
+                        <input type="text" id="hash_tag">
+                    </td>
+                </tr>
+                    <tr>
+                        <td>
+                            Token :
+                        </td>
+                        <td>
+                            <input type="text" id="Token">
                         </td>
                     </tr>
                 </tbody>

@@ -1156,8 +1156,8 @@ router.post('/web/fitting_room', function(req, res){
            res.json({status:'f'});
            return;
        } else{
-           var q = "INSERT INTO CLOTH_BOARD(user_token, head, upperbody, lowerbody, coat) VALUES(?,?,?,?,?)";
-           var params = [recvData.token.toString(), parseInt(recvData.head), parseInt(recvData.upper), parseInt(recvData.down), parseInt(recvData.coat)];
+           var q = "INSERT INTO CLOTH_BOARD(user_token, head, upperbody, lowerbody, coat, hashtag) VALUES(?,?,?,?,?,?)";
+           var params = [recvData.token.toString(), parseInt(recvData.head), parseInt(recvData.upper), parseInt(recvData.down), parseInt(recvData.coat), recvData.hash.toString()];
 
            conn.query(q, params, function(err2, result){
                 if(err2){
