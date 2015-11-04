@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var morgan = require('morgan');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -18,7 +19,7 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.ico'));
-
+app.use(morgan('dev'));
 /*
 //log setting
 app.use(require('morgan')({ "stream": logger.stream }));

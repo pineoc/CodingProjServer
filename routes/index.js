@@ -255,7 +255,7 @@ router.get('/app/board/view',function(req,res){
                         status : 's',
                         contentID : result[0].b_idx,
                         likes : result[0].likes,
-                        editor : result[0].editor,
+                        editor : result[0].e_name,
                         title : result[0].title,
                         pagesNum : result[0].pagesNum,
                         datas : arr
@@ -483,7 +483,7 @@ router.get('/app/clothList', function(req, res){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index');
 });
 
 router.get('/default_iframe',function(req,res,next){
