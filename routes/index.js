@@ -157,99 +157,44 @@ router.get('/app/board', function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    if(recvData.cateID == CLOTHIDX){
-        //cloth board
-
-
-        db.pool.getConnection(function(err,conn){
-            if(err){
-                console.log('err conn /board cate1, ',err);
-                res.json({status:'f'});
-                return;
-            }
-            else{
-                conn.query('SELECT * FROM CLOTH_BOARD ORDER BY likes DESC LIMIT 3',[],function(err2,result){
-                    if(err2){
-                        console.log('err S /board cate1, ',err2);
-                        res.json({status:'f'});
-                        conn.release();
-                        return;
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err conn /board, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'SELECT * FROM BOARD WHERE category=? LIMIT ?, 10';
+            conn.query(query,[parseInt(recvData.cateID),parseInt(recvData.pageNum)*10],function(err2,result){
+                if(err2){
+                    console.log('err S /board, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    var arr = [];
+                    for (var i=0; i<result.length;i++){
+                        var data = {};
+                        data.contentIdx = result[i].b_idx;
+                        data.likes = result[i].likes;
+                        data.title = result[i].title;
+                        data.titleImg = urlpath_base + result[i].thumnail;
+                        data.editor = result[i].e_name;
+                        data.dateTime = result[i].datetime;
+                        arr.push(data);
                     }
-                    else{
-                        conn.query('SELECT * FROM CLOTH_BOARD LIMIT ?, 10',[parseInt(recvData.pageNum)*10],function(err3,result2){
-                            if(err3){
-                                console.log('err S2 /board cate1, ',err3);
-                                res.json({status:'f'});
-                                conn.release();
-                                return;
-                            }
-                            else{
-                                var arr = [];
-                                for(var i=0; i<result2.length; i++){
-                                    var d = {
-                                        contentIdx : result2[i].cb_idx,
-                                        likes : result2[i].likes,
-                                        clothIdxs :[result2[i].head,result2[i].upperBody,result2[i].lowerBody,result2[i].coat],
-                                        datetime : result2[i].datetime
-                                    };
-                                    arr.push(d);
-                                }
-                                var sendData ={};
-                                sendData.status = 's';
-                                sendData.rankedData = result;
-                                sendData.datas = arr;
-                                sendData.contentsNum = arr.length;
-                                res.json(sendData);
-                            }
-                            conn.release();
-                        });
-                    }
-                });
-            }
-        });
-    }
-    else{
-        //normal board
-
-        db.pool.getConnection(function(err,conn){
-            if(err){
-                console.log('err conn /board cate!=1, ',err);
-                res.json({status:'f'});
-                return;
-            }
-            else{
-                var query = 'SELECT * FROM BOARD WHERE category=? LIMIT ?, 10';
-                conn.query(query,[parseInt(recvData.cateID),parseInt(recvData.pageNum)*10],function(err2,result){
-                    if(err2){
-                        console.log('err S /board cate1, ',err2);
-                        res.json({status:'f'});
-                        conn.release();
-                        return;
-                    }
-                    else{
-                        var arr = [];
-                        for (var i=0; i<result.length;i++){
-                            var data = {};
-                            data.contentIdx = result[i].b_idx;
-                            data.likes = result[i].likes;
-                            data.title = result[i].title;
-                            data.titleImg = urlpath_base + result[i].thumnail;
-                            data.editor = result[i].editor;
-                            data.dateTime = result[i].datetime;
-                            arr.push(data);
-                        }
-                        var sendData = {
-                            status : 's',
-                            contentsNum : result.length,
-                            datas : arr
-                        };
-                        res.json(sendData);
-                        conn.release();
-                    }
-                });
-            }
-        });
-    }
+                    var sendData = {
+                        status : 's',
+                        contentsNum : result.length,
+                        datas : arr
+                    };
+                    res.json(sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 
 /*
@@ -263,112 +208,64 @@ router.get('/app/board/view',function(req,res){
     var recvData = req.query;
     console.log('recvData : ',recvData);
 
-    if(recvData.cateID == CLOTHIDX){
-        //cloth content view
-
-        db.pool.getConnection(function(err,conn){
-            if(err){
-                console.log('err conn /view cate=1, ',err);
-                res.json({status:'f'});
-                return;
-            }
-            else{
-                var query = 'SELECT * FROM CLOTH_BOARD NATURAL JOIN USER WHERE cb_idx=?';
-                conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
-                    if(err2){
-                        console.log('err S /view cate1, ',err2);
+    db.pool.getConnection(function(err,conn){
+        if(err){
+            console.log('err conn /view cate!=1, ',err);
+            res.json({status:'f'});
+            return;
+        }
+        else{
+            var query = 'SELECT * FROM BOARD WHERE b_idx=?';
+            conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
+                if(err2){
+                    console.log('err S /view cate!=1, ',err2);
+                    res.json({status:'f'});
+                    conn.release();
+                    return;
+                }
+                else{
+                    if(result.length<1){
+                        console.log('err S /view cate!=1, no data');
                         res.json({status:'f'});
                         conn.release();
                         return;
                     }
-                    else{
-                        if(result.length<1){
-                            console.log('err S /view cate1, no data');
-                            res.json({status:'f'});
-                            conn.release();
-                            return;
-                        }
-                        var sendData = {
-                            status : 's',
-                            contentID : parseInt(recvData.contentID),
-                            likes : result[0].likes,
-                            editor : result[0].nickName,
-                            datas : [
-                                result[0].head,
-                                result[0].upperBody,
-                                result[0].lowerBody,
-                                result[0].coat
-                            ]
-                        };
-                        res.json(sendData);
-                        conn.release();
-                    }
-                });
-            }
-        });
-    }
-    else{
-        //normal board view
-
-        db.pool.getConnection(function(err,conn){
-            if(err){
-                console.log('err conn /view cate!=1, ',err);
-                res.json({status:'f'});
-                return;
-            }
-            else{
-                var query = 'SELECT * FROM BOARD WHERE b_idx=?';
-                conn.query(query,[parseInt(recvData.contentID)],function(err2,result){
-                    if(err2){
-                        console.log('err S /view cate!=1, ',err2);
-                        res.json({status:'f'});
-                        conn.release();
+                    var arr = [];
+                    var c_data;
+                    var i_data;
+                    //error check
+                    try {
+                        c_data = JSON.parse(result[0].contents);
+                        i_data = JSON.parse(result[0].images);
+                    } catch(e) {
+                        console.log('parse error : ',e);
+                        res.json({status:'f',msg:'parse error'});
                         return;
                     }
-                    else{
-                        if(result.length<1){
-                            console.log('err S /view cate!=1, no data');
-                            res.json({status:'f'});
-                            conn.release();
-                            return;
-                        }
-                        var arr = [];
-                        var c_data;
-                        var i_data;
-                        //error check
-                        try {
-                            c_data = JSON.parse(result[0].contents);
-                            i_data = JSON.parse(result[0].images);
-                        } catch(e) {
-                            console.log('parse error : ',e);
-                            res.json({status:'f',msg:'parse error'});
-                            return;
-                        }
 
-                        for (var i = 0; i < c_data.length; i++){
-                            var data = {
-                                img : urlpath_base + i_data[i],
-                                content : c_data[i]
-                            };
-                            arr.push(data);
-                        }
-
-                        var sendData = {
-                            status : 's',
-                            contentID : result[0].b_idx,
-                            likes : result[0].likes,
-                            editor : result[0].editor,
-                            title : result[0].title,
-                            pagesNum : result[0].pagesNum,
-                            datas : arr
+                    for (var i = 0; i < c_data.length; i++){
+                        var data = {
+                            img : urlpath_base + i_data[i],
+                            content : c_data[i]
                         };
-                        res.json(sendData);
-                        conn.release();
+                        arr.push(data);
                     }
-                });
-            }
-        });
-    }
+
+                    var sendData = {
+                        status : 's',
+                        contentID : result[0].b_idx,
+                        likes : result[0].likes,
+                        editor : result[0].editor,
+                        title : result[0].title,
+                        pagesNum : result[0].pagesNum,
+                        datas : arr
+                    };
+                    res.json(sendData);
+                    conn.release();
+                }
+            });
+        }
+    });
 });
 
 
