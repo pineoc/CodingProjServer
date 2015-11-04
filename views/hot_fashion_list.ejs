@@ -28,9 +28,15 @@
                 $(this).append(repText);//.replace(repText);
             });
             $("u#hashTag").click(function() {
-                var clickTag = $(this).text().replace(/\ /,'').replace(/\#/,'');
+                var clickTag = $(this).text().replace(/\ /, '').replace(/\#/, '');
                 var url = "/web/hot_fashion_list?hashtag=" + clickTag;
-                $("div#hot_fashion_container").load(url);
+                if ($("div#hot_fashion_container").text() == 0) {
+                    // if mobile
+                    $("body").load(url);
+                } else {    $("div#hot_fashion_container").load(url);
+
+                }
+
             });
             // when press like btn
             $("td#like").click(function(){
@@ -43,7 +49,7 @@
                 $(this).parent().children("td#likeCnt").text(parseInt($(this).parent().children("td#likeCnt").text())+1);
             });
            // var res = str.split("");
-            $('[data-toggle="popover"]').popover({html: true});
+            $('[data-toggle="popover"]').popover({html: true, placement : "top"});
         });
 
 
@@ -68,24 +74,32 @@
                     <tbody>
                     <tr>
                         <td id="head" colspan="2">
-                            <img src=<%=list[i].headUrl%> value="0" width="200px" height="100px"/>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
+                                <img src=<%=list[i].headUrl%> value="0" width="200px" height="100px"/>
+                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td  id="top_cloth" width="100px" height="100px">
-                            <img src=<%=list[i].upperUrl%> value="0" width="100px" height="100px"/>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
+                                <img src=<%=list[i].upperUrl%> value="0" width="100px" height="100px"/>
+                            </a>
                         </td>
                         <td  id="outer_cloth" width="100px" rowspan="2">
-                            <img src=<%=list[i].coatUrl%> value="0" width="100px" height="200px"/>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com/product/detail.html?product_no=1176&cate_no=54&display_group=1' target='_blank'>구매하러 가기</a>">
+                        <img src=<%=list[i].coatUrl%> value="0" width="100px" height="200px"/>
+                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td  id="bottom_cloth" width="100px" height="100px">
-                            <img src=<%=list[i].lowerUrl%> value="0" width="100px" height="100px"/>
+                            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
+                        <img src=<%=list[i].lowerUrl%> value="0" width="100px" height="100px"/>
+                            </a>
                         </td>
                     </tr>
 
-                    <tr><td id="hashTag" colsapn="2"><%=list[i].hashtag%></td></tr>
+                    <tr><td id="hashTag" colsapn="2"><u id="hashTag"> <%=list[i].hashtag%></u></td></tr>
                     <tr>
                         <td id="like" cbIdx=<%=list[i].cbIdx%>> 추천 </td>
                         <td id="likeCnt" tmp="123"> <%=list[i].likes%></td>
