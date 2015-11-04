@@ -164,7 +164,7 @@ router.get('/app/board', function(req,res){
             return;
         }
         else{
-            var query = 'SELECT * FROM BOARD WHERE category=? LIMIT ?, 10';
+            var query = 'SELECT b_idx, likes, title, thumnail, e_name, DATE_FORMAT(datetime, "%Y.%m.%d %H:%i") datetime FROM BOARD WHERE category=? LIMIT ?, 10';
             conn.query(query,[parseInt(recvData.cateID),parseInt(recvData.pageNum)*10],function(err2,result){
                 if(err2){
                     console.log('err S /board, ',err2);
