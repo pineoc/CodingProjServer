@@ -32,6 +32,16 @@
                 var url = "/web/hot_fashion_list?hashtag=" + clickTag;
                 $("div#hot_fashion_container").load(url);
             });
+            // when press like btn
+            $("td#like").click(function(){
+                var cbIdx = $(this).attr('cbIdx');
+                var likeCnt = $(this).parent().children("td#likeCnt").text();
+                var postJson =  {cbIdx : cbIdx, likeCnt : likeCnt};
+
+                //alert(postJson.toString());
+                $.post("/web/fasion_like", postJson);
+                $(this).parent().children("td#likeCnt").text(parseInt($(this).parent().children("td#likeCnt").text())+1);
+            });
            // var res = str.split("");
             $('[data-toggle="popover"]').popover({html: true});
         });
@@ -41,60 +51,50 @@
 </head>
 <body>
     <div class="container">
-        <h3> This week's Top HashTag </h3>
+        <h3> 최신 유행 패션 <small> 최근 사람들에게 추천을 많이 받은 패션을 보여줍니다. </small> </h3>
+        <h4> 인기 키워드 </h4>
         <div class="row">
-            <bdi> #가을 </bdi>
-            <bdi> #대학생 </bdi>
-            <bdi> #스트라이프 </bdi>
-            <bdi> #카키 </bdi>
-            <bdi> #반팔티 </bdi>
+            <u id='hashTag'> #가을 </u> &nbsp
+            <u id='hashTag'> #대학생 </u> &nbsp
+            <u id='hashTag'> #스트라이프 </u> &nbsp
+            <u id='hashTag'> #카키 </u> &nbsp
+            <u id='hashTag'> #반팔티 </u>
         </div>
-        <h3> hot fashion list </h3>
+        </br></br>
+        <div class="container">
+            <%for(var i = 0 ; i < list.length; i++){%>
+            <div class="table-responsive col-sm-3">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td id="head" colspan="2">
+                            <img src=<%=list[i].headUrl%> value="0" width="200px" height="100px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id="top_cloth" width="100px" height="100px">
+                            <img src=<%=list[i].upperUrl%> value="0" width="100px" height="100px"/>
+                        </td>
+                        <td  id="outer_cloth" width="100px" rowspan="2">
+                            <img src=<%=list[i].lowerUrl%> value="0" width="100px" height="200px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  id="bottom_cloth" width="100px" height="100px">
+                            <img src=<%=list[i].coatUrl%> value="0" width="100px" height="100px"/>
+                        </td>
+                    </tr>
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <th> 모자 </th>
-                <th> 상의 </th>
-                <th> 하의 </th>
-                <th> 코트 </th>
-                <th> 태그 </th>
-            </thead>
-            <tbody>
-            <%for(var i = 0 ; i < list.length; i++){ %>
-                <tr>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].headUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].upperUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].lowerUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td> <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                            <img src=<%=list[i].coatUrl%> width="100px" height="100px"/>
-                        </a></td>
-                    <td id="hashTag"><%=list[i].hashtag%></td>
-                </tr>
+                    <tr><td id="hashTag" colsapn="2"><%=list[i].hashtag%></td></tr>
+                    <tr>
+                        <td id="like" cbIdx=<%=list[i].cbIdx%>> 추천 </td>
+                        <td id="likeCnt" tmp="123"> <%=list[i].likes%></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <%}%>
-            </tbody>
-        </table>
-
-        <!--
-        <div class="row">
-            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
-            </a>
-            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
-            </a>
-            <a href="#" data-toggle="popover" title="Popover Header" data-content="<a href='http://www.namjungnedle.com' target='_blank'>구매하러 가기</a>">
-                <img src="http://www.namjungnedle.com/web/product/extra/small/201508/1136_shop1_587453.jpg" width="100px" height="100px"/>
-            </a>
-            #가을 #트랜치코트 #배기바지 #소풍 #데이트룩
-
         </div>
-        -->
     </div>
 </body>
 </html>
