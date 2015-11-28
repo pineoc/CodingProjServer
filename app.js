@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -10,20 +11,17 @@ var routes = require('./routes/index');
 
 var app = express();
 
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(morgan(''));
 
 /*
 //log setting
 app.use(require('morgan')({ "stream": logger.stream }));
-
-
 var logger = new winston.Logger({
     transports: [
         new winston.transports.File({
@@ -49,11 +47,9 @@ logger.stream = {
         logger.info(message);
     }
 };
-
-
 app.use(require("morgan")("combined",
     { "stream": logger.stream }));
-    */
+*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
